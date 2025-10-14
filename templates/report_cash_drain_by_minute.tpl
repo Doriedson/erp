@@ -1,0 +1,1 @@
+id[#id#]=#id_sangria#;string[#id#]="Sangria (#data#) #nome#\nR$ #valor# - #obs#\n";

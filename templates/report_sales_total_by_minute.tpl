@@ -1,0 +1,1 @@
+id[#id#]=#id_caixa#;string[#id#]="Fechamento de Caixa\n(#data#) #nome#\n\n<!-- DIVISION -->#especie# - R$ #valor#\n<!-- DIVISION -->\nTotal R$ #total# #troco# #cupons#";

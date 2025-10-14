@@ -1,0 +1,1 @@
+id[#id#]=#id_venda#;string[#id#]="Pedido: #id_venda# (#data#)\nCliente: #nome#\n\n<!-- DIVISION -->#produto#\n#qtd# * #preco# = R$ #total#\n<!-- DIVISION -->\nTotal R$ #total#";

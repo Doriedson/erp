@@ -1,0 +1,225 @@
+.printable {
+
+	display: none;
+}
+
+@page {
+  size: A4;
+  /* margin: 11mm 17mm 17mm 17mm; */
+}
+
+@media print {
+
+	html {
+		background-image: none;
+		background-color: white;
+	}
+
+	body {
+
+		width: 210mm;
+		height: 297mm;
+		margin: 0 auto;
+		padding: 0;
+		color: black;
+		background-color: white;
+	}
+
+	body>*:not(.printable) {
+
+		display: none;
+	}
+
+	.printable * {
+
+		page-break-inside: avoid;
+	}
+
+	.printable {
+
+		display: unset;
+		visibility: visible;
+		/* position: fixed;
+		top: 0;
+		left: 0; */
+		/* margin: 0; */
+		/* break-inside: avoid; */
+		page-break-inside: auto;
+	}
+}
+
+.receiptprint {
+
+	display: flex;
+	flex-direction: column;
+	gap: 0.2cm;
+	width: 21cm;
+	/* height: 6.5cm; */
+	color: black;
+	background-color: white;
+	border: solid gray 5px;
+	margin-bottom: 0.2cm;
+	/* margin: auto; */
+}
+
+.receiptprint-title {
+
+	text-align: center;
+	font-size: 3em;
+	margin: 0;
+	padding: 16px 0 0 0;
+}
+
+.receiptprint-body {
+
+	margin: 0;
+	padding: 16px;
+	text-align: justify;
+	height: 3.9cm;
+}
+
+.receiptprint-footer {
+
+	text-align: center;
+	padding-bottom: 0.1cm;
+}
+
+.pricetag-m1 {
+
+	display: flex;
+		/* flex-wrap: wrap; */
+		justify-content: center;
+	gap: 0.2cm;
+	/* line-height: unset; */
+	width: 21cm;
+	/* margin: 0 auto; */
+	color: black;
+	background-color: white;
+}
+
+.pricetag-m1 .pricetag{
+
+	border: 1px solid black;
+	width: 10cm;
+	height: 4.8cm;
+	margin-bottom: 0.2cm;
+	/* margin-right: 0.2cm; */
+	/* display: inline-block; */
+}
+
+.pricetag-m1 .pricetag-title { /* .produto{*/
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: uppercase;
+	height: 1.6cm; /* 50px;*/
+	text-align: center;
+	font-size: 0.5cm;
+	background-color: black;
+	color: white;
+	margin: 0;
+	padding: 0 0.5cm;
+}
+
+.pricetag-m1 .pricetag-content { /*} .preco{*/
+
+	container-type: inline-size;
+	display: flex;
+	flex: 1;
+	align-items: flex-end;
+	justify-content: center;
+	font-size: 2.2cm;
+	line-height: 2.2cm;
+	height: 3cm;
+	gap: 0.5cm;
+	margin: 0;
+	padding: 0;
+}
+
+.pricetag-m1 .pricetag-cifrao{
+
+	font-size: 0.8cm;
+	line-height: 1.2cm;
+}
+
+.pricetag-m1 .pricetag-tipo{
+
+	font-size: 0.8cm;
+	line-height: 1.2cm;
+}
+
+.pricetag-m1 .cifrao{
+
+	font-size: 28px;
+}
+
+/* .pricetag-model-2 {
+
+	display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+	gap: 0.2cm;
+	line-height: unset;
+	width: 21cm;
+	margin: 0 auto;
+	color: black;
+	background-color: white;
+} */
+
+.pricetag-m2{
+
+	/* border: 1px solid black; */
+	margin-bottom: 0.2cm;
+	margin-right: 0.2cm;
+	width: 21cm;
+	height: 14.5cm;
+	background-image: url("../img/promocao.png");
+	background-size: 21cm auto;
+	color: black;
+}
+
+.pricetag-m2 .pricetag-title { /* .produto{*/
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: uppercase;
+	/* height: 3cm; */
+	text-align: center;
+	font-size: 0.8cm;
+	line-height: 1.3cm;
+	/* background-color: black; */
+	/* margin-top: 3.5cm; */
+	padding: 3.5cm 3.7cm 0 3.7cm;
+}
+
+.pricetag-m2 .pricetag-content { /*} .preco{*/
+
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	font-size: 3.5cm;
+	line-height: 3.5cm;
+	/* height: 3cm; */
+	gap: 0.5cm;
+	/* margin-top: 1.5cm; */
+	padding: 1.5cm 3.7cm 0 3.7cm;
+}
+
+.pricetag-m2 .pricetag-cifrao{
+
+	font-size: 0.8cm;
+	line-height: 1.2cm;
+}
+
+.pricetag-m2 .pricetag-tipo{
+
+	font-size: 0.8cm;
+	line-height: 1.2cm;
+}
+
+.pricetag-m2 .cifrao{
+
+	font-size: 28px;
+}

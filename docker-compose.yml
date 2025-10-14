@@ -1,0 +1,30 @@
+services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public:/var/www/html/erp/public
+      - ./:/var/www/html/erp
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    environment:
+      DB_HOST: host.docker.internal
+      DB_PORT: "3306"
+      DB_DATABASE: erp
+      DB_USERNAME: erp
+      DB_PASSWORD: "8511965"
+      DB_CHARSET: utf8mb4
+      DB_COLLATION: utf8mb4_unicode_ci
+      APP_TZ: America/Sao_Paulo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/var/www/html/erp
+    working_dir: /var/www

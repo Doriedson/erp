@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Vendas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    body { margin: 16px; background:#fafafa; color:#111; }
+    .toolbar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px; }
+    .toolbar input, .toolbar select, .toolbar button { padding:8px 10px; font-size:14px; }
+    table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
+    th, td { padding:10px 12px; border-bottom:1px solid #eee; font-size:14px; text-align:left; }
+    th { background:#f7f7f7; }
+    tr:hover { background:#fcfcfc; }
+    .muted { color:#777; font-size:12px; }
+    .pagination { display:flex; justify-content:space-between; align-items:center; margin-top:12px; }
+    .pagination button { padding:8px 10px; }
+    .status-pill { padding:4px 8px; border-radius:999px; background:#f2f2f2; font-size:12px; }
+    @media (max-width: 768px){
+      table, thead, tbody, th, td, tr { display:block; }
+      thead { display:none; }
+      tr { margin-bottom:10px; border:1px solid #eee; border-radius:8px; }
+      td { border:none; border-bottom:1px solid #eee; position:relative; padding-left:44%; min-height:44px; }
+      td::before { position:absolute; left:12px; top:10px; width:40%; white-space:nowrap; color:#555; content:attr(data-label); }
+    }
+  </style>
+</head>
+<body>
+  <h1>Vendas</h1>
+
+  <div class="toolbar">
+    <input id="q" type="search" placeholder="Buscar (cliente, status, mesa, obs…)" />
+    <label>Ordenar por:
+      <select id="sort">
+        <option value="data">Data</option>
+        <option value="id">ID</option>
+        <option value="cliente">Cliente</option>
+        <option value="status">Status</option>
+        <option value="frete">Frete</option>
+        <option value="servico">Serviço</option>
+      </select>
+    </label>
+    <label>Direção:
+      <select id="dir">
+        <option value="desc">Desc</option>
+        <option value="asc">Asc</option>
+      </select>
+    </label>
+    <label>Por página:
+      <select id="limit">
+        <option>10</option>
+        <option selected>20</option>
+        <option>50</option>
+        <option>100</option>
+      </select>
+    </label>
+    <button id="reload">Atualizar</button>
+    <span class="muted" id="meta"></span>
+  </div>
+
+  <table id="grid">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Data</th>
+        <th>Cliente</th>
+        <th>Status</th>
+        <th>Frete</th>
+        <th>Serviço</th>
+        <th>Obs</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="pagination">
+    <button id="prev">← Anterior</button>
+    <div id="pageInfo" class="muted"></div>
+    <button id="next">Próxima →</button>
+  </div>
+
+<script>
+(() => {
+  const state = { q:'', sort:'data', dir:'desc', limit:20, offset:0, total:0 };
+  const els = {
+    q: q, sort: sort, dir: dir, limit: limit,
+    reload: reload, meta: meta, gridBody: document.querySelector('#grid tbody'),
+    prev: prev, next: next, pageInfo: pageInfo
+  };
+
+  function fmtMoney(v){ return Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+  function fmtDate(s){ if(!s) return ''; const [d,t]=s.split(' '); const [Y,M,D]=d.split('-').map(Number); const [h,m]=(t||'00:00:00').split(':').map(Number); return new Date(Y,M-1,D,h,m).toLocaleString('pt-BR'); }
+
+  async function fetchOrders(){
+    const params = new URLSearchParams({ limit: state.limit, offset: state.offset, q: state.q, sort: state.sort, dir: state.dir });
+    const res = await fetch(`/api/orders?${params.toString()}`, { headers: { 'Accept': 'application/json' } });
+    if(!res.ok){ throw new Error(`HTTP ${res.status}: ${await res.text().catch(()=> '')}`); }
+    const totalHeader = res.headers.get('X-Total');
+    const limitHeader = res.headers.get('X-Limit');
+    const offsetHeader = res.headers.get('X-Offset');
+    const data = await res.json();
+    const items = data.items || [];
+    state.total  = totalHeader ? Number(totalHeader) : (data.total ?? items.length);
+    state.limit  = limitHeader ? Number(limitHeader) : state.limit;
+    state.offset = offsetHeader ? Number(offsetHeader) : state.offset;
+    render(items);
+  }
+
+  function render(items){
+    els.gridBody.innerHTML = items.map(row => `
+      <tr>
+        <td data-label="ID">${row.id_venda}</td>
+        <td data-label="Data">${fmtDate(row.data)}</td>
+        <td data-label="Cliente">${row.cliente_nome ?? ''}</td>
+        <td data-label="Status"><span class="status-pill">${row.vendastatus ?? ''}</span></td>
+        <td data-label="Frete">${fmtMoney(row.frete ?? 0)}</td>
+        <td data-label="Serviço">${fmtMoney(row.valor_servico ?? 0)}</td>
+        <td data-label="Obs">${(row.obs||'').slice(0,80)}</td>
+        <td data-label="Ações">
+          <select data-acao="status" data-id="${row.id_venda}">
+            <option value="">Alterar status…</option>
+            <option>Venda Paga</option>
+            <option>Venda Cancelada</option>
+            <option>Venda a Prazo</option>
+            <option>Pedido Efetuado</option>
+            <option>Pedido em Entrega</option>
+          </select>
+        </td>
+      </tr>`).join('');
+
+    const from = state.total === 0 ? 0 : state.offset + 1;
+    const to   = Math.min(state.offset + state.limit, state.total);
+    els.pageInfo.textContent = `${from}–${to} de ${state.total}`;
+    els.meta.textContent = `ordenado por ${state.sort} ${state.dir.toUpperCase()} • limite ${state.limit}`;
+    els.prev.disabled = (state.offset <= 0);
+    els.next.disabled = (state.offset + state.limit >= state.total);
+  }
+
+  let t; els.q.addEventListener('input', (e)=>{ clearTimeout(t); state.q=e.target.value.trim(); state.offset=0; t=setTimeout(load,300); });
+  els.sort.addEventListener('change', e=>{ state.sort=e.target.value; state.offset=0; load(); });
+  els.dir.addEventListener('change', e=>{ state.dir=e.target.value;  state.offset=0; load(); });
+  els.limit.addEventListener('change', e=>{ state.limit=Number(e.target.value); state.offset=0; load(); });
+  els.reload.addEventListener('click', load);
+  els.prev.addEventListener('click', ()=>{ state.offset=Math.max(0,state.offset-state.limit); load(); });
+  els.next.addEventListener('click', ()=>{ state.offset=state.offset+state.limit; load(); });
+
+  document.addEventListener('change', async (e) => {
+    const sel = e.target.closest('select[data-acao="status"]'); if(!sel) return;
+    const id = sel.getAttribute('data-id'); const nome = sel.value; if(!nome) return;
+    try{
+      const r = await fetch(`/api/orders/${id}/status`, { method:'PATCH', headers:{'Content-Type':'application/json','Accept':'application/json'}, body: JSON.stringify({ vendastatus:nome }) });
+      if(!r.ok) throw new Error(`Falha ao atualizar status (HTTP ${r.status})`);
+      await load();
+    }catch(err){ alert(err.message); } finally { sel.value=''; }
+  });
+
+  async function load(){ try{ await fetchOrders(); } catch(err){ els.gridBody.innerHTML = `<tr><td colspan="8"><strong>Erro:</strong> ${String(err.message||err)}</td></tr>`; els.pageInfo.textContent=''; } }
+
+  // Estado inicial via URL
+  const url=new URL(location.href);
+  state.q=url.searchParams.get('q')||state.q; state.sort=url.searchParams.get('sort')||state.sort; state.dir=url.searchParams.get('dir')||state.dir;
+  state.limit=Number(url.searchParams.get('limit')||state.limit); state.offset=Number(url.searchParams.get('offset')||state.offset);
+  q.value=state.q; sort.value=state.sort; dir.value=state.dir; limit.value=String(state.limit);
+
+  load();
+})();
+</script>
+</body>
+</html>
