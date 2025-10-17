@@ -1,0 +1,3 @@
+﻿tab_impressora_id_impressora;tab_impressora_descricao;tab_impressora_impressora;tab_impressora_bigfont;tab_impressora_colunas;tab_impressora_linefeed;tab_impressora_guilhotina;tab_impressora_copies
+1;Pedido;smb://hortifruti:8511965@192.168.1.54/generic;1;48;5;1;1
+2;PDV;smb://hortifruti:8511965@192.168.1.54/generic;0;48;5;1;1

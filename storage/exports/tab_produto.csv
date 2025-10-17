@@ -1,0 +1,13 @@
+﻿tab_produto_id_produto;tab_produto_id_produtosetor;tab_produto_id_produtounidade;tab_produto_id_produtotipo;tab_produto_id_impressora;tab_produto_produto;tab_produto_preco;tab_produto_margem_lucro;tab_produto_margem_perda;tab_produto_imagem;tab_produto_ativo;tab_produto_cardapio_produto;tab_produto_estoque;tab_produto_estoque_secundario;tab_produto_preco_promo;tab_produto_obs
+1;1;1;1;;"Gás GLP botijão P13 13kg";115.00;60.00;60.00;botijao-liquigas-p13.jpg;0;0;248.000;0.000;0.00;
+2;1;1;1;;"Gás GLP P45 45kg";420.00;60.00;60.00;p45.jpg;1;0;5.000;0.000;0.00;
+3;1;1;1;;"Kit Regulador Registro + Mangueira";50.00;60.00;60.00;;1;0;11.000;0.000;0.00;
+4;3;1;1;;"Vasilhame P13";200.00;60.00;60.00;botijao-liquigas-p13.jpg;1;0;526.000;0.000;0.00;
+5;2;1;1;;"Bacia retangular com tampa";0.00;60.00;60.00;;0;0;576.000;0.000;0.00;
+6;3;1;1;;"Vasilhame P45";600.00;60.00;60.00;p45.jpg;1;0;9.000;10.000;0.00;
+7;2;1;1;;"PRODUTO NOVO";0.00;60.00;60.00;;0;0;0.000;0.000;0.00;
+8;1;1;2;;"Gás GLP P13 13kg (Comércio)";100.00;60.00;60.00;botijao-liquigas-p13.jpg;1;0;0.000;0.000;0.00;
+9;1;1;2;;"Gás GLP P13 13kg (Revenda)";87.00;60.00;60.00;botijao-liquigas-p13.jpg;1;0;0.000;0.000;0.00;
+10;1;1;2;;"Gás GLP P13 13kg + Brinde (Retira)";115.00;60.00;60.00;botijao-liquigas-p13.jpg;1;0;0.000;0.000;0.00;
+11;1;1;1;;"Mangueira para P45";50.00;60.00;60.00;;1;0;5.000;0.000;0.00;
+12;1;1;2;;"Gás GLP P13 13kg + Brinde (Entrega)";120.00;60.00;60.00;botijao-liquigas-p13.jpg;1;0;0.000;0.000;0.00;
