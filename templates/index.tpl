@@ -9,90 +9,90 @@
 		<meta name="viewport" content="height=device-height, width=device-width, user-scalable=no">
 		<link rel="manifest" href="{manifest}?version={version}">
 
-		<link rel="stylesheet" type="text/css" href="css/style.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="css/menu.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="css/print.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="css/login.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/css/style.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/css/menu.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/css/print.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/css/login.css?version={version}" />
 
-		<link rel="stylesheet" type="text/css" href="vendor/css/jquery-ui.min.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="vendor/css/fontawesome.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="vendor/css/brands.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="vendor/css/solid.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="vendor/css/regular.css?version={version}" />
-		<link rel="shortcut icon" type="imagex/png" href="assets/icons/icon-48x48.png?version={version}">
+		<link rel="stylesheet" type="text/css" href="/vendor/css/jquery-ui.min.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/vendor/css/fontawesome.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/vendor/css/brands.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/vendor/css/solid.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/vendor/css/regular.css?version={version}" />
+		<link rel="shortcut icon" type="imagex/png" href="/assets/icons/icon-48x48.png?version={version}">
 
-		<script type="text/javascript" src="service_worker.js?version={version}"></script>
+		<script type="text/javascript" src="/service_worker.js?version={version}"></script>
 		<script>
 			let version = {version};
 		</script>
 
-		<script type="text/javascript" src="vendor/js/jquery-3.6.0.min.js?version={version}"></script>
-		<script type="text/javascript" src="vendor/js/jquery-ui.min.js?version={version}"></script>
+		<script type="text/javascript" src="/vendor/js/jquery-3.6.0.min.js?version={version}"></script>
+		<script type="text/javascript" src="/vendor/js/jquery-ui.min.js?version={version}"></script>
 
-		<script type="text/javascript" src="vendor/js/chart.min.js?version={version}"></script>
+		<script type="text/javascript" src="/vendor/js/chart.min.js?version={version}"></script>
 
-		<script type="text/javascript" src="js/funcoes.js?version={version}"></script>
-		<script type="text/javascript" src="js/autoload.js?version={version}"></script>
-		<script type="text/javascript" src="js/mychart.js?version={version}"></script>
-		<script type="text/javascript" src="js/smart_search.js?version={version}"></script>
+		<script type="text/javascript" src="/js/funcoes.js?version={version}"></script>
+		<script type="text/javascript" src="/js/autoload.js?version={version}"></script>
+		<script type="text/javascript" src="/js/mychart.js?version={version}"></script>
+		<script type="text/javascript" src="/js/smart_search.js?version={version}"></script>
 
-		<script type="text/javascript" src="js/menu.js?version={version}"></script>
-		<script type="text/javascript" src="js/integrations.js?version={version}"></script>
-		<script type="text/javascript" src="js/home.js?version={version}"></script>
-		<!-- <script type="text/javascript" src="js/controlpanel.js?version={version}"></script> -->
-		<script type="text/javascript" src="js/backend.js?version={version}"></script>
-		<script type="text/javascript" src="js/tab_system.js?version={version}"></script>
-		<script type="text/javascript" src="js/product.js?version={version}"></script>
-		<script type="text/javascript" src="js/collaborator.js?version={version}"></script>
-		<script type="text/javascript" src="js/user.js?version={version}"></script>
-		<script type="text/javascript" src="js/product_sector.js?version={version}"></script>
-		<script type="text/javascript" src="js/entity.js?version={version}"></script>
-		<script type="text/javascript" src="js/provider.js?version={version}"></script>
-		<script type="text/javascript" src="js/sale_order.js?version={version}"></script>
-		<script type="text/javascript" src="js/fidelity_program.js?version={version}"></script>
-		<script type="text/javascript" src="js/black_friday.js?version={version}"></script>
-		<script type="text/javascript" src="js/config_shipment.js?version={version}"></script>
-		<script type="text/javascript" src="js/purchase_order.js?version={version}"></script>
-		<script type="text/javascript" src="js/purchase_list.js?version={version}"></script>
-		<script type="text/javascript" src="js/bills_to_pay.js?version={version}"></script>
-		<script type="text/javascript" src="js/bills_to_pay_sector.js?version={version}"></script>
-		<script type="text/javascript" src="js/bills_to_receive.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_sale_total.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_entitycredit.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_cashdrain.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_cashbreak.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_sale_coupon.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_sale_product.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_sale_one_product.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_stockin.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_stockinout.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_stockupdate.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_salecard.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_billspay.js?version={version}"></script>
-		<script type="text/javascript" src="js/report_waitertip.js?version={version}"></script>
-		<script type="text/javascript" src="js/price_tag.js?version={version}"></script>
-		<script type="text/javascript" src="js/receipt.js?version={version}"></script>
-		<script type="text/javascript" src="js/settings.js?version={version}"></script>
-		<script type="text/javascript" src="js/waiter.js?version={version}"></script>
-		<script type="text/javascript" src="js/wallet.js?version={version}"></script>
-		<script type="text/javascript" src="js/wallets.js?version={version}"></script>
-		<script type="text/javascript" src="js/wallet_sector.js?version={version}"></script>
-		<script type="text/javascript" src="js/wallet_cashtype.js?version={version}"></script>
-		<script type="text/javascript" src="js/printer.js?version={version}"></script>
-		<script type="text/javascript" src="js/printing.js?version={version}"></script>
-		<script type="text/javascript" src="js/table_config.js?version={version}"></script>
-		<script type="text/javascript" src="js/waiter_tip.js?version={version}"></script>
-		<script type="text/javascript" src="js/waiter_table_transf.js?version={version}"></script>
-		<script type="text/javascript" src="js/waiter_self_service.js?version={version}"></script>
-		<script type="text/javascript" src="js/pdv_config.js?version={version}"></script>
-		<script type="text/javascript" src="js/sound.js?version={version}"></script>
-		<script type="text/javascript" src="js/cashier_closing.js?version={version}"></script>
-		<script type="text/javascript" src="js/scales_barcode.js?version={version}"></script>
-		<script type="text/javascript" src="js/pdv.js?version={version}"></script>
-		<script type="text/javascript" src="js/sale_cashtype.js?version={version}"></script>
-		<script type="text/javascript" src="js/stock.js?version={version}"></script>
-		<script type="text/javascript" src="js/company.js?version={version}"></script>
-		<script type="text/javascript" src="js/digital_menu_config.js?version={version}"></script>
+		<script type="text/javascript" src="/js/menu.js?version={version}"></script>
+		<script type="text/javascript" src="/js/integrations.js?version={version}"></script>
+		<script type="text/javascript" src="/js/home.js?version={version}"></script>
+		<!-- <script type="text/javascript" src="/js/controlpanel.js?version={version}"></script> -->
+		<script type="text/javascript" src="/js/backend.js?version={version}"></script>
+		<script type="text/javascript" src="/js/tab_system.js?version={version}"></script>
+		<script type="text/javascript" src="/js/product.js?version={version}"></script>
+		<script type="text/javascript" src="/js/collaborator.js?version={version}"></script>
+		<script type="text/javascript" src="/js/user.js?version={version}"></script>
+		<script type="text/javascript" src="/js/product_sector.js?version={version}"></script>
+		<script type="text/javascript" src="/js/entity.js?version={version}"></script>
+		<script type="text/javascript" src="/js/provider.js?version={version}"></script>
+		<script type="text/javascript" src="/js/sale_order.js?version={version}"></script>
+		<script type="text/javascript" src="/js/fidelity_program.js?version={version}"></script>
+		<script type="text/javascript" src="/js/black_friday.js?version={version}"></script>
+		<script type="text/javascript" src="/js/config_shipment.js?version={version}"></script>
+		<script type="text/javascript" src="/js/purchase_order.js?version={version}"></script>
+		<script type="text/javascript" src="/js/purchase_list.js?version={version}"></script>
+		<script type="text/javascript" src="/js/bills_to_pay.js?version={version}"></script>
+		<script type="text/javascript" src="/js/bills_to_pay_sector.js?version={version}"></script>
+		<script type="text/javascript" src="/js/bills_to_receive.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_sale_total.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_entitycredit.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_cashdrain.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_cashbreak.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_sale_coupon.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_sale_product.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_sale_one_product.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_stockin.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_stockinout.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_stockupdate.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_salecard.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_billspay.js?version={version}"></script>
+		<script type="text/javascript" src="/js/report_waitertip.js?version={version}"></script>
+		<script type="text/javascript" src="/js/price_tag.js?version={version}"></script>
+		<script type="text/javascript" src="/js/receipt.js?version={version}"></script>
+		<script type="text/javascript" src="/js/settings.js?version={version}"></script>
+		<script type="text/javascript" src="/js/waiter.js?version={version}"></script>
+		<script type="text/javascript" src="/js/wallet.js?version={version}"></script>
+		<script type="text/javascript" src="/js/wallets.js?version={version}"></script>
+		<script type="text/javascript" src="/js/wallet_sector.js?version={version}"></script>
+		<script type="text/javascript" src="/js/wallet_cashtype.js?version={version}"></script>
+		<script type="text/javascript" src="/js/printer.js?version={version}"></script>
+		<script type="text/javascript" src="/js/printing.js?version={version}"></script>
+		<script type="text/javascript" src="/js/table_config.js?version={version}"></script>
+		<script type="text/javascript" src="/js/waiter_tip.js?version={version}"></script>
+		<script type="text/javascript" src="/js/waiter_table_transf.js?version={version}"></script>
+		<script type="text/javascript" src="/js/waiter_self_service.js?version={version}"></script>
+		<script type="text/javascript" src="/js/pdv_config.js?version={version}"></script>
+		<script type="text/javascript" src="/js/sound.js?version={version}"></script>
+		<script type="text/javascript" src="/js/cashier_closing.js?version={version}"></script>
+		<script type="text/javascript" src="/js/scales_barcode.js?version={version}"></script>
+		<script type="text/javascript" src="/js/pdv.js?version={version}"></script>
+		<script type="text/javascript" src="/js/sale_cashtype.js?version={version}"></script>
+		<script type="text/javascript" src="/js/stock.js?version={version}"></script>
+		<script type="text/javascript" src="/js/company.js?version={version}"></script>
+		<script type="text/javascript" src="/js/digital_menu_config.js?version={version}"></script>
 	</head>
 
 	<body>

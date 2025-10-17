@@ -1,48 +1,52 @@
 <?php
 namespace App\Auth;
 
-use App\Database\Connection;
 use PDO;
 
-final class AuthService {
-    private PDO $pdo;
+final class AuthService
+{
+    private ?PDO $pdo;
 
-    public function __construct() {
-        $this->pdo = Connection::pdo();
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+    public function __construct(?PDO $pdo = null)
+    {
+        $this->pdo = $pdo;
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
     }
 
-    /**
-     * Autenticação estrita:
-     * - Entrada: id_entidade (int) + senha (string)
-     * - Hash: sempre bcrypt (password_verify)
-     * - Tabela: tab_colaborador.hash
-     */
-    public function login(int $id_entidade, string $senha): bool {
-        // Busca a credencial para o id_entidade informado
-        $sql = "
-            SELECT c.id_entidade, c.hash, e.nome, e.email
-            FROM tab_colaborador c
-            JOIN tab_entidade   e ON e.id_entidade = c.id_entidade
-            WHERE c.id_entidade = ?
-            LIMIT 1";
+    public function authenticate(int $id_entidade, string $senha): array
+    {
+        if ($this->pdo === null) {
+            throw new \RuntimeException('Conexão com DB indisponível');
+        }
+        if ($id_entidade <= 0 || $senha === '') {
+            throw new \RuntimeException('Parâmetros inválidos');
+        }
+
+        $sql = "SELECT c.id_entidade, c.hash, c.acesso, e.nome
+                  FROM tab_colaborador c
+                  JOIN tab_entidade   e USING (id_entidade)
+                 WHERE c.id_entidade = :id
+                 LIMIT 1";
         $st = $this->pdo->prepare($sql);
-        $st->execute([$id_entidade]);
+        $st->execute([':id' => $id_entidade]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
-        if (!$row) return false;
 
-        $hash = (string)$row['hash'];
-        // Somente bcrypt/argon (password_verify). Sem legado.
-        if (!password_verify($senha, $hash)) return false;
+        if (!$row || !password_verify($senha, (string)($row['hash'] ?? ''))) {
+            throw new \RuntimeException('Credenciais inválidas');
+        }
 
-        $_SESSION['auth']  = true;
-        $_SESSION['uid']   = (int)$row['id_entidade'];
-        $_SESSION['uname'] = (string)($row['nome'] ?? $row['email'] ?? 'Usuário');
-
-        return true;
+        return [
+            'id_entidade' => (int)$row['id_entidade'],
+            'nome'        => (string)($row['nome'] ?? ''),
+            'acesso'      => (string)($row['acesso'] ?? ''),
+        ];
     }
 
-    public function logout(): void {
+    public function logout(?int $id_entidade = null): void
+    {
+        // Se quiser, zere token persistido aqui.
         $_SESSION = [];
         if (ini_get('session.use_cookies')) {
             $p = session_get_cookie_params();
@@ -51,18 +55,24 @@ final class AuthService {
         session_destroy();
     }
 
-    public function check(): bool { return !empty($_SESSION['auth']); }
-
-    public function requireAuthForApi(): void {
-        if (!$this->check()) {
-            http_response_code(401);
-            header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['error' => 'unauthorized']);
-            exit;
-        }
+    public function check(): bool
+    {
+        return !empty($_SESSION['auth']) && !empty($_SESSION['uid']);
     }
 
-    public function requireAuthForPage(): void {
-        if (!$this->check()) { header('Location: /login'); exit; }
+    public function requireAuthForApi(): void
+    {
+        if ($this->check()) return;
+        http_response_code(401);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['error' => 'unauthorized']);
+        exit;
+    }
+
+    public function requireAuthForPage(string $loginPath = '/login'): void
+    {
+        if ($this->check()) return;
+        header('Location: ' . $loginPath);
+        exit;
     }
 }

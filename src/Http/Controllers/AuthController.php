@@ -2,49 +2,72 @@
 namespace App\Http\Controllers;
 
 use App\Auth\AuthService;
+use PDO;
+use PDOException;
 
-final class AuthController {
-    private AuthService $auth;
-    public function __construct() { $this->auth = new AuthService(); }
+final class AuthController
+{
+    private function pdo(): PDO
+    {
+        $host = getenv('DB_HOST') ?: '127.0.0.1';
+        $port = getenv('DB_PORT') ?: '3306';
+        $db   = getenv('DB_DATABASE') ?: '';
+        $user = getenv('DB_USERNAME') ?: '';
+        $pass = getenv('DB_PASSWORD') ?: '';
 
-    // POST /auth/login
-    // Body aceito:
-    //   - form-urlencoded: id_entidade=...&senha=...
-    //   - JSON: {"id_entidade": 123, "senha": "..." }
-    public function login(): array {
-        $ct = $_SERVER['CONTENT_TYPE'] ?? '';
-        $data = str_contains($ct, 'application/json')
-              ? (json_decode(file_get_contents('php://input'), true) ?: [])
-              : $_POST;
+        $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
 
-        $id_entidade = isset($data['id_entidade']) ? (int)$data['id_entidade'] : 0;
-        $senha       = (string)($data['senha'] ?? '');
-
-        if ($id_entidade <= 0 || $senha === '') {
-            http_response_code(400);
-            return ['error' => 'parâmetros inválidos (id_entidade e senha são obrigatórios)'];
-        }
-
-        if (!$this->auth->login($id_entidade, $senha)) {
-            http_response_code(401);
-            return ['error' => 'credenciais inválidas'];
-        }
-
-        // Se veio de formulário HTML, redireciona para o painel atual
-        if (!str_contains($ct, 'application/json')) {
-            header('Location: /admin'); // mantenha seu fluxo/template atual
-            exit;
-        }
-
-        return ['ok' => true, 'user' => ['id_entidade' => $id_entidade]];
+        $pdo = new PDO($dsn, $user, $pass, [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+        return $pdo;
     }
 
-    // POST /auth/logout
-    public function logout(): array {
-        $this->auth->logout();
-        if (($_SERVER['HTTP_ACCEPT'] ?? '') !== 'application/json') {
-            header('Location: /login'); exit;
+    public function login(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        if (session_status() !== PHP_SESSION_ACTIVE) { session_start(); }
+
+        try {
+            // Aceita JSON ou form-urlencoded
+            $ct = $_SERVER['CONTENT_TYPE'] ?? '';
+            $in = (stripos($ct, 'application/json') !== false)
+                ? (json_decode(file_get_contents('php://input'), true) ?: [])
+                : $_POST;
+
+            $id_entidade = (int)($in['id_entidade'] ?? 0);
+            $senha       = (string)($in['senha'] ?? $in['pass'] ?? '');
+
+            $auth = new AuthService($this->pdo());
+            $user = $auth->authenticate($id_entidade, $senha);
+
+            $_SESSION['auth']  = true;
+            $_SESSION['uid']   = $user['id_entidade'];
+            $_SESSION['uname'] = $user['nome'];
+
+            echo json_encode(['ok' => true] + $user);
+        } catch (\Throwable $e) {
+            // Em produção, evite vazar detalhe de exceção
+            http_response_code(500);
+            $payload = ['error' => 'Internal Server Error'];
+            if (getenv('APP_DEBUG') === '1' || getenv('APP_DEBUG') === 'true') {
+                $payload['detail'] = $e->getMessage();
+            }
+            echo json_encode($payload);
         }
-        return ['ok' => true];
+    }
+
+    public function logout(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        try {
+            $auth = new AuthService(); // guards não precisam de PDO
+            $auth->logout($_SESSION['uid'] ?? null);
+            echo json_encode(['ok' => true]);
+        } catch (\Throwable $e) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Internal Server Error']);
+        }
     }
 }
