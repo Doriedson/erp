@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\PurchaseOrder;
 use database\PurchaseOrderItem;
 use database\PurchaseList;

@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\BillsToPay;
 use database\BillsToPaySector;
 
@@ -25,7 +25,7 @@ function BillstopayFormEdit($block, $message_error) {
 		$row = BillsToPay::FormatFields($row);
 
 		Send($tplBillstopay->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -86,15 +86,15 @@ function BillstopayFormSave($field, $block, $message_error) {
 			if ($row['datapago'] != null) {
 
 				$status = $tplBillsToPay->getContent($row, "BLOCK_BILLSTOPAY_STATUS_PAID");
-		
+
 			} else {
-		
+
 				if (strtotime($row['vencimento']) < strtotime(date('Y-m-d'))) {
-		
+
 					$status = $tplBillsToPay->getContent($row, "BLOCK_BILLSTOPAY_STATUS_OVERDUE");
-					
+
 				} else {
-		
+
 					$status = $tplBillsToPay->getContent($row, "BLOCK_BILLSTOPAY_STATUS_PENDING");
 				}
 			}
@@ -105,7 +105,7 @@ function BillstopayFormSave($field, $block, $message_error) {
 			"bill" => $bill,
 			"status" => $status
 		]);
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -130,7 +130,7 @@ function getBillsToPay($row) {
 		if (strtotime($row['vencimento']) < strtotime(date('Y-m-d'))) {
 
 			$bill = $tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_OVERDUE");
-			
+
 		} else {
 
 			$bill = $tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_PENDING");
@@ -145,22 +145,22 @@ switch ($_POST['action']) {
 	case "load":
 
 		// $billsSector = new BillsToPaySector();
-		
+
 		// $billsSector->getList();
-	
+
 		// $sectorList = "";
-	
+
 		// while ($row = $billsSector->getResult()) {
-		
+
 		// 	$sectorList .= "<option value='" . $row['id_contasapagarsetor'] . "'>" . $row['contasapagarsetor'] . "</option>";
 		// }
-	
+
 		$billsToPay = new BillsToPay();
 
 		$billsToPay->getPendingList();
 
 		$bills = "";
-		
+
 		$tplBillsToPay = new View('templates/bills_to_pay');
 
 		$billstopay_none = "hidden";
@@ -170,7 +170,7 @@ switch ($_POST['action']) {
 			do {
 
 				$bills.= getBillsToPay($row);
-				
+
 			} while ($row = $billsToPay->getResult());
 
 		} else {
@@ -191,16 +191,16 @@ switch ($_POST['action']) {
 	case "billstopay_popup_new":
 
 		$billsSector = new BillsToPaySector();
-		
+
 		$billsSector->getList();
-	
+
 		$sectorList = "";
-	
+
 		while ($row = $billsSector->getResult()) {
-		
+
 			$sectorList .= "<option value='" . $row['id_contasapagarsetor'] . "'>" . $row['contasapagarsetor'] . "</option>";
 		}
-	
+
 		$tplBillsToPay = new View('templates/bills_to_pay');
 
 		$data = [
@@ -213,7 +213,7 @@ switch ($_POST['action']) {
 		break;
 
 	case "billstopay_new":
-		
+
 		$data = [
 			"id_entidade" => $GLOBALS['authorized_id_entidade'],
 			"vencimento" => $_POST['vencimento'],
@@ -226,7 +226,7 @@ switch ($_POST['action']) {
 		$billsToPay = new BillsToPay();
 
 		if ($id_contasapagar = $billsToPay->Create($data)) {
-		
+
 			$billsToPay->Read($id_contasapagar);
 
 			if($row = $billsToPay->getResult()) {
@@ -244,7 +244,7 @@ switch ($_POST['action']) {
 					if (strtotime($row['vencimento']) < strtotime(date('Y-m-d'))) {
 
 						$bill = $tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_OVERDUE");
-						
+
 					} else {
 
 						$bill = $tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_PENDING");
@@ -274,13 +274,13 @@ switch ($_POST['action']) {
 		$data["data"] = date('Y-m-d');
 
 		$billsSector = new BillsToPaySector();
-	
+
 		$billsSector->getList();
 
 		$sectorList = "";
-		
+
 		while ($row_sector = $billsSector->getResult()) {
-			
+
 			$sectorList.= "<option value='" . $row_sector['id_contasapagarsetor'] . "'>" . $row_sector['contasapagarsetor'] . "</option>";
 		}
 
@@ -290,7 +290,7 @@ switch ($_POST['action']) {
 
 		break;
 
-	case "billstopay_search":		
+	case "billstopay_search":
 
 		$dataini = $_POST['dataini'];
 		$intervalo = ($_POST['intervalo'] == "false")? false : true;
@@ -304,22 +304,22 @@ switch ($_POST['action']) {
 		$billsToPay = new BillsToPay();
 
 		if ($chk_descricao == false) {
-			
+
 			$descricao = null;
 		}
 
 		if ($chk_setor == false) {
-			
+
 			$setor = null;
 		}
 
 		if ($intervalo) {
-		
+
 			$billsToPay->SearchByDateInterval($dataini, $datafim, $procura, $descricao, $setor);
-		
+
 		} else {
 
-			$billsToPay->SearchByDate($dataini, $procura, $descricao, $setor);				
+			$billsToPay->SearchByDate($dataini, $procura, $descricao, $setor);
 		}
 
 		$tplBillsToPay = new View('templates/bills_to_pay');
@@ -341,7 +341,7 @@ switch ($_POST['action']) {
 					if (strtotime($row['vencimento']) < strtotime(date('Y-m-d'))) {
 
 						$response.= $tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_OVERDUE");
-						
+
 					} else {
 
 						$response.= $tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_PENDING");
@@ -365,7 +365,7 @@ switch ($_POST['action']) {
 		$billsToPay = new BillsToPay();
 
 		$billsToPay->getPendingList();
-		
+
 		$tplBillsToPay = new View('templates/bills_to_pay');
 
 		if ($row = $billsToPay->getResult()) {
@@ -384,7 +384,7 @@ switch ($_POST['action']) {
 					if (strtotime($row['vencimento']) < strtotime(date('Y-m-d'))) {
 
 						$bills.= $tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_OVERDUE");
-						
+
 					} else {
 
 						$bills.= $tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_PENDING");
@@ -439,15 +439,15 @@ switch ($_POST['action']) {
 			if ($row['datapago'] != null) {
 
 				$row['block_billstopay_status'] = $tplBillsToPay->getContent($row, "BLOCK_BILLSTOPAY_STATUS_PAID");
-		
+
 			} else {
-		
+
 				if (strtotime($row['vencimento']) < strtotime(date('Y-m-d'))) {
-		
+
 					$row['block_billstopay_status'] = $tplBillsToPay->getContent($row, "BLOCK_BILLSTOPAY_STATUS_OVERDUE");
-					
+
 				} else {
-		
+
 					$row['block_billstopay_status'] = $tplBillsToPay->getContent($row, "BLOCK_BILLSTOPAY_STATUS_PENDING");
 				}
 			}
@@ -478,13 +478,13 @@ switch ($_POST['action']) {
 			$row['data'] = date('Y-m-d');
 
 			Send($tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_POPUP_PAYMENT"));
-		
+
 		} else {
 
 			Notifier::Add("Erro ao carregar dados para pagamento da conta!", Notifier::NOTIFIER_ERROR);
 			Send(null);
 		}
-	
+
 		break;
 
 	case "billstopay_payment_cancel":
@@ -521,7 +521,7 @@ switch ($_POST['action']) {
 		if ($row = $billsToPay->getResult()) {
 
 			$row = BillsToPay::FormatFields($row);
-		
+
 			$tplBillsToPay = new View("templates/bills_to_pay");
 
 			if ($row['datapago'] != null) {
@@ -533,7 +533,7 @@ switch ($_POST['action']) {
 				if (strtotime($row['vencimento']) < strtotime(date('Y-m-d'))) {
 
 					$bill = $tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_OVERDUE");
-					
+
 				} else {
 
 					$bill = $tplBillsToPay->getContent($row, "EXTRA_BLOCK_BILLSTOPAY_PENDING");
@@ -625,19 +625,19 @@ switch ($_POST['action']) {
 
 		BillstopayFormSave("obs", "BLOCK_BILLSTOPAY_OBS", "Erro ao carregar observação da conta!");
 	break;
-	
+
 	case "billstopay_valorpago_edit":
 
 		BillstopayFormEdit("EXTRA_BLOCK_BILLSTOPAY_VALORPAGO_FORM", "Erro ao carregar valor pago da conta!");
 	break;
-	
+
 	case "billstopay_valorpago_cancel":
-	
+
 		BillstopayFormCancel("EXTRA_BLOCK_BILLSTOPAY_VALORPAGO", "Erro ao carregar valor pago da conta!");
 	break;
-	
+
 	case "billstopay_valorpago_save":
-	
+
 		BillstopayFormSave("valorpago", "EXTRA_BLOCK_BILLSTOPAY_VALORPAGO", "Erro ao carregar valor pago da conta!");
 	break;
 
@@ -662,4 +662,3 @@ switch ($_POST['action']) {
 		Send(null);
 	break;
 }
-

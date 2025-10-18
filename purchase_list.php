@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\Product;
 use database\PurchaseList;
 use database\PurchaseListItem;
@@ -20,7 +20,7 @@ switch ($_POST['action']) {
 
 		$purchase = new PurchaseList();
 		$purchase->getList();
-	
+
 		$list = "";
 
 		if ($row = $purchase->getResult()) {
@@ -30,14 +30,14 @@ switch ($_POST['action']) {
 			do {
 
 				$list.= $tplPurchaseList->getContent($row, "EXTRA_BLOCK_PURCHASELIST");
-			
+
 			} while ($row = $purchase->getResult());
-		
+
 		} else {
 
 			$list = $tplPurchaseList->getContent(["hidden" => ""], "EXTRA_BLOCK_PURCHASELIST_NONE");
 		}
-	
+
 		$data = [
 			"extra_block_purchaselist" => $list
 		];
@@ -48,7 +48,7 @@ switch ($_POST['action']) {
 	case "purchaselist_new":
 
 		$descricao = $_POST['descricao'];
-	
+
 		$purchaseList = new PurchaseList();
 
 		$id_compralista = $purchaseList->Create($descricao);
@@ -76,7 +76,7 @@ switch ($_POST['action']) {
 		$id_compralista = $_POST['id_compralista'];
 
 		$purchaseList = new PurchaseList();
-		
+
 		if ($purchaseList->Delete($id_compralista)) {
 
 			Notifier::Add("Lista de compra removida com sucesso!", Notifier::NOTIFIER_DONE);
@@ -87,10 +87,10 @@ switch ($_POST['action']) {
 			Notifier::Add("Erro ao remover lista de compra!", Notifier::NOTIFIER_ERROR);
 			Send(null);
 		}
-	break;	
+	break;
 
 	case "purchaselist_descricao_edit":
-	
+
 		$id_compralista = $_POST['id_compralista'];
 
 		$purchaseList = new PurchaseList();
@@ -98,7 +98,7 @@ switch ($_POST['action']) {
 		$purchaseList->Read($id_compralista);
 
 		if ($row = $purchaseList->getResult()) {
-			
+
 			$tplPurchaseList = new View('templates/purchase_list');
 
 			Send($tplPurchaseList->getContent($row, "EXTRA_BLOCK_DESCRICAO_FORM"));
@@ -111,7 +111,7 @@ switch ($_POST['action']) {
 	break;
 
 	case "purchaselist_descricao_save":
-	
+
 		$id_compralista = $_POST['id_compralista'];
 		$descricao = $_POST['descricao'];
 
@@ -128,7 +128,7 @@ switch ($_POST['action']) {
 		if ($row = $purchaseList->getResult()) {
 
 			$tplPurchaseList = new View("templates/purchase_list");
-			
+
 			Send($tplPurchaseList->getContent($row, "BLOCK_DESCRICAO"));
 
 		} else {
@@ -143,13 +143,13 @@ switch ($_POST['action']) {
 		$id_compralista = $_POST['id_compralista'];
 
 		$purchase = new PurchaseList();
-		
+
 		$purchase->Read($id_compralista);
 
 		if ($row = $purchase->getResult()) {
 
 			$tplPurchaseList = new View("templates/purchase_list");
-			
+
 			Send($tplPurchaseList->getContent($row, "BLOCK_DESCRICAO"));
 
 		} else {
@@ -182,7 +182,7 @@ switch ($_POST['action']) {
 				$extra_block_purchaselist_item.= $tplPurchaseList->getContent($row, "EXTRA_BLOCK_PURCHASELIST_ITEM");
 
 			} while ($row = $purchaseItem->getResult());
-					
+
 		} else {
 
 			$extra_block_purchaselist_item = $tplPurchaseList->getContent([], "EXTRA_BLOCK_PURCHASELIST_ITEM_NONE");
@@ -241,7 +241,7 @@ switch ($_POST['action']) {
 	break;
 
 	case "purchaselist_item_delete":
-	
+
 		$id_compralista = $_POST['id_compralista'];
 		$id_compralistaitem = $_POST['id_compralistaitem'];
 
@@ -255,7 +255,7 @@ switch ($_POST['action']) {
 
 				Notifier::Add("Item removido com sucesso!", Notifier::NOTIFIER_DONE);
 				Send([]);
-				
+
 			} else {
 
 				$tplPurchaseList = new View('templates/purchase_list');

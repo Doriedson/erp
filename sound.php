@@ -1,7 +1,7 @@
 ﻿<?php
 
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\Sound;
 
 require "inc/config.inc.php";

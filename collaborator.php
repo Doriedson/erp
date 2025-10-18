@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\Collaborator;
 use database\Entity;
 
@@ -16,7 +16,7 @@ switch ($_POST['action']) {
 	case "load":
 
 		$tplCollaborator = new View('templates/collaborator');
-		
+
 		$extra_block_collaborator = "";
 
 		$collaborator = new Collaborator;
@@ -36,7 +36,7 @@ switch ($_POST['action']) {
         $tplEntity = new View('templates/entity');
 
 	    $data['block_entity_autocomplete_search'] = $tplEntity->getContent([], "BLOCK_ENTITY_AUTOCOMPLETE_SEARCH");
-	
+
         Send($tplCollaborator->getContent($data, 'BLOCK_PAGE'));
 
 		break;
@@ -72,17 +72,17 @@ switch ($_POST['action']) {
             } else {
 
                 $collaborator->Create($id_entidade, '1234');
-                                    
+
                 $collaborator->Read($id_entidade);
 
                 if ($row = $collaborator->getResult()) {
-                
+
                     $tplCollaborator = new View('templates/collaborator');
 
                     $row = Collaborator::FormatFields($row);
 
                     $row = Entity::FormatFields($row);
-                    
+
                     Send($tplCollaborator->getContent($row, "EXTRA_BLOCK_COLLABORATOR"));
 
                 } else {
@@ -97,7 +97,7 @@ switch ($_POST['action']) {
             Notifier::Add("Não foi possível localizar o colaborador: $collaborator", Notifier::NOTIFIER_ERROR);
             Send(null);
         }
-    
+
     break;
 
     case "collaborator_del":
@@ -116,7 +116,7 @@ switch ($_POST['action']) {
 
             Notifier::Add("Colaborador removido com sucesso!", Notifier::NOTIFIER_DONE);
             Send([]);
-            
+
         } else {
 
             Notifier::Add("Error ao remover colaborador!", Notifier::NOTIFIER_ERROR);
@@ -190,5 +190,5 @@ switch ($_POST['action']) {
             Send(null);
         }
 
-    break;	        
+    break;
 }

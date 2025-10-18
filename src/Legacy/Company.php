@@ -1,13 +1,13 @@
 <?php
 
-namespace database;
+namespace App\Legacy;
 
 class Company extends Connection {
 
 	public function Read() {
 
 		$this->data = [];
-		
+
 		$this->query = "SELECT * from tab_empresa";
 
 		parent::Execute();
@@ -17,7 +17,7 @@ class Company extends Connection {
 	public function Update(array $data) {
 
 		$field = $data['field'];
-		
+
 		$this->data = [
 			"value" => $data['value'],
 		];

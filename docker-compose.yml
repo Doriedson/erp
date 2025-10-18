@@ -28,4 +28,4 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - ./:/var/www/html/erp
-    working_dir: /var/www
+    working_dir: /var/www/html/erp

@@ -6,7 +6,7 @@ use database\Notifier;
 // use database\ControlAccess;
 use database\PrinterConfig;
 use database\ProductExpDate;
-use database\View;
+use App\View\View;
 use database\Config;
 
 require "inc/config.inc.php";

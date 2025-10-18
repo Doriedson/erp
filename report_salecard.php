@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\SaleOrder;
 
 require "inc/config.inc.php";
@@ -19,7 +19,7 @@ switch ($_POST['action']) {
 		$data = ['data' => date('Y-m-d')];
 
 		Send($tplSalecard->getContent($data, "BLOCK_PAGE"));
-	
+
 		break;
 
 	case "report_salecard_search":
@@ -28,7 +28,7 @@ switch ($_POST['action']) {
 		$datafim = $_POST['datafim'];
 		$intervalo = ($_POST['intervalo'] == "false")? false : true;
 		$procura = $_POST['procura'];
-		
+
 		$sale = new SaleOrder();
 
 		$ratio = 0.6;
@@ -77,6 +77,6 @@ switch ($_POST['action']) {
 			Notifier::Add("Nenhum produto encontrado no período informado.", Notifier::NOTIFIER_ERROR);
 			Send(null);
 		}
-	
-		break;		
+
+		break;
 }

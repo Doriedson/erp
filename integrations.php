@@ -1,7 +1,7 @@
 <?php
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\DeliveryDireto;
 
 require "inc/config.inc.php";
@@ -32,9 +32,9 @@ switch ($_POST['action']) {
         break;
 
     default:
-		
+
 		Notifier::Add("Requisição inválida!", Notifier::NOTIFIER_ERROR);
         Send(null);
-	
+
 		break;
 }

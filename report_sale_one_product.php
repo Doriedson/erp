@@ -4,7 +4,7 @@ use database\ControlAccess;
 use database\Notifier;
 use database\ProductComposition;
 use database\ProductKit;
-use database\View;
+use App\View\View;
 use database\Product;
 use database\SaleOrderItem;
 use database\Calc;

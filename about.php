@@ -1,5 +1,5 @@
 <?php
-use database\View;
+use App\View\View;
 // use Escpos\PrintConnectors\NetworkPrintConnector;
 // use database\Notifier;
 

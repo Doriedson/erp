@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\FidelityProgram;
 
 require "inc/config.inc.php";
@@ -24,7 +24,7 @@ function FidelityFormEdit($block, $message_error) {
 		$row = FidelityProgram::FormatFields($row);
 
 		Send($tplFidelity->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -79,7 +79,7 @@ function FidelityFormSave($field, $block, $message_error) {
 		$row = FidelityProgram::FormatFields($row);
 
 		Send($tplFidelity->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -105,7 +105,7 @@ function FidelityGetRules() {
 			$extra_block_fidelity.= $tplFidelity->getContent($row, "EXTRA_BLOCK_FIDELITY");
 
 		} while ($row = $fidelity->getResult());
-	
+
 	// } else {
 
 	// 	$extra_block_fidelity = $tplFidelity->getContent([], "EXTRA_BLOCK_FIDELITY_NONE");
@@ -119,7 +119,7 @@ switch ($_POST['action']) {
 	case "load":
 
 		$tplFidelity = new View('templates/fidelity_program');
-		
+
 		$fidelity = new FidelityProgram();
 
 		$fidelity->getDays();
@@ -200,7 +200,7 @@ switch ($_POST['action']) {
 
 		Notifier::Add("Prioridade alterada com sucesso!", Notifier::NOTIFIER_DONE);
 		Send(FidelityGetRules());
-	
+
 		break;
 
 	case "fidelity_down":
@@ -213,7 +213,7 @@ switch ($_POST['action']) {
 
 		Notifier::Add("Prioridade alterada com sucesso!", Notifier::NOTIFIER_DONE);
 		Send(FidelityGetRules());
-	
+
 		break;
 
 	case "fidelity_condicao_edit":
@@ -270,7 +270,7 @@ switch ($_POST['action']) {
 		if ($row = $fidelity->getResult()) {
 
 			$tplFidelity = new View("templates/fidelity_program");
-	
+
 			Send($tplFidelity->getContent($row, "EXTRA_BLOCK_DIAS_FORM"));
 
 		} else {
@@ -289,7 +289,7 @@ switch ($_POST['action']) {
 		if ($row = $fidelity->getResult()) {
 
 			$tplFidelity = new View("templates/fidelity_program");
-	
+
 			Send($tplFidelity->getContent($row, "BLOCK_DIAS"));
 
 		} else {
@@ -318,7 +318,7 @@ switch ($_POST['action']) {
 		if ($row = $fidelity->getResult()) {
 
 			$tplFidelity = new View("templates/fidelity_program");
-	
+
 			Send($tplFidelity->getContent($row, "BLOCK_DIAS"));
 
 		} else {
@@ -326,7 +326,7 @@ switch ($_POST['action']) {
 			Notifier::Add("Erro ao carregar número de dias.", Notifier::NOTIFIER_ERROR);
 			Send(null);
 		}
-	
+
 		break;
 
 	default:

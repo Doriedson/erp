@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\SaleOrder;
 use database\CashAdd;
 use database\CashDrain;
@@ -16,7 +16,7 @@ ControlAccess::Check(ControlAccess::CA_SERVIDOR_RELATORIO);
 switch ($_POST['action']) {
 
 	case "load":
-	
+
 		$tplCashbreak = new View("templates/report_cashbreak");
 
 		$data = ['data' => date('Y-m-d')];
@@ -29,7 +29,7 @@ switch ($_POST['action']) {
 		$dataini = $_POST['dataini'];
 		$datafim = $_POST['datafim'];
 		$intervalo = ($_POST['intervalo'] == "false")? false : true;
-		
+
 		$tplCashbreak = new View('templates/report_cashbreak');
 
 		$sale = new SaleOrder();
@@ -44,7 +44,7 @@ switch ($_POST['action']) {
 		}
 
 		if ($row = $sale->getResult()) {
-	
+
 			$dataini_formatted = date_format(date_create($dataini), 'd/m/Y');
 			$datafim_formatted = date_format(date_create($datafim), 'd/m/Y');
 
@@ -63,10 +63,10 @@ switch ($_POST['action']) {
 			$quebraP=0;
 			$quebraN=0;
 			$total = 0;
-			
+
 			$cashAdd = new CashAdd();
 			$cashDrain = new CashDrain();
-			
+
 			do {
 
 				if ($colaborador != $row['nome']) {
@@ -83,7 +83,7 @@ switch ($_POST['action']) {
 						$total += $quebra;
 
 						if ($quebra > 0) {
-							
+
 							$data['quebra_formatted'] = number_format($quebra,2,",",".");
 							$data['extra_block_cashbreak_total'] = $tplCashbreak->getContent($data, "EXTRA_BLOCK_CASHBREAK_TOTAL_P");
 
@@ -106,24 +106,24 @@ switch ($_POST['action']) {
 
 					$data['nome'] = $row['nome'];
 					$data['extra_block_entity_button_status'] = $row['extra_block_entity_button_status'];
-					
-					
+
+
 					// $cashbreak_entry .= $tplCashbreak->getContent($row, "EXTRA_BLOCK_TR_COLABORADOR");
 				}
-			
+
 				$cashDrain->getTotalByCashier($row['id_caixa']);
 
 				$quebra = $row['total'] - $row['trocofim'] + $row['trocoini'];
 
 				if ($row2 = $cashDrain->getResult()) {
-				
+
 					$quebra -= $row2['total'];
 				}
 
 				$cashAdd->getTotalByCashier($row['id_caixa']);
 
 				if ($rowCashAdd = $cashAdd->getResult()) {
-				
+
 					$quebra += $rowCashAdd['total'];
 				}
 
@@ -157,7 +157,7 @@ switch ($_POST['action']) {
 			$total += $quebra;
 
 			if ($quebra > 0) {
-							
+
 				$data['quebra_formatted'] = number_format($quebra,2,",",".");
 				$data['extra_block_cashbreak_total'] = $tplCashbreak->getContent($data, "EXTRA_BLOCK_CASHBREAK_TOTAL_P");
 
@@ -175,7 +175,7 @@ switch ($_POST['action']) {
 				"data" => $tplCashbreak->getContent($content, "EXTRA_BLOCK_CONTENT"),
 				"total" => number_format(-$total, 2, ",", ".")
 			]);
-			
+
 		} else {
 
 			Notifier::Add("Relatório não encontrado para a data informada.", Notifier::NOTIFIER_INFO);
@@ -185,7 +185,5 @@ switch ($_POST['action']) {
 			]);
 		}
 
-	break;			
+	break;
 }
-
-

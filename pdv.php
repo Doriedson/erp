@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\Clean;
 use database\Collaborator;
 
@@ -44,13 +44,13 @@ if ($_POST['action'] == "load" || $_POST['action'] == "login") {
 require "./inc/authorization.php";
 
 // switch($_POST['action']) {
-	
+
 // 	case "load":
 
 //         ControlAccess::Check(ControlAccess::CA_PDV);
 
 //         $tplPdv = new View("templates/pdv_closed");
-		
+
 //         Send($tplPdv->getContent([], VIEW::ALL));
 
 // 		break;
@@ -63,11 +63,11 @@ require "./inc/authorization.php";
 // }
 
 switch($_POST['action']) {
-	
+
 	case "load":
 
 		$id_entidade = $_POST["id_entidade"];
-		
+
 		$tplLogin = new View("templates/pdv_login");
 
 		$collaborator = new Collaborator();
@@ -111,16 +111,16 @@ switch($_POST['action']) {
 			ControlAccess::Unauthorized();
 
 		} else if ($user == 0) {
-		
+
 			Notifier::Add("Nenhum(a) operador(a) cadastrado(a) para acesso!", Notifier::NOTIFIER_ERROR);
 			Send(null);
 
 		} else {
 
             if (ControlAccess::Login($user, $pass, ControlAccess::CA_PDV)) {
-			
+
                 $tplMenu = new View("templates/pdv_menu");
-                
+
                 Send([
                     "data" => "",
                     "menu" => $tplMenu->getContent([], View::ALL),
@@ -138,7 +138,7 @@ switch($_POST['action']) {
 	case "auth":
 
 		ControlAccess::Check(ControlAccess::CA_PDV);
-			
+
 		$tplMenu = new View("templates/pdv_menu");
 		$tplPDV = new View("templates/pdv_index");
 
@@ -153,6 +153,6 @@ switch($_POST['action']) {
 
         Notifier::Add("Requisição inválida!", Notifier::NOTIFIER_ERROR);
         Send(null);
- 
+
 		break;
 }

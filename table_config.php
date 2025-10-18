@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\Table;
 
 require "inc/config.inc.php";
@@ -35,7 +35,7 @@ function TableConfigGetTables() {
 }
 
 switch($_POST['action']) {
-	
+
 	case "load":
 
         $tplTable = new View("templates/table_config");
@@ -110,13 +110,13 @@ switch($_POST['action']) {
 
                     Notifier::Add("Mesa removida com sucesso!", Notifier::NOTIFIER_DONE);
                     Send([]);
-    
+
                 } else {
-    
+
                     Notifier::Add("Erro ao remover mesa!", Notifier::NOTIFIER_ERROR);
                     Send(null);
                 }
-    
+
             }
 
         } else {
@@ -205,7 +205,7 @@ switch($_POST['action']) {
             $tplTable = new View('templates/table_config');
 
             $row = Table::FormatFields($row);
-            
+
             Send($tplTable->getContent($row, "BLOCK_TABLE_MESA"));
 
         } else {

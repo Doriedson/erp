@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\BlackFriday;
 
 require "inc/config.inc.php";
@@ -37,7 +37,7 @@ switch ($_POST['action']) {
 
             } while ($row = $blackfriday->getResult());
         }
-		
+
         Send($tplBlackFriday->getContent($data, "BLOCK_PAGE"));
 
 	break;
@@ -57,7 +57,7 @@ switch ($_POST['action']) {
 		$data = $_POST['data'];
 		$desconto = $_POST['desconto'];
         $acumulativo = ($_POST['acumulativo'] == "false")? 0 : 1;
-		
+
 		$blackfriday = new BlackFriday();
 
         if ($blackfriday->hasDate($data)) {

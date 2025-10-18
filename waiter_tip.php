@@ -1,7 +1,7 @@
 ﻿<?php
 
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\Config;
 
 require "inc/config.inc.php";
@@ -19,7 +19,7 @@ function WaitertipFormEdit($block, $message_error) {
 		$row = Config::FormatFields($row);
 
 		Send($tplWaitertip->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -70,7 +70,7 @@ function WaitertipFormSave($field, $block, $message_error) {
 		$row = Config::FormatFields($row);
 
 		Send($tplWaitertip->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);

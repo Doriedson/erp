@@ -1,7 +1,7 @@
 <?php
 
 use database\ControlAccess;
-use database\View;
+use App\View\View;
 use database\Pdv;
 use database\Notifier;
 
@@ -22,7 +22,7 @@ function PDVFormEdit($block, $message_error) {
 		$row = Pdv::FormatFields($row);
 
 		Send($tplPdv->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -81,7 +81,7 @@ function PDVFormSave($field, $block, $message_error) {
 		$row = Pdv::FormatFields($row);
 
 		Send($tplPdv->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -102,7 +102,7 @@ switch ($_POST['action']) {
         $pdv->getList();
 
 		$data['extra_block_pdv'] = "";
-		
+
         if ($row = $pdv->getResult()) {
 
             do {
@@ -117,7 +117,7 @@ switch ($_POST['action']) {
 
             $data['extra_block_pdv'] = $tplPdv->getContent($data, "EXTRA_BLOCK_PDV_NONE");
         }
-		
+
         Send($tplPdv->getContent($data, "BLOCK_PAGE"));
 
 	break;

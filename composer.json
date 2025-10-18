@@ -1,5 +1,5 @@
 {
-  "name": "erp",
+  "name": "dago/erp",
   "description": "ERP modernizado (PHP 8.2+, PDO, PSR-4, Slim opcional)",
   "type": "project",
   "require": {

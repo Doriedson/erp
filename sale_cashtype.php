@@ -1,7 +1,7 @@
 <?php
 
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\PaymentKind;
 
 require "inc/config.inc.php";
@@ -21,7 +21,7 @@ function PaymentKindFormEdit($block, $message_error) {
 		$row = PaymentKind::FormatFields($row);
 
 		Send($tplPaymentKind->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -77,7 +77,7 @@ function PaymentKindFormSave($field, $block, $message_error) {
 		$row = PaymentKind::FormatFields($row);
 
 		Send($tplPaymentKind->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -88,12 +88,12 @@ function PaymentKindFormSave($field, $block, $message_error) {
 switch ($_POST['action']) {
 
 	case "load":
-	
+
 		$paymentKind = new PaymentKind();
 		$paymentKind->getList();
 
 		$tplCashtype = new View('templates/sale_cashtype');
-		
+
 		$cashtype = "";
 
 		while ($row = $paymentKind->getResult()) {
@@ -113,7 +113,7 @@ switch ($_POST['action']) {
 		$paymentKind = new PaymentKind();
 
 		$especie = $_POST['especie'];
-		
+
 		$id_especie = $paymentKind->Create($especie);
 
         if ($id_especie) {
@@ -133,28 +133,28 @@ switch ($_POST['action']) {
                 Notifier::Add("Não foi possível encontrar o espécie!", Notifier::NOTIFIER_ERROR);
 				Send(null);
             }
-            
+
         } else {
 
             Notifier::Add("Erro ao cadastrar espécie!", Notifier::NOTIFIER_ERROR);
 			Send(null);
         }
-	break;		
+	break;
 
 	case "salecashtype_edit":
-		
+
 		PaymentKindFormEdit('EXTRA_BLOCK_CASHTYPE_FORM', 'Erro ao carregar espécie!');
 	break;
 
 	case "salecashtype_cancel":
 
 		PaymentKindFormCancel('BLOCK_CASHTYPE', 'Erro ao carregar espécie!');
-	break;		
+	break;
 
 	case "salecashtype_save":
 
 		PaymentKindFormSave('especie', 'BLOCK_CASHTYPE', 'Erro ao carregar espécie!');
-	
+
         break;
 
 	case "salecashtype_delete":
@@ -181,14 +181,14 @@ switch ($_POST['action']) {
 
 				Notifier::Add("Espécie excluída com sucesso!", Notifier::NOTIFIER_DONE);
 				Send([]);
-			
+
 			} else {
 
 				Notifier::Add("Erro ao excluir espécie!", Notifier::NOTIFIER_ERROR);
 				Send(null);
 			}
 		}
-	
+
         break;
 
     case "salecashtype_toggle_active":
@@ -234,6 +234,6 @@ switch ($_POST['action']) {
 
         Notifier::Add("Requisição inválida!", Notifier::NOTIFIER_ERROR);
         Send(null);
-    
+
         break;
 }

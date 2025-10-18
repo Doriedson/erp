@@ -12,6 +12,7 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Http\Router;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
 use App\Auth\AuthService;
@@ -130,15 +131,7 @@ $router->get('/login', function () {
 // -----------------------------
 // Raiz
 // -----------------------------
-// Envia para /login (ou direto pro /admin se já autenticado)
-$router->get('/', function () {
-    if (!empty($_SESSION['auth'])) {
-        header('Location: /admin'); // ajuste se tiver dashboard específico
-        return '';
-    }
-    header('Location: /login');
-    return '';
-});
+$router->get('/', [HomeController::class, 'index']);
 
 // -----------------------------
 // Dispatch

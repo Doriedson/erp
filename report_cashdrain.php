@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\CashDrain;
 use database\CashAdd;
 use database\Calc;

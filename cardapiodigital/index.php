@@ -1,7 +1,7 @@
 <?php
 
 use database\ControlAccess;
-use database\View;
+use App\View\View;
 use database\Clean;
 use database\Company;
 use database\Product;
@@ -43,7 +43,7 @@ while ($row = $productSector->getResult()) {
             $rowProduct = Product::FormatFields($rowProduct);
 
             $extra_block_product .= $tplDigitalMenu->getContent($rowProduct, "EXTRA_BLOCK_PRODUCT");
-        
+
         } while ($rowProduct = $product->getResult());
 
         $extra_block_product_sector .= $tplDigitalMenu->getContent(["produtosetor" => $row['produtosetor'], "extra_block_product" => $extra_block_product], "EXTRA_BLOCK_PRODUCT_SECTOR");

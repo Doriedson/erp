@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\Receipt;
 use database\Entity;
 
@@ -20,13 +20,13 @@ switch ($_POST['action']) {
         $receipt = new Receipt();
 
         $receipt->getList();
-    
+
         $extra_block_receipt = "";
 
         if ($row = $receipt->getResult()) {
 
             do {
-            
+
                 $row = Receipt::FormatFields($row);
 
                 $row = Entity::FormatFields($row);
@@ -39,7 +39,7 @@ switch ($_POST['action']) {
                 "receipt_bt_clear_visibility" => "",
                 "receipt_bt_print_visibility" => ""
             ];
-        
+
         } else {
 
             $extra_block_receipt = $tplReceipt->getContent([], "EXTRA_BLOCK_RECEIPT_NONE");
@@ -50,16 +50,16 @@ switch ($_POST['action']) {
                 "receipt_bt_print_visibility" => "hidden"
             ];
         }
-    
+
         // $data['data'] = date('Y-m-d');
         $data['extra_block_receipt'] = $extra_block_receipt;
-        
+
         // $tplEntity = new View('templates/entity');
 
 	    // $data['block_entity_autocomplete_search'] = $tplEntity->getContent([], "BLOCK_ENTITY_AUTOCOMPLETE_SEARCH");
 
         Send($tplReceipt->getContent($data, "BLOCK_PAGE"));
-    
+
     break;
 
     case "receipt_add":
@@ -81,7 +81,7 @@ switch ($_POST['action']) {
 		}
 
         if ($row = $entity->getResult()) {
-            
+
             $receipt = new Receipt();
 
             $data = [
@@ -92,9 +92,9 @@ switch ($_POST['action']) {
             ];
 
             $id_receipt = $receipt->Create($data);
-    
+
             $receipt->Read($id_receipt);
-    
+
             if ($row = $receipt->getResult()) {
 
                 $tplReceipt = new View('templates/receipt');
@@ -122,7 +122,7 @@ switch ($_POST['action']) {
     case "receipt_delete":
 
         $id_recibo = $_POST['id_recibo'];
-    
+
         $receipt = new Receipt();
 
         if ($receipt->Delete($id_recibo)) {
@@ -141,36 +141,36 @@ switch ($_POST['action']) {
                 Notifier::Add("Recibo removido com sucesso.", Notifier::NOTIFIER_DONE);
                 Send($tplReceipt->getContent([], "EXTRA_BLOCK_RECEIPT_NONE"));
             }
-            
+
         } else {
-        
+
             Notifier::Add("Erro ao remover recibo!", Notifier::NOTIFIER_ERROR);
             Send(null);
         }
-    break;        
+    break;
 
     case "receipt_delete_all":
 
         $receipt = new Receipt();
 
         if($receipt->DeleteAll()) {
-        
+
             $tplReceipt = new View('templates/receipt');
 
             Notifier::Add("Todos os rebibos foram removidos com sucesso.", Notifier::NOTIFIER_DONE);
             Send($tplReceipt->getContent([], "EXTRA_BLOCK_RECEIPT_NONE"));
-        
+
         } else {
 
             Notifier::Add("Não há recibos para excluir!", Notifier::NOTIFIER_ERROR);
             Send(null);
         }
     break;
-        
+
     case "receipt_print":
 
         $receipt = new Receipt();
-        
+
         $receipt->getList();
 
         if ($row = $receipt->getResult()) {
@@ -202,7 +202,7 @@ switch ($_POST['action']) {
 
         $tplReceipt = new View("templates/receipt");
         $tplEntity = new View('templates/entity');
-        
+
         $data = [
             "id_entidade" => $id_entidade,
             "nome" => $nome,

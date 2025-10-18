@@ -3,7 +3,7 @@
 use database\ControlAccess;
 use database\Entity;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\SaleOrder;
 use database\Calc;
 

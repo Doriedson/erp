@@ -7,29 +7,35 @@
 		<title>{title}</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="height=device-height, width=device-width, user-scalable=no">
-		<link rel="manifest" href="{manifest}?version={version}">
+		<link rel="manifest" href="/{manifest}?version={version}">
 
 		<link rel="stylesheet" type="text/css" href="/css/style.css?version={version}" />
 		<link rel="stylesheet" type="text/css" href="/css/menu.css?version={version}" />
 		<link rel="stylesheet" type="text/css" href="/css/print.css?version={version}" />
 		<link rel="stylesheet" type="text/css" href="/css/login.css?version={version}" />
 
-		<link rel="stylesheet" type="text/css" href="/vendor/css/jquery-ui.min.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="/vendor/css/fontawesome.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="/vendor/css/brands.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="/vendor/css/solid.css?version={version}" />
-		<link rel="stylesheet" type="text/css" href="/vendor/css/regular.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/vendor/bootstrap/css/jquery-ui.min.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/vendor/bootstrap/css/fontawesome.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/vendor/bootstrap/css/brands.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/vendor/bootstrap/css/solid.css?version={version}" />
+		<link rel="stylesheet" type="text/css" href="/vendor/bootstrap/css/regular.css?version={version}" />
 		<link rel="shortcut icon" type="imagex/png" href="/assets/icons/icon-48x48.png?version={version}">
 
-		<script type="text/javascript" src="/service_worker.js?version={version}"></script>
+		<script>
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('/js/service_worker.js?version={version}', { scope: '/' });
+		}
+		</script>
+
+		<!-- <script type="text/javascript" src="/service_worker.js?version={version}"></script> -->
 		<script>
 			let version = {version};
 		</script>
 
-		<script type="text/javascript" src="/vendor/js/jquery-3.6.0.min.js?version={version}"></script>
-		<script type="text/javascript" src="/vendor/js/jquery-ui.min.js?version={version}"></script>
+		<script type="text/javascript" src="/vendor/bootstrap/js/jquery-3.6.0.min.js?version={version}"></script>
+		<script type="text/javascript" src="/vendor/bootstrap/js/jquery-ui.min.js?version={version}"></script>
 
-		<script type="text/javascript" src="/vendor/js/chart.min.js?version={version}"></script>
+		<script type="text/javascript" src="/vendor/bootstrap/js/chart.min.js?version={version}"></script>
 
 		<script type="text/javascript" src="/js/funcoes.js?version={version}"></script>
 		<script type="text/javascript" src="/js/autoload.js?version={version}"></script>

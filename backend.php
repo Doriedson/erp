@@ -1,7 +1,7 @@
 <?php
 
 use database\ControlAccess;
-use database\View;
+use App\View\View;
 use database\Clean;
 use database\Company;
 use database\Collaborator;

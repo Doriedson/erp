@@ -1,6 +1,6 @@
 <?php
 
-use database\View;
+use App\View\View;
 use database\Wallet;
 use database\WalletCashType;
 use database\Notifier;
@@ -22,7 +22,7 @@ function WalletcashtypeFormEdit($block, $message_error) {
 		// $row = WalletCashType::FormatFields($row);
 
 		Send($tplWalletcashtype->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -95,11 +95,11 @@ function WalletcashtypeFormSave($field, $block, $message_error) {
 	if ($row = $walletcashtype->getResult()) {
 
 		$walletcashtype->getList($row['id_wallet']);
-					
+
 		$extra_block_walletdespesa_cashtype_option = "";
 
 		$tplWallet = new View('templates/wallet');
-		
+
 		while ($row_list = $walletcashtype->getResult()) {
 
 			$row_list['selected'] = "";
@@ -116,7 +116,7 @@ function WalletcashtypeFormSave($field, $block, $message_error) {
 			"data" => $tplWalletcashtype->getContent($row, $block),
 			"list" => $extra_block_walletdespesa_cashtype_option
 		]);
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -127,7 +127,7 @@ function WalletcashtypeFormSave($field, $block, $message_error) {
 switch ($_POST['action']) {
 
 	case "load":
-	
+
 		$id_wallet = $_POST['id_wallet'];
 
 		$wallet = new Wallet();
@@ -142,7 +142,7 @@ switch ($_POST['action']) {
 		$walletcashtype->getList($id_wallet);
 
 		$tplWallet = new View('templates/wallet');
-		
+
 		$cashtype = "";
 
 		$notfound = "";
@@ -152,7 +152,7 @@ switch ($_POST['action']) {
 			$notfound = "hidden";
 
 			do {
-			
+
 				$cashtype.= $tplWallet->getContent($row, "EXTRA_BLOCK_WALLETDESPESA_CASHTYPE");
 
 			} while ($row = $walletcashtype->getResult());
@@ -185,17 +185,17 @@ switch ($_POST['action']) {
 			Notifier::Add("Acesso negado!", Notifier::NOTIFIER_ERROR);
 			Send(null);
 		}
-		
+
 		$id_walletcashtype = $cashtype->Create($id_wallet, $walletcashtype);
 
         if ($id_walletcashtype) {
 
 			$cashtype->getList($id_wallet);
-					
+
 			$extra_block_walletdespesa_cashtype_option = "";
 
 			while ($row = $cashtype->getResult()) {
-				
+
 				$row['selected'] = "";
 
 				if ($row['id_walletcashtype'] == $id_walletcashtype) {
@@ -219,7 +219,7 @@ switch ($_POST['action']) {
 					$cashtype->Read($id_walletcashtype);
 
 					if ($row = $cashtype->getResult()) {
-					
+
 						$data = [
 							"list" => $extra_block_walletdespesa_cashtype_option,
 							"walletcashtype" => $tplWallet->getContent($row, "EXTRA_BLOCK_WALLETDESPESA_CASHTYPE")
@@ -235,23 +235,23 @@ switch ($_POST['action']) {
 
 			// 		break;
 			// }
-            
+
         } else {
 
             Notifier::Add("Erro ao cadastrar espécie!", Notifier::NOTIFIER_ERROR);
 			Send(null);
         }
-	break;		
+	break;
 
 	case "walletcashtype_edit":
-		
+
 		WalletcashtypeFormEdit('EXTRA_BLOCK_CASHTYPE_FORM', 'Erro ao carregar espécie!');
 	break;
 
 	case "walletcashtype_cancel":
 
 		WalletcashtypeFormCancel('BLOCK_CASHTYPE', 'Erro ao carregar espécie!');
-	break;		
+	break;
 
 	case "walletcashtype_save":
 
@@ -263,7 +263,7 @@ switch ($_POST['action']) {
 		$id_walletcashtype = $_POST['id_walletcashtype'];
 
 		$walletcashtype = new WalletCashType();
-		
+
 		if ($walletcashtype->isCashtypeInUse($id_walletcashtype)) {
 
 			Notifier::Add("Espécie em uso não pode ser removido!", Notifier::NOTIFIER_ERROR);
@@ -287,11 +287,11 @@ switch ($_POST['action']) {
 			if ($walletcashtype->Delete($id_walletcashtype)) {
 
 				$walletcashtype->getList($id_wallet);
-					
+
 				$extra_block_walletdespesa_cashtype_option = "";
 
 				$tplWallet = new View('templates/wallet');
-				
+
 				while ($row = $walletcashtype->getResult()) {
 
 					$row['selected'] = "";
@@ -303,17 +303,17 @@ switch ($_POST['action']) {
 
 					$extra_block_walletdespesa_cashtype_option .= $tplWallet->getContent($row, "EXTRA_BLOCK_WALLETDESPESA_CASHTYPE_OPTION");
 				}
-				
+
 				Notifier::Add("Espécie excluída com sucesso!", Notifier::NOTIFIER_DONE);
 				Send($extra_block_walletdespesa_cashtype_option);
-			
+
 			} else {
 
 				Notifier::Add("Erro ao excluir espécie!", Notifier::NOTIFIER_ERROR);
 				Send(null);
 			}
 		}
-	
+
 		break;
 
 	case "walletcashtype_popup_new":
@@ -334,6 +334,6 @@ switch ($_POST['action']) {
 
         Notifier::Add("Requisição inválida!", Notifier::NOTIFIER_ERROR);
         Send(null);
-    
+
 		break;
 }

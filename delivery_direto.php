@@ -2,7 +2,7 @@
 
 use database\DeliveryDireto;
 use database\Notifier;
-use database\View;
+use App\View\View;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -49,7 +49,7 @@ switch ($_POST['action']) {
         }
 
         break;
-    
+
     case "deliverydireto_storeid_edit":
 
         $tplDeliveryDireto = new View('templates/integrations');
@@ -69,7 +69,7 @@ switch ($_POST['action']) {
             $row = DeliveryDireto::FormatFields($row);
 
             Send($tplDeliveryDireto->getContent($row, 'EXTRA_BLOCK_STOREID_FORM'));
-        
+
         } else {
 
             Notifier::Add('Erro ao carregar dados do X-DeliveryDireto-ID!', Notifier::NOTIFIER_ERROR);
@@ -98,7 +98,7 @@ switch ($_POST['action']) {
             Send(null);
         }
 
-        break;		
+        break;
 
     case "deliverydireto_storeid_save":
 
@@ -122,7 +122,7 @@ switch ($_POST['action']) {
             $row = DeliveryDireto::FormatFields($row);
 
             Send($tplDeliveryDireto->getContent($row, 'BLOCK_STOREID'));
-        
+
         } else {
 
             Notifier::Add('Erro ao carregar dados do X-DeliveryDireto-ID!', Notifier::NOTIFIER_ERROR);
@@ -150,7 +150,7 @@ switch ($_POST['action']) {
             $row = DeliveryDireto::FormatFields($row);
 
             Send($tplDeliveryDireto->getContent($row, 'EXTRA_BLOCK_USUARIO_FORM'));
-        
+
         } else {
 
             Notifier::Add('Erro ao carregar dados acesso ao Delivery Direto!', Notifier::NOTIFIER_ERROR);
@@ -179,7 +179,7 @@ switch ($_POST['action']) {
             Send(null);
         }
 
-        break;		
+        break;
 
     case "deliverydireto_usuario_save":
 
@@ -203,7 +203,7 @@ switch ($_POST['action']) {
             $row = DeliveryDireto::FormatFields($row);
 
             Send($tplDeliveryDireto->getContent($row, 'BLOCK_USUARIO'));
-        
+
         } else {
 
             Notifier::Add('Erro ao carregar dados acesso ao Delivery Direto!', Notifier::NOTIFIER_ERROR);
@@ -227,11 +227,11 @@ switch ($_POST['action']) {
                 Notifier::Add("Desative a integração para alterar os dados de acesso!", Notifier::NOTIFIER_ERROR);
                 Send(null);
             }
-            
+
             $row = DeliveryDireto::FormatFields($row);
 
             Send($tplDeliveryDireto->getContent($row, 'EXTRA_BLOCK_SENHA_FORM'));
-        
+
         } else {
 
             Notifier::Add('Erro ao carregar dados acesso ao Delivery Direto!', Notifier::NOTIFIER_ERROR);
@@ -260,7 +260,7 @@ switch ($_POST['action']) {
             Send(null);
         }
 
-        break;		
+        break;
 
     case "deliverydireto_senha_save":
 
@@ -284,7 +284,7 @@ switch ($_POST['action']) {
             $row = DeliveryDireto::FormatFields($row);
 
             Send($tplDeliveryDireto->getContent($row, 'BLOCK_SENHA'));
-        
+
         } else {
 
             Notifier::Add('Erro ao carregar dados acesso ao Delivery Direto!', Notifier::NOTIFIER_ERROR);
@@ -331,13 +331,13 @@ switch ($_POST['action']) {
 
         Notifier::Add($ret, Notifier::NOTIFIER_DONE);
         Send(null);
-        
+
         break;
 
     default:
-		
+
 		Notifier::Add("Requisição inválida!", Notifier::NOTIFIER_ERROR);
         Send(null);
-	
+
 		break;
 }

@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\PrinterConfig;
 
 require "inc/config.inc.php";
@@ -24,7 +24,7 @@ function PrintingFormEdit($block, $message_error) {
 		$row = PrinterConfig::PrintingFormatFields($row);
 
 		Send($tplPrinting->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -82,9 +82,9 @@ function PrintingFormSave($field, $block, $message_error) {
 	if ($row = $printer->getResult()) {
 
 		$row = PrinterConfig::PrintingFormatFields($row);
-		
+
 		Send($tplPrinting->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -95,11 +95,11 @@ function PrintingFormSave($field, $block, $message_error) {
 switch ($_POST['action']) {
 
 	case "load":
-	
+
 		$printer = new PrinterConfig();
 
 		$tplPrinting = new View('templates/printing');
-		
+
         $printer->getPrintingList();
 
         $extra_block_printing = "";
@@ -111,7 +111,7 @@ switch ($_POST['action']) {
             do {
 
 				$row = PrinterConfig::PrintingFormatFields($row);
-				
+
                 $extra_block_printing .= $tplPrinting->getContent($row, "EXTRA_BLOCK_PRINTING");
 
             } while ($row = $printer->getResult());
@@ -124,14 +124,14 @@ switch ($_POST['action']) {
 		break;
 
 	case "printing_impressora_edit":
-		
+
 		PrintingFormEdit('EXTRA_BLOCK_IMPRESSORA_FORM', 'Erro ao carregar impressora!');
 	break;
 
 	case "printing_impressora_cancel":
 
 		PrintingFormCancel('BLOCK_IMPRESSORA', 'Erro ao carregar impressora!');
-	break;		
+	break;
 
 	case "printing_impressora_save":
 

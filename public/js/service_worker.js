@@ -1,4 +1,9 @@
 // Web-Push
+
+// public/service_worker.js
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', () => self.clients.claim());
+
 // Public base64 to Uint
 function urlBase64ToUint8Array(base64String) {
     var padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -47,7 +52,7 @@ function ServiceWorkerInit() {
                     permissionResult.then(resolve, reject);
 
                     navigator.serviceWorker
-                        .register('./service_worker.js', { scope: './' })
+                        .register('./service_worker.js', { scope: '/' })
                         .then(function (registration) {
 
                             console.log('Service Worker registrado com sucesso.');

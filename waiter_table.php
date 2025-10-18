@@ -1,6 +1,6 @@
 <?php
 
-use database\View;
+use App\View\View;
 use database\Table;
 use database\Notifier;
 
@@ -32,7 +32,7 @@ function Unauthorized() {
 }
 
 switch($_POST['action']) {
-	
+
 	case "load":
 
 		Send(Table::LoadWaiterTable("waiter_table"));

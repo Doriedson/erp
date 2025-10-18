@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\SaleOrder;
 use database\Product;
 
@@ -27,7 +27,7 @@ switch ($_POST['action']) {
 		$dataini = $_POST['dataini'];
 		$datafim = $_POST['datafim'];
 		$intervalo = ($_POST['intervalo'] == "false")? false : true;
-		
+
 		$saleorder = new SaleOrder();
 
 		if ($intervalo) {
@@ -62,20 +62,20 @@ switch ($_POST['action']) {
         $extra_block_waitertip_waiter = "";
 
 		if ($row = $saleorder->getResult()) {
-	
+
 			$id_colaborador = "";
             $colaborador = "";
 			// $tr = "";
-		 	
-			// 
 
-			
-			
+			//
+
+
+
 
 			do {
 
-				
-	
+
+
 				$subtotal+= $row['valor_servico'];
 
 				// $row['subtotal_formatted'] = number_format($row['valor_servico'], 2, ',', '.');
@@ -98,21 +98,21 @@ switch ($_POST['action']) {
                     $data_row = [];
 
                     // 		if ($id_colaborador != "") {
-        
+
                     			$data_row = ['subtotal_formatted' => number_format($subtotal, 2, ",", ".")];
-        
+
                     			$data_row['colaborador'] = $colaborador;
-        
+
                     			$data_row['extra_block_waitertip_tip'] = $extra_block_waitertip_tip;
-        
+
                     			$extra_block_waitertip_waiter.= $tplWaitertip->getContent($data_row, "EXTRA_BLOCK_WAITERTIP_WAITER");
-        
+
                     			$extra_block_waitertip_tip = "";
-        
+
                     // 		}
-                            
+
                     // 		$id_colaborador = $row['produtosetor'];
-        
+
                     		$total+= $subtotal;
                     		$subtotal = 0;
                         }
@@ -123,18 +123,18 @@ switch ($_POST['action']) {
 			// $data = ['subtotal_formatted' => number_format($subtotal, 2, ",", ".")];
 
 			// $data['produtosetor'] = $id_colaborador;
-			
+
 			// $data['extra_block_waitertip_tip'] = $extra_block_waitertip_tip;
 
 			// $extra_block_waitertip_waiter.= $tplWaitertip->getContent($data, "EXTRA_BLOCK_SETOR_GRUPO");
 
 			// $total+= $subtotal;
-			
 
-			// 
+
+			//
 
 		} else {
-			
+
 			Notifier::Add("Nenhum relatório encontrado:<br>$header", Notifier::NOTIFIER_INFO);
             $extra_block_waitertip_waiter = $tplWaitertip->getContent([], "EXTRA_BLOCK_WAITERTIP_NOTFOUND");
 		}

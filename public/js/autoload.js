@@ -3,7 +3,7 @@
   */
 $(window).on("load", async function() {
 
-	ServiceWorkerInit();
+	// ServiceWorkerInit();
 
 	// let sUsrAg = navigator.userAgent;
 

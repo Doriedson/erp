@@ -1,7 +1,7 @@
 <?php
 
 use database\ControlAccess;
-use database\View;
+use App\View\View;
 use database\SaleOrder;
 use database\SaleOrderStatusChange;
 use database\SaleOrderItem;

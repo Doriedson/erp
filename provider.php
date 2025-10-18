@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\Clean;
 use database\Provider;
 
@@ -25,7 +25,7 @@ function ProviderFormEdit($block, $message_error) {
 		$row = Provider::FormatFields($row);
 
 		Send($tplProvider->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -80,7 +80,7 @@ function ProviderFormSave($field, $block, $message_error) {
 		$row = Provider::FormatFields($row);
 
 		Send($tplProvider->getContent($row, $block));
-	
+
 	} else {
 
 		Notifier::Add($message_error, Notifier::NOTIFIER_ERROR);
@@ -93,7 +93,7 @@ switch ($_POST['action']) {
 	case "load":
 
 		$tplEntity = new View('templates/provider');
-		
+
 		Send($tplEntity->getContent([], "BLOCK_PAGE"));
 
 		break;
@@ -119,13 +119,13 @@ switch ($_POST['action']) {
             Notifier::Add("Ocorreu um erro ao cadastrar novo fornecedor!", Notifier::NOTIFIER_ERROR);
 			Send(null);
         }
-        
-        break;        
+
+        break;
 
 	// case "provider_search":
 
 	// 	$value = $_POST['value'];
-		
+
 	// 	$provider = new Provider();
 
 	// 	if( is_numeric($value) ) {
@@ -136,7 +136,7 @@ switch ($_POST['action']) {
 
 	// 		$provider->Search($value);
 	// 	}
-		
+
 	// 	$tplProvider = new View('templates/provider');
 
 	// 	if ($row = $provider->getResult()) {
@@ -157,7 +157,7 @@ switch ($_POST['action']) {
 	// 		Send([], "Nenhum fornecedor encontrado!", Notifier::NOTIFIER_INFO);
 	// 	}
 
-	// break;	
+	// break;
 
 	case "provider_smart_search":
 
@@ -198,7 +198,7 @@ switch ($_POST['action']) {
 						$provider_list.= $tplProvider->getContent($row, "EXTRA_BLOCK_ITEM_SEARCH");
 
 					break;
-					
+
 
 					case "provider":
 
@@ -227,8 +227,8 @@ switch ($_POST['action']) {
 
 		Send($provider_list);
 
-	break;	
-				
+	break;
+
     case "provider_list":
 
         $provider = new Provider();
@@ -258,7 +258,7 @@ switch ($_POST['action']) {
 			Send([]);
         }
 
-        break;        
+        break;
 
 	case "provider_change_status":
 
@@ -305,26 +305,26 @@ switch ($_POST['action']) {
             Notifier::Add("Erro ao ler dados do fornecedor!", Notifier::NOTIFIER_ERROR);
 			Send([]);
         }
-		
+
         break;
 
     case "provider_razaosocial_edit":
 
 		ProviderFormEdit("EXTRA_BLOCK_PROVIDER_RAZAOSOCIAL_FORM", "Não foi possível localizar o cadastro do fornecedor!");
 
-	break; 
-        
+	break;
+
     case "provider_razaosocial_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_RAZAOSOCIAL", "Não foi possível localizar o cadastro do fornecedor!");
 
-	break;        
-	
+	break;
+
 	case "provider_razaosocial_save":
 
 		ProviderFormSave('razaosocial', "BLOCK_PROVIDER_RAZAOSOCIAL", "Não foi possível ler os dados do fornecedor!");
 	break;
-	
+
 	case "provider_nomefantasia_edit":
 
 		ProviderFormEdit("EXTRA_BLOCK_PROVIDER_NOMEFANTASIA_FORM", "Não foi possível localizar o cadastro do fornecedor!");
@@ -333,7 +333,7 @@ switch ($_POST['action']) {
 	case "provider_nomefantasia_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_NOMEFANTASIA", "Não foi possível localizar o cadastro do fornecedor!");
-	break;        
+	break;
 
 	case "provider_nomefantasia_save":
 
@@ -348,7 +348,7 @@ switch ($_POST['action']) {
 	case "provider_cpfcnpj_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_CPFCNPJ", "Não foi possível localizar o cadastro do fornecedor!");
-	break;        
+	break;
 
 	case "provider_cpfcnpj_save":
 
@@ -363,7 +363,7 @@ switch ($_POST['action']) {
 	case "provider_ie_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_IE", "Não foi possível localizar o cadastro do fornecedor!");
-	break;        
+	break;
 
 	case "provider_ie_save":
 
@@ -378,7 +378,7 @@ switch ($_POST['action']) {
 	case "provider_email_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_EMAIL", "Não foi possível localizar o cadastro do fornecedor!");
-	break;        
+	break;
 
 	case "provider_email_save":
 
@@ -393,7 +393,7 @@ switch ($_POST['action']) {
 	case "provider_obs_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_OBS", "Não foi possível localizar o cadastro do fornecedor!");
-	break;        
+	break;
 
 	case "provider_obs_save":
 
@@ -408,7 +408,7 @@ switch ($_POST['action']) {
 	case "provider_cep_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_CEP", "Não foi possível localizar o cadastro do fornecedor!");
-	break;        
+	break;
 
 	case "provider_cep_save":
 
@@ -423,7 +423,7 @@ switch ($_POST['action']) {
 	case "provider_endereco_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_ENDERECO", "Não foi possível localizar o cadastro do fornecedor!");
-	break;        
+	break;
 
 	case "provider_endereco_save":
 
@@ -438,7 +438,7 @@ switch ($_POST['action']) {
 	case "provider_bairro_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_BAIRRO", "Não foi possível localizar o cadastro do fornecedor!");
-	break;        
+	break;
 
 	case "provider_bairro_save":
 
@@ -453,7 +453,7 @@ switch ($_POST['action']) {
 	case "provider_cidade_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_CIDADE", "Não foi possível localizar o cadastro do fornecedor!");
-	break;        
+	break;
 
 	case "provider_cidade_save":
 
@@ -468,7 +468,7 @@ switch ($_POST['action']) {
 	case "provider_uf_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_UF", "Não foi possível localizar o cadastro do fornecedor!");
-		break;        
+		break;
 
 	case "provider_uf_save":
 
@@ -483,7 +483,7 @@ switch ($_POST['action']) {
 	case "provider_telefone1_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_TELEFONE1", "Não foi possível localizar o cadastro do fornecedor!");
-		break;        
+		break;
 
 	case "provider_telefone1_save":
 
@@ -498,7 +498,7 @@ switch ($_POST['action']) {
 	case "provider_contato1_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_CONTATO1", "Não foi possível localizar o cadastro do fornecedor!");
-		break;        
+		break;
 
 	case "provider_contato1_save":
 
@@ -513,7 +513,7 @@ switch ($_POST['action']) {
 	case "provider_telefone2_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_TELEFONE2", "Não foi possível localizar o cadastro do fornecedor!");
-		break;        
+		break;
 
 	case "provider_telefone2_save":
 
@@ -528,7 +528,7 @@ switch ($_POST['action']) {
 	case "provider_contato2_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_CONTATO2", "Não foi possível localizar o cadastro do fornecedor!");
-		break;        
+		break;
 
 	case "provider_contato2_save":
 
@@ -543,7 +543,7 @@ switch ($_POST['action']) {
 	case "provider_telefone3_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_TELEFONE3", "Não foi possível localizar o cadastro do fornecedor!");
-		break;        
+		break;
 
 	case "provider_telefone3_save":
 
@@ -558,13 +558,13 @@ switch ($_POST['action']) {
 	case "provider_contato3_cancel":
 
 		ProviderFormCancel("BLOCK_PROVIDER_CONTATO3", "Não foi possível localizar o cadastro do fornecedor!");
-		break;        
+		break;
 
 	case "provider_contato3_save":
 
 		ProviderFormSave('contato3', "BLOCK_PROVIDER_CONTATO3", "Não foi possível ler os dados do fornecedor!");
 		break;
-		
+
 	default:
 
 		Notifier::Add("Requisição inválida!", Notifier::NOTIFIER_ERROR);

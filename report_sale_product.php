@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\SaleOrder;
 use database\Product;
 
@@ -28,7 +28,7 @@ switch ($_POST['action']) {
 		$dataini = $_POST['dataini'];
 		$datafim = $_POST['datafim'];
 		$intervalo = ($_POST['intervalo'] == "false")? false : true;
-		
+
 		$tplSaleProduct = new View("templates/report_sale_product");
 
 		$sale = new SaleOrder();
@@ -49,7 +49,7 @@ switch ($_POST['action']) {
 				"dataini_formatted" => date_format(date_create($dataini), 'd/m/Y'),
 				"datafim_formatted" => date_format(date_create($datafim), 'd/m/Y'),
 			];
-			
+
 			$subtotal = 0;
 			$total = 0;
 			$setor = "";
@@ -59,7 +59,7 @@ switch ($_POST['action']) {
 			do {
 
 				if ($setor != $row['produtosetor']) {
-					
+
 					if ($setor != "") {
 
 						$content['subtotal_formatted'] = number_format($subtotal, 2, ",", ".");
@@ -73,13 +73,13 @@ switch ($_POST['action']) {
 
 						$extra_block_produto = "";
 					}
-					
+
 					$setor = $row['produtosetor'];
 
 					$total+= $subtotal;
 					$subtotal = 0;
 				}
-			
+
 				$subtotal+= $row['subtotal'];
 				$row['valor_medio_formatted'] = number_format(round($row['subtotal'] / $row['qtd'], 2), 2, ",", ".");
 				$row['subtotal_formatted'] = number_format($row['subtotal'], 2, ",", ".");
@@ -96,7 +96,7 @@ switch ($_POST['action']) {
 			// $extra_block_produto.= $tplSaleProduct->getContent($content, "EXTRA_BLOCK_SUBTOTAL");
 
 			$content['produtosetor'] = $setor;
-			
+
 			$content['extra_block_produto'] = $extra_block_produto;
 
 			$extra_block_setor_grupo.= $tplSaleProduct->getContent($content, "EXTRA_BLOCK_SETOR_GRUPO");
@@ -132,5 +132,5 @@ switch ($_POST['action']) {
 			Notifier::Add("Nenhum relatório encontrado para a data informada!", Notifier::NOTIFIER_INFO);
 			Send($content);
 		}
-	break;	
+	break;
 }

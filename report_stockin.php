@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\PurchaseOrder;
 use database\Product;
 
@@ -27,7 +27,7 @@ switch ($_POST['action']) {
 		$dataini = $_POST['dataini'];
 		$datafim = $_POST['datafim'];
 		$intervalo = ($_POST['intervalo'] == "false")? false : true;
-		
+
 		$purchase = new PurchaseOrder();
 
 		if ($intervalo) {
@@ -54,7 +54,7 @@ switch ($_POST['action']) {
 
 				$header = "$dataini_formatted";
 			}
-						
+
 			$setor = "";
 			$tr = "";
 		 	$extra_block_produto = "";
@@ -80,13 +80,13 @@ switch ($_POST['action']) {
 						$extra_block_produto = "";
 
 					}
-					
+
 					$setor = $row['produtosetor'];
 
 					$total+= $subtotal;
 					$subtotal = 0;
 				}
-	
+
 				$subtotal+= $row['subtotal'];
 
 				$row['subtotal_formatted'] = number_format($row['subtotal'], 2, ',', '.');
@@ -107,7 +107,7 @@ switch ($_POST['action']) {
 			$data = ['subtotal_formatted' => number_format($subtotal, 2, ",", ".")];
 
 			$data['produtosetor'] = $setor;
-			
+
 			$data['extra_block_produto'] = $extra_block_produto;
 
 			$extra_block_setor_grupo.= $tplStockin->getContent($data, "EXTRA_BLOCK_SETOR_GRUPO");
@@ -127,7 +127,7 @@ switch ($_POST['action']) {
 			Send($content);
 
 		} else {
-			
+
 			$content = [
 				'data' => $tplStockin->getContent([], "EXTRA_BLOCK_REPORTSTOCKIN_NOTFOUND"),
 				'total_formatted' => "0,00"

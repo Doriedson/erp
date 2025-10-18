@@ -2,7 +2,7 @@
 
 use database\ControlAccess;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\BillsToPay;
 use database\BillsToPaySector;
 
@@ -14,12 +14,12 @@ ControlAccess::Check(ControlAccess::CA_SERVIDOR_CONTAS_A_PAGAR);
 switch ($_POST['action']) {
 
 	case "load":
-	
+
 		$billsSector = new BillsToPaySector();
 		$billsSector->getList();
 
 		$tplSector = new View('templates/bills_to_pay_sector');
-		
+
 		$tr = "";
 
 		if ($row = $billsSector->getResult()) {
@@ -29,7 +29,7 @@ switch ($_POST['action']) {
 				$tr.= $tplSector->getContent($row, "EXTRA_BLOCK_BILLSTOPAY");
 
 			} while ($row = $billsSector->getResult());
-			
+
 		} else {
 
 			$tr = $tplSector->getContent([], 'EXTRA_BLOCK_BILLSTOPAY_NONE');
@@ -43,15 +43,15 @@ switch ($_POST['action']) {
         $tplSector = new View('templates/bills_to_pay_sector');
 
 		Send($tplSector->getContent($row, "EXTRA_BLOCK_POPUP_BILLSTOPAY_NEWSECTOR"));
-	
+
 		break;
 
 	case "billstopaysector_setor_new":
 
 		$billsSector = new BillsToPaySector();
-		
+
 		$id_contasapagarsetor = $billsSector->Create($_POST['value']);
-		
+
 		$billsSector->Read($id_contasapagarsetor);
 
 		if ($row = $billsSector->getResult()) {
@@ -65,11 +65,11 @@ switch ($_POST['action']) {
 			Notifier::Add("Erro ao cadastrar setor!", Notifier::NOTIFIER_ERROR);
 			Send(null);
 		}
-	
-		break;		
+
+		break;
 
 	case "billstopaysector_contasapagarsetor_edit":
-		
+
         $billsSector = new BillsToPaySector();
 
         $billsSector->Read($_POST['id_contasapagarsetor']);
@@ -79,7 +79,7 @@ switch ($_POST['action']) {
             $tplSector = new View('templates/bills_to_pay_sector');
 
             Send($tplSector->getContent($row, "EXTRA_BLOCK_CONTASAPAGARSETOR_FORM"));
-    
+
         } else {
 
             Notifier::Add("Error ao carregar setor!", Notifier::NOTIFIER_ERROR);
@@ -104,7 +104,7 @@ switch ($_POST['action']) {
 			Notifier::Add("Setor não encontrado!", Notifier::NOTIFIER_ERROR);
 			Send(null);
 		}
-	break;		
+	break;
 
 	case "billstopaysector_contasapagar_save":
 
@@ -126,12 +126,12 @@ switch ($_POST['action']) {
 			$tplSector = new View("templates/bills_to_pay_sector");
 
 			Send($tplSector->getContent($row, "BLOCK_CONTASAPAGARSETOR"));
-			
+
 		} else {
 
 			Notifier::Add("Erro a cadastrar setor!", Notifier::NOTIFIER_ERROR);
 			Send(null);
-		} 
+		}
 	break;
 
 	case "billstopaysector_setor_delete":

@@ -1,7 +1,7 @@
 <?php
 
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\Config;
 
 require "inc/config.inc.php";
@@ -10,12 +10,12 @@ require "inc/authorization.php";
 switch ($_POST['action']) {
 
 	case "load":
-	
+
 		$config = new Config();
 		$config->Read();
 
 		$tplStock = new View('templates/stock');
-		
+
 		$cashtype = "";
 
 		if ($row = $config->getResult()) {
@@ -36,7 +36,7 @@ switch ($_POST['action']) {
 			Notifier::Add("Erro ao carregar configuração de estoque,", Notifier::NOTIFIER_ERROR);
 			Send(null);
 		}
-	
+
 		break;
 
     case "stock_toggle_active":
@@ -50,7 +50,7 @@ switch ($_POST['action']) {
         if ($row = $config->getResult()) {
 
 			$tplStock = new View('templates/stock');
-			
+
 			if ($row['estoque_secundario'] == 1) {
 
 				Send($tplStock->getContent($row, "EXTRA_BLOCK_BUTTON_ATIVO"));
@@ -72,6 +72,6 @@ switch ($_POST['action']) {
 
         Notifier::Add("Requisição inválida!", Notifier::NOTIFIER_ERROR);
         Send(null);
-    
+
         break;
 }

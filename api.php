@@ -23,7 +23,7 @@ use database\Table;
 use database\Pdv;
 use database\Log;
 use database\SaleOrderPay;
-use database\View;
+use App\View\View;
 use database\Calc;
 use database\ControlAccess;
 

@@ -5,7 +5,7 @@ use database\EntityAddress;
 use database\FreightCEP;
 use database\FreightValue;
 use database\Notifier;
-use database\View;
+use App\View\View;
 use database\Freight;
 
 require "inc/config.inc.php";
