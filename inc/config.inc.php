@@ -14,6 +14,8 @@ loadEnv(__DIR__ . '/../.env');
 // 2. Namespace da sua classe de Auth
 use database\Notifier;
 use App\Auth\Authorization;
+use App\Support\Version;
+use App\Http\Response;
 
 // 3. Defina aqui as páginas públicas (sem autenticação)
 $publicPages = [
@@ -81,8 +83,6 @@ function loadEnv(string $path): void {
     }
 }
 
-require __DIR__ . "/version.php";
-
 //Overload on operator new
 // function __autoload($class) {
 // }
@@ -118,36 +118,9 @@ spl_autoload_register(function ($className) {
 
 // spl_autoload_register("AutoloadFunction");
 
-function Send($data) {
+function Send($data, int $status = 200) {
 
-    global $version;
-
-    // switch($message_type) {
-
-    //     case "info":
-
-    //         $message_type = 0;
-    //         break;
-
-    //     case "error":
-
-    //         $message_type = 1;
-    //         break;
-
-    //     case "done":
-
-    //         $message_type = 2;
-    //         break;
-    // }
-
-    echo json_encode(
-        array(
-            "data"=> $data,
-            "messages" => Notifier::getMessages(),
-            "version" => $version
-        )
-    );
-
+    echo Response::json($data, $status, true); // mantém envelope legado
     exit();
 }
 

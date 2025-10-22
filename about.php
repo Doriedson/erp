@@ -1,10 +1,8 @@
 <?php
 use App\View\View;
-// use Escpos\PrintConnectors\NetworkPrintConnector;
-// use database\Notifier;
+use App\Support\Version;
 
 require "./inc/config.inc.php";
-require "./inc/version.php";
 
 $tplAbout = new View("templates/about");
 
@@ -66,7 +64,7 @@ $tplAbout = new View("templates/about");
 // $connector->finalize();
 
 $data = [
-  "version" => $version // . "<bR>" . $new_text
+  "version" => Version::get()
 ];
 
 Send($tplAbout->getContent($data, "BLOCK_PAGE"));

@@ -67,8 +67,6 @@ function PricetagM1($pricetag_option) {
 
 function PricetagM2($pricetag_option) {
 
-	global $version;
-
 	$priceTag = new PriceTag();
 
 	$priceTag->getList($pricetag_option);

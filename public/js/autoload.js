@@ -15,13 +15,14 @@ $(window).on("load", async function() {
 
 	if (response != null) {
 
-		Message.Set(response['message_info'], Message.MSG_INFO);
-		Message.Set(response['message_error'], Message.MSG_ERROR);
-		Message.Set(response['message_done'], Message.MSG_DONE);
-		Message.Set(response['message_alert'], Message.MSG_ALERT);
-		Modal.window = $(response['popup']);
-		// Authenticator.window = $(response['authenticator']);
-		MessageBox.window = $(response['messagebox']);
+		if (response['message_info'] != null) Message.Set(response['message_info'], Message.MSG_INFO);
+		if (response['message_error'] != null) Message.Set(response['message_error'], Message.MSG_ERROR);
+		if (response['message_done'] != null) Message.Set(response['message_done'], Message.MSG_DONE);
+		if (response['message_alert'] != null) Message.Set(response['message_alert'], Message.MSG_ALERT);
+
+		if (response['popup']) Modal.window = $(response['popup']);
+
+		if (response['messagebox']) MessageBox.window = $(response['messagebox']);
 	}
 
 	// data = {

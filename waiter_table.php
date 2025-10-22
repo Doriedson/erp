@@ -3,16 +3,16 @@
 use App\View\View;
 use database\Table;
 use database\Notifier;
+use App\Support\Version;
 
 require "./inc/config.inc.php";
-require "./inc/version.php";
 
 if (!isset($_POST['action'])) {
 
     $tplIndex = new View("templates/index");
 
     $content = [
-        "version" => $version,
+        "version" => Version::get(),
         "title" => 'Hortifruti - Garçom',
         "module" => 'waiter',
         'manifest' => 'waiter_manifest.json'

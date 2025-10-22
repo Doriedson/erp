@@ -7,9 +7,9 @@ use database\Company;
 use database\Collaborator;
 use database\Session;
 use database\Notifier;
+use App\Support\Version;
 
 require "./inc/config.inc.php";
-require "./inc/version.php";
 
 if (!isset($_POST['action'])) {
 
@@ -33,7 +33,7 @@ if (!isset($_POST['action'])) {
 	// $tplEntity = new View('templates/entity');
 
     $content = [
-			"version" => $version,
+			"version" => Version::get(),
 			"date" => date('Y-m-d'),
 		// "date_search" => date("Y-m"),
 			"title" => 'Retaguarda',
@@ -122,7 +122,7 @@ switch($_POST['action']) {
 			$date = new DateTimeImmutable();
 
 			$content = [
-				"version" => $version,
+				"version" => Version::get(),
 				"id_entidade" => $GLOBALS['authorized_id_entidade'],
 				"nome" => $nome,
 				"empresa" => $empresa,
@@ -166,7 +166,7 @@ switch($_POST['action']) {
 		$date = new DateTimeImmutable();
 
 		$content = [
-			"version" => $version,
+			"version" => Version::get(),
 			"id_entidade" => $GLOBALS['authorized_id_entidade'],
 			"nome" => $nome,
 			"empresa" => $empresa,

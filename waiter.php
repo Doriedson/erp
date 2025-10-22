@@ -14,9 +14,9 @@ use database\Product;
 use database\ProductSector;
 use database\Collaborator;
 use database\Company;
+use App\Support\Version;
 
 require "./inc/config.inc.php";
-require "./inc/version.php";
 
 if (!isset($_POST['action'])) {
 
@@ -38,7 +38,7 @@ if (!isset($_POST['action'])) {
 	}
 
     $content = [
-        "version" => $version,
+        "version" => Version::get(),
 		"date" => date('Y-m-d'),
 		"date_search" => date("Y-m"),
         "title" => 'Garçom',

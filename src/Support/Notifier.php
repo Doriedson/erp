@@ -1,6 +1,6 @@
 <?php
 
-namespace database;
+namespace App\Support;
 
 class Notifier {
 

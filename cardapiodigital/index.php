@@ -6,9 +6,9 @@ use database\Clean;
 use database\Company;
 use database\Product;
 use database\ProductSector;
+use App\Support\Version;
 
 require __DIR__ . "/../inc/config.inc.php";
-require __DIR__ . "/../inc/version.php";
 
 $tplDigitalMenu = new View("templates/digital_menu");
 
@@ -53,7 +53,7 @@ while ($row = $productSector->getResult()) {
 $date = new DateTimeImmutable();
 
 $content = [
-    "version" => $version,
+    "version" => Version::get(),
     "date" => date('Y-m-d'),
     "date_search" => date("Y-m"),
     "title" => 'Cardápio Digital',

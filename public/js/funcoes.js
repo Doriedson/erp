@@ -417,7 +417,7 @@ class Message {
 	}
 }
 
-function Treat_Receive_Success(data, status, request, url) {
+function Treat_Receive_Success(response, status, request, url) {
 
 	if (request.status === 202) {
 
@@ -425,29 +425,30 @@ function Treat_Receive_Success(data, status, request, url) {
 	}
 
 	let token;
-	let response = [];
 
-	try {
+	response = (typeof response === 'string') ?
+		(function(s){
 
-		response = JSON.parse(data);
+			try {
 
-		if (response.messages.length > 0) {
+				return JSON.parse(s);
 
-			for (index = 0; index < response.messages.length; index++ ) {
+			} catch(e){
 
-				Message.Show(response.messages[index][0], response.messages[index][1]);
-
-				// console.log(response.messages[index]);
+				return null;
 			}
+		})(response)
+	:
+		response;
+
+	if (response.messages.length > 0) {
+
+		for (index = 0; index < response.messages.length; index++ ) {
+
+			Message.Show(response.messages[index][0], response.messages[index][1]);
+
+			// console.log(response.messages[index]);
 		}
-
-	} catch (err) {
-
-		Message.Show("Ocorreu um erro não previsto no sistema.<br>Contacte o desenvolvedor!", Message.MSG_ERROR);
-		console.log(data);
-		console.log(err);
-
-		return;
 	}
 
 	if (response.version != version) {
@@ -545,6 +546,7 @@ async function Post(url, data, processData = true, contentType = 'application/x-
 			url: url,
 			type: "POST",
 			data: data,
+			dataType: 'json',
 			cache: processData,
 			processData: processData,
 			contentType: contentType,

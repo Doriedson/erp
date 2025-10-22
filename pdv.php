@@ -5,6 +5,7 @@ use database\Notifier;
 use App\View\View;
 use database\Clean;
 use database\Collaborator;
+use App\Support\Version;
 
 require "./inc/config.inc.php";
 
@@ -25,7 +26,7 @@ if (!isset($_POST['action'])) {
     $tplIndex = new View("templates/index");
 
     $content = [
-        "version" => $version,
+        "version" => Version::get(),
         "title" => 'PDV',
         "module" => $module,
         'manifest' => 'pdv_manifest.json'

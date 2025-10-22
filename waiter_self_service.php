@@ -16,7 +16,6 @@ use database\ProductType;
 // use database\Collaborator;
 
 require "./inc/config.inc.php";
-require "./inc/version.php";
 require "./inc/authorization.php";
 
 function LoadWaiterTableOrder($id_mesa) {

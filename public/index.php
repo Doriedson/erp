@@ -9,13 +9,20 @@ declare(strict_types=1);
 // -----------------------------
 // Autoload / Boot / Ambiente
 // -----------------------------
+if (!defined('APP_ROOT')) {
+
+    define('APP_ROOT', dirname(__DIR__)); // /var/www/html/erp
+}
+
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Http\Router;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LegacyCompatController;
 use App\Auth\AuthService;
+use App\Http\Controllers\MessageController;
 
 // Fuso horário do projeto
 @date_default_timezone_set('America/Sao_Paulo');
@@ -27,10 +34,14 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 // Error reporting (ajuste se tiver APP_DEBUG no ambiente)
 $debug = getenv('APP_DEBUG');
+
 if ($debug === '1' || $debug === 'true') {
+
     error_reporting(E_ALL);
     ini_set('display_errors', '1');
+
 } else {
+
     error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
     ini_set('display_errors', '0');
 }
@@ -84,6 +95,7 @@ $router->get('/health', function () {
 // -----------------------------
 // Usa o guard do AuthService antes de invocar os controllers
 $router->mount('/api', function (Router $r) {
+
     $r->get('/orders', function () {
         (new AuthService())->requireAuthForApi();
         return (new OrderController())->index();
@@ -106,32 +118,20 @@ $router->mount('/api', function (Router $r) {
 // Qualquer rota começando com /admin/ exige sessão.
 // O retorno vazio deixa o Nginx servir os estáticos via try_files.
 $router->get('/admin/.*', function () {
+
     (new AuthService())->requireAuthForPage();
     return ''; // Nginx/estático resolve (HTML, CSS, JS, etc).
 });
 
-// -----------------------------
-// Login (página)
-// -----------------------------
-// Se você tem um arquivo estático /public/login.html, o mais simples é
-// redirecionar para ele. Caso a sua SPA use outra página inicial,
-// ajuste aqui para a rota correta.
-$router->get('/login', function () {
-    // Se já estiver logado, envie para o painel
-    if (!empty($_SESSION['auth'])) {
-        header('Location: /admin'); // ajuste conforme sua home/admin
-        return '';
-    }
-    // Redireciona para um arquivo estático (se existir)
-    // Ex.: /public/login.html
-    header('Location: /login.html');
-    return '';
-});
+/** PÁGINAS (render de index.tpl + módulo) */
+$router->get('/',        [HomeController::class, 'indexBackend']); // Retaguarda
+$router->get('/garcom',  [HomeController::class, 'indexWaiter']);  // Garçom
 
-// -----------------------------
-// Raiz
-// -----------------------------
-$router->get('/', [HomeController::class, 'index']);
+/** ENDPOINTS LEGADOS (compat p/ JS atual) */
+$router->post('/message.php', [MessageController::class, 'load']);
+$router->post('/backend.php', [LegacyCompatController::class, 'backend']);
+$router->post('/waiter.php',  [LegacyCompatController::class, 'waiter']);
+$router->post('/pdv.php',     [LegacyCompatController::class, 'pdv']); // se usar
 
 // -----------------------------
 // Dispatch
