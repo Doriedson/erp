@@ -1,6 +1,6 @@
 <?php
 
-use database\Notifier;
+use App\Legacy\Notifier;
 
 require "./inc/config.inc.php";
 // require "./inc/authorization.php";
@@ -11,7 +11,7 @@ require "./inc/config.inc.php";
 // }
 
 switch($_POST['action']) {
-	
+
 	case "subscription":
 
 		$endpoint = $_POST['endpoint'];

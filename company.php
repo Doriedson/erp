@@ -1,16 +1,16 @@
 <?php
 
-use database\Notifier;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Company;
-use database\ValidaCPFCNPJ;
+use App\Legacy\Company;
+use App\Legacy\ValidaCPFCNPJ;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
 
 function CompanyFormEdit($block, $message_error) {
 
-	$tplCompany = new View('templates/company');
+	$tplCompany = new View('company');
 
 	$company = new Company();
 	$company->Read();
@@ -52,7 +52,7 @@ function CompanyFormEdit($block, $message_error) {
 
 function CompanyFormCancel($block, $message_error) {
 
-	$tplCompany = new View('templates/company');
+	$tplCompany = new View('company');
 
 	$company = new Company();
 	$company->Read();
@@ -96,7 +96,7 @@ function CompanyFormSave($field, $block, $message_error) {
 
 	$company->Update($data);
 
-	$tplCompany = new View('templates/company');
+	$tplCompany = new View('company');
 
 	$company->Read();
 
@@ -132,7 +132,7 @@ switch ($_POST['action']) {
 		$company = new Company();
 		$company->Read();
 
-		$tplCompany = new View('templates/company');
+		$tplCompany = new View('company');
 
 		$sector = "";
 

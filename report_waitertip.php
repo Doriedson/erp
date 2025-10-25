@@ -1,10 +1,10 @@
 ﻿<?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\SaleOrder;
-use database\Product;
+use App\Legacy\SaleOrder;
+use App\Legacy\Product;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -17,7 +17,7 @@ switch ($_POST['action']) {
 
 		$data = ['data' => date('Y-m-d')];
 
-		$tplWaitertip = new View('templates/report_waitertip');
+		$tplWaitertip = new View('report_waitertip');
 
 		Send($tplWaitertip->getContent($data, "BLOCK_PAGE"));
 	break;
@@ -39,7 +39,7 @@ switch ($_POST['action']) {
 			$saleorder->SearchWaitertipByDate($dataini);
 		}
 
-		$tplWaitertip = new View('templates/report_waitertip');
+		$tplWaitertip = new View('report_waitertip');
 
         $dataini_formatted = date_format(date_create($dataini), 'd/m/Y');
         $datafim_formatted = date_format(date_create($datafim), 'd/m/Y');

@@ -1,10 +1,10 @@
 <?php
 
-use database\ControlAccess;
+
 use App\View\View;
-use database\PriceTag;
-use database\Product;
-use database\Notifier;
+use App\Legacy\PriceTag;
+use App\Legacy\Product;
+use App\Legacy\Notifier;
 
 require "./inc/config.inc.php";
 require "./inc/authorization.php";
@@ -19,7 +19,7 @@ function PricetagM1($pricetag_option) {
 
 	if ($row = $priceTag->getResult()) {
 
-		$tplPricetag = new View("templates/price_tag_mod1");
+		$tplPricetag = new View("price_tag_mod1");
 
 		$result = "";
 
@@ -73,7 +73,7 @@ function PricetagM2($pricetag_option) {
 
 	if ($row = $priceTag->getResult()) {
 
-		$tplPricetag = new View("templates/price_tag_mod2");
+		$tplPricetag = new View("price_tag_mod2");
 
 		$content['extra_block_tag'] = "";
 
@@ -109,9 +109,9 @@ switch ($_POST['action']) {
 
 		$priceTag->getList("ALL");
 
-		$tplPricetag = new View('templates/price_tag');
+		$tplPricetag = new View('price_tag');
 
-		$tplProduct = new View("templates/product");
+		$tplProduct = new View("product");
 
 		$pricetag = "";
 
@@ -155,7 +155,7 @@ switch ($_POST['action']) {
 
 		} else {
 
-			$tplPricetag = new View('templates/price_tag');
+			$tplPricetag = new View('price_tag');
 
 			Send($tplPricetag->getContent($row, "EXTRA_BLOCK_PRICETAG_NONE"));
 		}
@@ -176,7 +176,7 @@ switch ($_POST['action']) {
 
 			} else {
 
-				$tplPricetag = new View('templates/price_tag');
+				$tplPricetag = new View('price_tag');
 
 				Send($tplPricetag->getContent([], 'EXTRA_BLOCK_PRICETAG_NONE'));
 			}
@@ -213,8 +213,8 @@ switch ($_POST['action']) {
 
 			if ($row = $priceTag->getResult()) {
 
-				$tplPricetag = new View('templates/price_tag');
-				$tplProduct = new View('templates/product');
+				$tplPricetag = new View('price_tag');
+				$tplProduct = new View('product');
 
 				$row = Product::FormatFields($row);
 
@@ -258,7 +258,7 @@ switch ($_POST['action']) {
 
 	case "pricetag_popup_print":
 
-		$tplPricetag = new View('templates/price_tag');
+		$tplPricetag = new View('price_tag');
 
 		Send($tplPricetag->getContent([], "EXTRA_BLOCK_POPUP_PRICETAG_PRINT"));
 

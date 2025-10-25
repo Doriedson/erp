@@ -1,10 +1,10 @@
 <?php
 
-use database\Notifier;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Wallet;
-use database\WalletCashType;
-use database\WalletSector;
+use App\Legacy\Wallet;
+use App\Legacy\WalletCashType;
+use App\Legacy\WalletSector;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -13,7 +13,7 @@ function WalletsectorFormEdit($block, $message_error) {
 
 	$id_walletsector = $_POST['id_walletsector'];
 
-	$tplWalletsector = new View('templates/wallet');
+	$tplWalletsector = new View('wallet');
 
 	$walletsector = new WalletSector();
 	$walletsector->Read($id_walletsector);
@@ -36,7 +36,7 @@ function WalletsectorFormCancel($block, $message_error) {
 
 	$id_walletsector = $_POST['id_walletsector'];
 
-	$tplWalletsector = new View('templates/wallet');
+	$tplWalletsector = new View('wallet');
 
 	$walletsector = new WalletSector();
 	$walletsector->Read($id_walletsector);
@@ -89,7 +89,7 @@ function WalletsectorFormSave($field, $block, $message_error) {
 
 	$walletsector->Update($data);
 
-	$tplWalletsector = new View('templates/wallet');
+	$tplWalletsector = new View('wallet');
 
 	$walletsector->Read($id_walletsector);
 
@@ -99,7 +99,7 @@ function WalletsectorFormSave($field, $block, $message_error) {
 
 		$extra_block_walletdespesa_sector_option = "";
 
-		$tplWallet = new View('templates/wallet');
+		$tplWallet = new View('wallet');
 
 		while ($row_list = $walletsector->getResult()) {
 
@@ -143,7 +143,7 @@ switch ($_POST['action']) {
 
 		$walletsector->getList($id_wallet);
 
-		$tplWallet = new View('templates/wallet');
+		$tplWallet = new View('wallet');
 
 		$sector = "";
 
@@ -177,7 +177,7 @@ switch ($_POST['action']) {
 		$id_wallet = $_POST['id_wallet'];
 		$walletsector = $_POST['walletsector'];
 
-		$tplWallet = new View('templates/wallet');
+		$tplWallet = new View('wallet');
 		$sector = new WalletSector();
 
 		$wallet = new Wallet();
@@ -281,7 +281,7 @@ switch ($_POST['action']) {
 
 					$extra_block_walletdespesa_sector_option = "";
 
-					$tplWallet = new View('templates/wallet');
+					$tplWallet = new View('wallet');
 
 					while ($row = $walletsector->getResult()) {
 
@@ -321,7 +321,7 @@ switch ($_POST['action']) {
 			"id_wallet" => $id_wallet,
 		];
 
-		$tplWallet = new View('templates/wallet');
+		$tplWallet = new View('wallet');
 
 		Send($tplWallet->getContent($data, "EXTRA_BLOCK_POPUP_WALLETDESPESA_SECTOR_NEW"));
 

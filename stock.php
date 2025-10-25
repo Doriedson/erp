@@ -1,8 +1,8 @@
 <?php
 
-use database\Notifier;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Config;
+use App\Legacy\Config;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -14,7 +14,7 @@ switch ($_POST['action']) {
 		$config = new Config();
 		$config->Read();
 
-		$tplStock = new View('templates/stock');
+		$tplStock = new View('stock');
 
 		$cashtype = "";
 
@@ -49,7 +49,7 @@ switch ($_POST['action']) {
 
         if ($row = $config->getResult()) {
 
-			$tplStock = new View('templates/stock');
+			$tplStock = new View('stock');
 
 			if ($row['estoque_secundario'] == 1) {
 

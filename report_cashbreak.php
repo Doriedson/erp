@@ -1,12 +1,12 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\SaleOrder;
-use database\CashAdd;
-use database\CashDrain;
-use database\Entity;
+use App\Legacy\SaleOrder;
+use App\Legacy\CashAdd;
+use App\Legacy\CashDrain;
+use App\Legacy\Entity;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -17,7 +17,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplCashbreak = new View("templates/report_cashbreak");
+		$tplCashbreak = new View("report_cashbreak");
 
 		$data = ['data' => date('Y-m-d')];
 
@@ -30,7 +30,7 @@ switch ($_POST['action']) {
 		$datafim = $_POST['datafim'];
 		$intervalo = ($_POST['intervalo'] == "false")? false : true;
 
-		$tplCashbreak = new View('templates/report_cashbreak');
+		$tplCashbreak = new View('report_cashbreak');
 
 		$sale = new SaleOrder();
 

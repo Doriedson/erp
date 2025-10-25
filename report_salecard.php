@@ -1,9 +1,9 @@
 ﻿<?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\SaleOrder;
+use App\Legacy\SaleOrder;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -14,7 +14,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplSalecard = new View('templates/report_salecard');
+		$tplSalecard = new View('report_salecard');
 
 		$data = ['data' => date('Y-m-d')];
 
@@ -33,7 +33,7 @@ switch ($_POST['action']) {
 
 		$ratio = 0.6;
 
-		$tplSalecard = new View('templates/report_salecard');
+		$tplSalecard = new View('report_salecard');
 
 		$dataini_formatted = date_format(date_create($dataini), 'd/m/Y');
 		$datafim_formatted = date_format(date_create($datafim), 'd/m/Y');

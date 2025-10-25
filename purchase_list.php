@@ -1,11 +1,11 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Product;
-use database\PurchaseList;
-use database\PurchaseListItem;
+use App\Legacy\Product;
+use App\Legacy\PurchaseList;
+use App\Legacy\PurchaseListItem;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -16,7 +16,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplPurchaseList = new View('templates/purchase_list');
+		$tplPurchaseList = new View('purchase_list');
 
 		$purchase = new PurchaseList();
 		$purchase->getList();
@@ -57,7 +57,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseList->getResult()) {
 
-			$tplPurchaseList = new View('templates/purchase_list');
+			$tplPurchaseList = new View('purchase_list');
 
 			$row = Product::FormatFields($row);
 
@@ -99,7 +99,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseList->getResult()) {
 
-			$tplPurchaseList = new View('templates/purchase_list');
+			$tplPurchaseList = new View('purchase_list');
 
 			Send($tplPurchaseList->getContent($row, "EXTRA_BLOCK_DESCRICAO_FORM"));
 
@@ -127,7 +127,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseList->getResult()) {
 
-			$tplPurchaseList = new View("templates/purchase_list");
+			$tplPurchaseList = new View("purchase_list");
 
 			Send($tplPurchaseList->getContent($row, "BLOCK_DESCRICAO"));
 
@@ -148,7 +148,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchase->getResult()) {
 
-			$tplPurchaseList = new View("templates/purchase_list");
+			$tplPurchaseList = new View("purchase_list");
 
 			Send($tplPurchaseList->getContent($row, "BLOCK_DESCRICAO"));
 
@@ -169,9 +169,9 @@ switch ($_POST['action']) {
 
 		$extra_block_purchaselist_item = "";
 
-		$tplPurchaseList = new View("templates/purchase_list");
+		$tplPurchaseList = new View("purchase_list");
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		if ($row = $purchaseItem->getResult()) {
 
@@ -221,7 +221,7 @@ switch ($_POST['action']) {
 
 			if ($row = $purchaseItem->getResult()) {
 
-				$tplPurchaseList = new View('templates/purchase_list');
+				$tplPurchaseList = new View('purchase_list');
 
 				$row = Product::FormatFields($row);
 
@@ -258,7 +258,7 @@ switch ($_POST['action']) {
 
 			} else {
 
-				$tplPurchaseList = new View('templates/purchase_list');
+				$tplPurchaseList = new View('purchase_list');
 
 				Notifier::Add("Item removido com sucesso!", Notifier::NOTIFIER_DONE);
 				Send($tplPurchaseList->getContent([], "EXTRA_BLOCK_PURCHASELIST_ITEM_NONE"));

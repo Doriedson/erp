@@ -1,9 +1,9 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\BlackFriday;
+use App\Legacy\BlackFriday;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -14,7 +14,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplBlackFriday = new View("templates/black_friday");
+		$tplBlackFriday = new View("black_friday");
 
 		// $data = ['data' => date('Y-m-d')];
 
@@ -46,7 +46,7 @@ switch ($_POST['action']) {
 
         $data = ['data' => date('Y-m-d')];
 
-        $tplBlackFriday = new View("templates/black_friday");
+        $tplBlackFriday = new View("black_friday");
 
         Send($tplBlackFriday->getContent($data, "EXTRA_BLOCK_POPUP_BLACKFRIDAY_NEW"));
 
@@ -78,7 +78,7 @@ switch ($_POST['action']) {
 
         if ($row = $blackfriday->getResult()) {
 
-            $tplBlackFriday = new View("templates/black_friday");
+            $tplBlackFriday = new View("black_friday");
 
             $row = BlackFriday::FormatFields($row);
 

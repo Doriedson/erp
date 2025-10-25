@@ -1,9 +1,9 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Table;
+use App\Legacy\Table;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -16,7 +16,7 @@ function TableConfigGetTables() {
 
     $table->getList();
 
-    $tplTable = new View("templates/table_config");
+    $tplTable = new View("table_config");
 
     $tables = "";
 
@@ -38,7 +38,7 @@ switch($_POST['action']) {
 
 	case "load":
 
-        $tplTable = new View("templates/table_config");
+        $tplTable = new View("table_config");
 
         $data = [
             "extra_block_table" => TableConfigGetTables()
@@ -137,7 +137,7 @@ switch($_POST['action']) {
 
         if($row = $table->getResult()) {
 
-            $tplTable = new View('templates/table_config');
+            $tplTable = new View('table_config');
 
             Send($tplTable->getContent($row, "EXTRA_BLOCK_TABLE_FORM_MESA"));
 
@@ -159,7 +159,7 @@ switch($_POST['action']) {
 
         if($row = $table->getResult()) {
 
-            $tplTable = new View('templates/table_config');
+            $tplTable = new View('table_config');
 
             $row = Table::FormatFields($row);
 
@@ -202,7 +202,7 @@ switch($_POST['action']) {
 
         if($row = $table->getResult()) {
 
-            $tplTable = new View('templates/table_config');
+            $tplTable = new View('table_config');
 
             $row = Table::FormatFields($row);
 
@@ -218,7 +218,7 @@ switch($_POST['action']) {
 
     case "tableconfig_popup_new":
 
-        $tplTable = new View('templates/table_config');
+        $tplTable = new View('table_config');
 
         Send($tplTable->getContent([], "EXTRA_BLOCK_POPUP_TABLECONFIG_NEW"));
 

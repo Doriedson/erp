@@ -162,9 +162,13 @@ class Observable {
 	}
 }
 
-let observerStart = new Observable();
+// let observerStart = new Observable();
 
 class Authenticator {
+
+	static _statusCache = { ts: 0, value: { authenticated: false, user: null } };
+  	static _statusTTLms = 10000; // 10s de cache (ajuste se quiser)
+	static _didAfterLogin = false; // <-- guarda de execução única
 
 	// static window = null;
 	static data = {};
@@ -173,51 +177,212 @@ class Authenticator {
 	static error = null;
 	static cancel = null;
 
-	static async Authenticate(data, url, success, error, cancel, anonymous = false) {
+	static async afterLogin() {
 
-		this.data = data;
-		this.url = url;
-		this.success = success;
-		this.error = error;
-		this.cancel = cancel;
+		if (this._didAfterLogin) return;   // evita rodar 2x
+		this._didAfterLogin = true;
 
-		if (!anonymous || !await this.Send(null, null)) {
+		await this.status(true);            // invalida o cache e confirma auth
 
-			let data = {
-				action: "popup_authenticator"
-			}
+		// some com a tela de login
+		$('#auth_container').remove();      // ou .addClass('hidden')
+		$('#body-container').empty();
 
-			let response = await Post("backend.php", data);
+		Message.Show('Autenticado com sucesso.', Message.MSG_DONE);
 
-			if (response != null) {
+		// segue para o backend (menu + home)
+		await this.loadBackendMenu();
+	}
 
-				Modal.Show(Modal.POPUP_SIZE_SMALL, "Autorização", response, cancel);
-			}
+	// ---- STATUS ----
+	static async status(force = false) {
+
+		const now = Date.now();
+
+		if (!force && (now - this._statusCache.ts) < this._statusTTLms) {
+
+			return this._statusCache.value;
+		}
+
+		try {
+
+			const r = await GET_JSON('/auth/status');     // << JSON!
+			// r já é data normalizada por Treat_Receive_Success
+			const v = r ? r : { authenticated: false, user: null };
+			this._statusCache = { ts: now, value: v };
+			return v;
+
+		} catch {
+
+			this._statusCache = { ts: now, value: { authenticated: false, user: null } };
+			return this._statusCache.value;
 		}
 	}
 
-	static async Send(auth_id, auth_pass) {
+	static async isAuthenticated(force = false) {
 
-		this.data.auth_id = auth_id;
-		this.data.auth_pass = auth_pass;
-
-		let ret = false;
-
-		let response = await Post(this.url, this.data);
-
-		if (response != null) {
-
-			this.success(response);
-
-			ret = true;
-
-		} else {
-
-			this.error();
-		}
-
-		return ret;
+		const s = await this.status(force);
+		return !!(s && s.authenticated);
 	}
+
+	static async showLogin(cancel = null) {
+
+		try {
+
+			const r = await GET_JSON('/ui/login');
+			const html = (r && r.html) ? r.html : r; // compat: caso venha já o HTML puro
+
+			$('#body-container').html(html);
+			$('.leftmenu_container').addClass('hidden').empty();
+			$('.body-header').addClass('hidden');
+
+			this._didAfterLogin = false; // permite novo afterLogin numa sessão futura
+
+		} catch (e) {
+
+			Message.Show('Falha ao carregar tela de login.', Message.MSG_ERROR);
+		}
+	}
+
+	// ---- GARANTIR AUTENTICAÇÃO (fluxo único) ----
+	static async ensure({ anonymous = false, cancel = null } = {}) {
+
+		if (anonymous) return true;
+
+		const ok = await this.isAuthenticated();
+
+		if (ok) return true;
+
+		await this.showLogin(cancel);
+
+		return false; // o submit do form vai continuar o fluxo
+	}
+
+	// ---- MONTAGEM DO BACKEND ----
+	static async loadBackendMenu() {
+
+		try {
+
+			const html = await GET_HTML('/ui/backend/menu');
+
+			const $menu = $('.leftmenu_container');
+
+			if (!$menu.length) {
+				console.error('Container .leftmenu_container não encontrado no DOM.');
+				Message.Show('Estrutura da página indisponível. Recarregue a tela.', Message.MSG_ERROR);
+				return;
+			}
+
+			$menu.removeClass('hidden').html(html);
+
+			$('.body-header').removeClass('hidden');
+			$('#body-container').empty();
+
+			LoadPage('home.php');
+
+		} catch (e) {
+
+			console.error('Falha ao carregar menu:', e);
+			Message.Show('Não foi possível carregar o menu.', Message.MSG_ERROR);
+		}
+	}
+
+	// ---- BOOT ÚNICO DA PÁGINA ----
+	static async bootstrap() {
+
+		// 1) mensagens (mantém compat com seu backend atual)
+		try {
+			const msg = await Post('/message.php', { action: 'load' });
+			const m = msg && msg.data ? msg.data : msg;
+			if (m) {
+				Message.Set(m["message_info"],  Message.MSG_INFO);
+				Message.Set(m["message_error"], Message.MSG_ERROR);
+				Message.Set(m["message_done"],  Message.MSG_DONE);
+				Message.Set(m["message_alert"], Message.MSG_ALERT);
+				Modal.window      = $(m["popup"]);
+				MessageBox.window = $(m["messagebox"]);
+			}
+		} catch {}
+
+		this.showWelcome();
+
+		// 2) Após 500ms, decide o que mostrar
+		setTimeout(async () => {
+
+			const s = await this.status();
+
+			this.hideWelcome();
+
+			if (s.authenticated) {
+
+				const module = ($("#body-container").data("module") || "backend").toString();
+
+				switch (module) {
+
+					case 'backend':
+						await this.loadBackendMenu();
+						break;
+					case 'waiter':
+						if (typeof loadWaiter === 'function') await loadWaiter();
+						else Message.Show('Módulo do garçom não implementado.', Message.MSG_INFO);
+						break;
+					case 'pdv':
+						if (typeof loadPdv === 'function') await loadPdv();
+						else Message.Show('Módulo do PDV não implementado.', Message.MSG_INFO);
+						break;
+					default:
+						Message.Show('Módulo não definido.', Message.MSG_ERROR);
+				}
+
+			} else {
+
+				await this.showLogin();   // <-- login (página), diferente do autenticador/popup
+			}
+
+		}, 500);
+
+	}
+
+	// Mostra a tela de boas-vindas (container já existente no index.tpl)
+	static showWelcome() {
+		$('.splash-screen').removeClass('hidden');   // ajuste o ID/classe conforme seu tpl
+	}
+
+	// Oculta a tela de boas-vindas
+	static hideWelcome() {
+		$('.splash-screen').addClass('hidden');
+	}
+
+	// static async Authenticate(data, url, success, error, cancel, anonymous = false) {
+
+	// 	this.data = data;
+	// 	this.url = url;
+	// 	this.success = success;
+	// 	this.error = error;
+	// 	this.cancel = cancel;
+
+	// 	if (!anonymous) {
+
+	// 		const ok = await IsAuthenticated();
+
+	// 		if (!ok) {
+
+	// 			const html = await GetAuthPopupHtml(); // pega o form existente
+	// 			Modal.Show(Modal.POPUP_SIZE_SMALL, 'Autorização', html, cancel);
+	// 			return; // aguarda o usuário logar; o submit vai disparar a continuação
+	// 		}
+	// 	}
+
+	// 	try {
+
+	// 		const resp = await Post(url, data); // seu Post existente
+	// 		if (typeof success === 'function') success(resp);
+
+	// 	} catch (e) {
+
+	// 		if (typeof error === 'function') error(e);
+	// 	}
+	// }
 }
 
 // let authenticator = new Authenticator();
@@ -233,6 +398,13 @@ function setCookie(cname, cvalue, exdays = 365) {
 	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+async function GetAuthPopupHtml() {
+
+  const r = await GET_JSON('/ui/auth/popup');
+  const v = r && r.data ? r.data : r;
+  return v.html || '';
+}
+
 /**
  * Form to authenticate
 */
@@ -240,23 +412,29 @@ $(document).on("submit", "#frm_authenticator", async function(event) {
 
 	event.preventDefault();
 
-	let form = $(this);
+	const form = $(this);
 
 	FormDisable(form);
 
-	let id_entidade = this.id_entidade.value;
-	let pass = this.pass.value;
+	const payload = {
+		id_entidade: this.id_entidade.value,
+		senha: this.senha.value
+	}
 
-	if (await Authenticator.Send(id_entidade, pass)) {
+	try {
+		// faz o login
+		const resp = await Post('/auth/login', payload);
 
-		Modal.Close(form.closest(".popup"));
-		// this.user.value = "";
-		// this.pass.value = "";
-	} else {
+		// sucesso: dispara o pós-login único
+		await Authenticator.afterLogin();
 
-		FormEnable(form);
-		this.pass.value = "";
-		this.pass.focus();
+	} catch (e) {
+
+		const msg = (e && e.responseJSON && e.responseJSON.error)
+		? e.responseJSON.error
+		: 'Falha no login';
+		Message.Show(msg, Message.MSG_ERROR);
+		FormEnable($form);
 	}
 });
 
@@ -419,80 +597,61 @@ class Message {
 
 function Treat_Receive_Success(response, status, request, url) {
 
-	if (request.status === 202) {
+console.log(url);
 
+	// 202 = aceito e nada a fazer
+  	if (request.status === 202) return null;
+
+	try {
+		// Detectar HTML/texto (ex.: /ui/login, /ui/backend/menu)
+		const ct = (request.getResponseHeader('Content-Type') || '').toLowerCase();
+
+		if (typeof response === 'string' || ct.includes('text/html')) {
+
+			return response; // não tenta ler messages nem version
+		}
+
+		// Se é objeto (JSON), normaliza campos opcionais
+		const data      = response?.data ?? null;
+		const messages  = Array.isArray(response?.messages) ? response.messages : [];
+		const srvVer   = response?.version;
+
+		// Renderiza mensagens se existirem (apenas informativas)
+		for (const m of messages) {
+			Message.Show(m.text || String(m), Message.MSG_INFO);
+		}
+
+		// Verificação de versão (somente se houver variável global version definida)
+		// e apenas quando a resposta tem version (evita loop de reload quando é HTML).
+		if (typeof srvVer !== 'undefined' && typeof window.version !== 'undefined') {
+		if (srvVer != window.version) {
+			Message.Show('O sistema está sendo atualizado...', Message.MSG_INFO);
+			setTimeout(() => window.location.reload(true), 1000);
+			return null;
+		}
+		}
+
+		// Compat: headers de autorização (legado)
+		if (data && data['logged']) {
+		const token = request.getResponseHeader('Authorization');
+		if (token) {
+			localStorage.setItem('token', token);
+			if (url === 'backend.php') localStorage.setItem('module', 'backend');
+			else if (url === 'waiter.php') localStorage.setItem('module', 'waiter');
+		}
+		}
+
+		return data ?? response;
+
+	} catch (e) {
+
+		console.error('Treat_Receive_Success falhou:', e);
+		Message.Show('Erro ao tratar resposta do servidor.', Message.MSG_ERROR);
 		return null;
 	}
-
-	let token;
-
-	response = (typeof response === 'string') ?
-		(function(s){
-
-			try {
-
-				return JSON.parse(s);
-
-			} catch(e){
-
-				return null;
-			}
-		})(response)
-	:
-		response;
-
-	if (response.messages.length > 0) {
-
-		for (index = 0; index < response.messages.length; index++ ) {
-
-			Message.Show(response.messages[index][0], response.messages[index][1]);
-
-			// console.log(response.messages[index]);
-		}
-	}
-
-	if (response.version != version) {
-
-		Message.Show("O sistema está sendo atualizado...", Message.MSG_INFO);
-
-		setTimeout(function() {
-
-			window.location.reload(true);
-		}, 1000);
-
-		return;
-	}
-
-	if (response.data && response.data['logged']) {
-
-		if (token = request.getResponseHeader('Authorization')) {
-
-			localStorage.setItem('token', token);
-
-			if (url == "backend.php") {
-
-				localStorage.setItem('module', 'backend');
-
-			} else if (url == "waiter.php") {
-
-				localStorage.setItem('module', 'waiter');
-			}
-		}
-	}
-
-	if (response.message_type != null) {
-
-		Message.Show(response.message, response.message_type);
-
-	}
-
-	return response.data;
 }
 
 function Treat_Receive_Error(data, request, url) {
-
-console.log("treat " + request.status);
-console.log(data);
 
 	switch (request.status) {
 
@@ -504,14 +663,11 @@ console.log(data);
 
 		case 401:
 
-			if (url == "backend.php" && data.action != "auth") {
-
-				Message.Show("Login ou senha inválida!", Message.MSG_ERROR);
-
-			} else {
-
-				Message.Show("Acesso não autorizado!", Message.MSG_ERROR);
-			}
+			localStorage.removeItem('token');
+			Authenticator.status(true);
+			Authenticator.showLogin();
+			Message.Show('Sessão expirada. Faça login novamente.', Message.MSG_INFO);
+			return null;
 
 			break;
 
@@ -587,6 +743,13 @@ async function Post(url, data, processData = true, contentType = 'application/x-
 	return ret;
 }
 
+function ShowLogin() {
+
+  $("#auth_container").removeClass("hidden");   // onde está o <form id="frm_authenticator"...>
+  $("#id_entidade").focus();
+}
+
+
 async function GET(url, data, contentType = 'application/x-www-form-urlencoded; charset=UTF-8') {
 
 	let ret = null;
@@ -599,7 +762,7 @@ async function GET(url, data, contentType = 'application/x-www-form-urlencoded; 
 			data: data,
 			contentType: contentType,
 			headers: {"Authorization": localStorage.getItem('token')},
-			// dataType: "JSON",
+			cache: false,
 			success: function(data, status, request) {
 
 				ret = Treat_Receive_Success(data, status, request, url);
@@ -632,6 +795,52 @@ async function GET(url, data, contentType = 'application/x-www-form-urlencoded; 
 	}
 
 	return ret;
+}
+
+async function GET_JSON(url, data) {
+  let ret = null;
+  try {
+    await $.ajax({
+      url,
+      type: 'GET',
+      data,
+      dataType: 'json',              // << quer JSON
+      headers: { "Authorization": localStorage.getItem('token') },
+      cache: false,
+      success: function (data, status, request) {
+        ret = Treat_Receive_Success(data, status, request, url);
+      },
+      error: function (request) {
+        ret = Treat_Receive_Error(data, request, url);
+      }
+    });
+  } catch (e) {
+    Message.Show(`Erro de comunicação [GET_JSON] [${e.status||'?'}]`, Message.MSG_ERROR);
+  }
+  return ret;
+}
+
+async function GET_HTML(url, data) {
+  let ret = null;
+  try {
+    await $.ajax({
+      url,
+      type: 'GET',
+      data,
+      dataType: 'text',              // << quer HTML
+      headers: { "Authorization": localStorage.getItem('token') },
+      cache: false,
+      success: function (data, status, request) {
+        ret = Treat_Receive_Success(data, status, request, url);
+      },
+      error: function (request) {
+        ret = Treat_Receive_Error(data, request, url);
+      }
+    });
+  } catch (e) {
+    Message.Show(`Erro de comunicação [GET_HTML] [${e.status||'?'}]`, Message.MSG_ERROR);
+  }
+  return ret;
 }
 
 async function CEPSearch(cep) {
@@ -739,55 +948,24 @@ $(document).on("click", ".message_bt_close", function() {
 
 async function Logout() {
 
-	$(".leftmenu_container").addClass("hidden");
-	$(".body-header").addClass("hidden");
-	$(".leftmenu_container").html("");
+  // 1) tenta encerrar no servidor (ignora falhas/401)
+  try { await Post('/auth/logout', {}); } catch(e) {}
 
-	let page = "backend.php";
+  // 2) limpa UI
+  $('.leftmenu_container').addClass('hidden').empty();
+  $('.body-header').addClass('hidden');
 
-	switch ($('#body-container').data('module')) {
+  // 3) limpa estado local
+  localStorage.removeItem('token');
+  localStorage.removeItem('module');
+  // se quiser manter o último colaborador selecionado:
+  // localStorage.removeItem('id_entidade');
 
-		case "backend":
-
-			page = "backend.php";
-			break;
-
-		case "waiter":
-
-			page = "waiter.php";
-			break;
-
-		case "pdv":
-
-			page = "pdv.php";
-			break;
-
-		default:
-
-			Message.Show("Módulo não definido!", Message.MSG_ERROR);
-			break;
-	}
-
-	// localStorage.clear();
-	localStorage.removeItem("token");
-	localStorage.removeItem("module");
-
-	let data = {
-		action: "load",
-		id_entidade: localStorage.getItem("id_entidade")
-	}
-
-	let response = await Post(page, data);
-
-	if (response != null) {
-
-		let content = $(response);
-
-		$("#body-container").html(content);
-
-		AutoFocus(content);
-	}
+  // 4) invalida cache de status e mostra a tela de login
+  await Authenticator.status(true);
+  await Authenticator.showLogin();
 }
+
 
 Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
     var n = this,

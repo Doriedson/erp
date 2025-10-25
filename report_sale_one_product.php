@@ -1,13 +1,13 @@
 ﻿<?php
 
-use database\ControlAccess;
-use database\Notifier;
-use database\ProductComposition;
-use database\ProductKit;
+
+use App\Legacy\Notifier;
+use App\Legacy\ProductComposition;
+use App\Legacy\ProductKit;
 use App\View\View;
-use database\Product;
-use database\SaleOrderItem;
-use database\Calc;
+use App\Legacy\Product;
+use App\Legacy\SaleOrderItem;
+use App\Legacy\Calc;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -113,8 +113,8 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplSaleProduct = new View('templates/report_sale_one_product');
-        $tplProduct = new View('templates/product');
+		$tplSaleProduct = new View('report_sale_one_product');
+        $tplProduct = new View('product');
 
 		$data = ['data' => date('Y-m-d')];
         $data["block_product_autocomplete_search"] = $tplProduct->getContent([], "BLOCK_PRODUCT_AUTOCOMPLETE_SEARCH");
@@ -238,7 +238,7 @@ switch ($_POST['action']) {
 
 				$filter = date_format(date_create($dataini), "d/m/Y") . " a " . date_format(date_create($datafim), "d/m/Y");
 
-				$tplReport = new View('templates/report_sale_one_product');
+				$tplReport = new View('report_sale_one_product');
 
 				Send([
 					// "data" => $tplReport->getContent([], "EXTRA_BLOCK_CONTAINER"),
@@ -331,7 +331,7 @@ switch ($_POST['action']) {
 						break;
 				}
 
-				$tplReport = new View('templates/report_sale_one_product');
+				$tplReport = new View('report_sale_one_product');
 
 				$filter = date_format(date_create($dataini), "d/m/Y");
 
@@ -352,7 +352,7 @@ switch ($_POST['action']) {
 					// 	]],
 					// ];
 
-					// $tplReport = new View('templates/report_sale_one_product');
+					// $tplReport = new View('report_sale_one_product');
 
 					// Send([
 					// 	"data" => $tplReport->getContent([], "EXTRA_BLOCK_CONTAINER"),
@@ -391,9 +391,9 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplIndex = new View("templates/index");
-			$tplProduct = new View("templates/product");
-			$tplReport = new View("templates/report_sale_one_product");
+			$tplIndex = new View("index");
+			$tplProduct = new View("product");
+			$tplReport = new View("report_sale_one_product");
 
 			$row = Product::FormatFields($row);
 
@@ -440,8 +440,8 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplProduct = new View("templates/product");
-			$tplReport = new View("templates/report_sale_one_product");
+			$tplProduct = new View("product");
+			$tplReport = new View("report_sale_one_product");
 
 			$row = Product::FormatFields($row);
 

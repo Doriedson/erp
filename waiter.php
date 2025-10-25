@@ -1,30 +1,31 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Clean;
-use database\Printing;
-use database\PrinterConfig;
-use database\Table;
-use database\SaleOrder;
-use database\SaleOrderItem;
-use database\Entity;
-use database\Product;
-use database\ProductSector;
-use database\Collaborator;
-use database\Company;
+use App\Legacy\Clean;
+use App\Legacy\Printing;
+use App\Legacy\PrinterConfig;
+use App\Legacy\Table;
+use App\Legacy\SaleOrder;
+use App\Legacy\SaleOrderItem;
+use App\Legacy\Entity;
+use App\Legacy\Product;
+use App\Legacy\ProductSector;
+use App\Legacy\Collaborator;
+use App\Legacy\ControlAccess;
+use App\Legacy\Company;
 use App\Support\Version;
 
 require "./inc/config.inc.php";
 
 if (!isset($_POST['action'])) {
 
-	$tplWaiterIndex = new View("templates/waiter_index");
+	$tplWaiterIndex = new View("waiter_index");
 
 	$module = $tplWaiterIndex->getContent(["module" => 'waiter'], "BLOCK_PAGE");
 
-    $tplIndex = new View("templates/index");
+    $tplIndex = new View("index");
 
 	$company = new Company();
 
@@ -66,11 +67,11 @@ require "./inc/authorization.php";
 
 function LoadWaiterTableOrder($id_mesa) {
 
-	$tplWaiterOrder = new View('templates/waiter_order');
-	$tplWaiterSector = new View('templates/waiter_sector');
-	$tplWaiterOrderProducts = new View('templates/waiter_order_products');
+	$tplWaiterOrder = new View('waiter_order');
+	$tplWaiterSector = new View('waiter_sector');
+	$tplWaiterOrderProducts = new View('waiter_order_products');
 
-	$tplEntity = new View('templates/entity');
+	$tplEntity = new View('entity');
 
 	$table = new Table();
 
@@ -204,9 +205,9 @@ function LoadWaiterTableOrder($id_mesa) {
 
 function LoadWaiterTableOrderRevision($id_mesa, $products) {
 
-	$tplWaiterOrder = new View('templates/waiter_order');
-	$tplWaiterSector = new View('templates/waiter_sector');
-	$tplEntity = new View('templates/entity');
+	$tplWaiterOrder = new View('waiter_order');
+	$tplWaiterSector = new View('waiter_sector');
+	$tplEntity = new View('entity');
 	$versao = 0;
 
 	$data["id_mesa"] = $id_mesa;
@@ -317,7 +318,7 @@ switch($_POST['action']) {
 
 		$id_entidade = $_POST["id_entidade"];
 
-		$tplLogin = new View("templates/waiter_login");
+		$tplLogin = new View("waiter_login");
 
 		$collaborator = new Collaborator();
 
@@ -368,8 +369,8 @@ switch($_POST['action']) {
 
 			if (ControlAccess::Login($user, $pass, ControlAccess::CA_WAITER)) {
 
-				$tplMenu = new View("templates/waiter_menu");
-				$tplTable = new View("templates/waiter_table");
+				$tplMenu = new View("waiter_menu");
+				$tplTable = new View("waiter_table");
 
 				$nome = strtok($GLOBALS['authorized_nome'], " ");
 
@@ -411,8 +412,8 @@ switch($_POST['action']) {
 
 		ControlAccess::Check(ControlAccess::CA_WAITER);
 
-		$tplMenu = new View("templates/waiter_menu");
-		$tplTable = new View("templates/waiter_table");
+		$tplMenu = new View("waiter_menu");
+		$tplTable = new View("waiter_table");
 
 		$nome = strtok($GLOBALS['authorized_nome'], " ");
 
@@ -496,7 +497,7 @@ switch($_POST['action']) {
 
 		$sector = $productsector->getListWaiter();
 
-		$tplSector = new View('templates/waiter_sector');
+		$tplSector = new View('waiter_sector');
 
 		$waitersector_notfound = "";
 
@@ -531,7 +532,7 @@ switch($_POST['action']) {
 
 		$product->getProductBySector($id_produtosetor);
 
-		$tplWaiterProduct = new View('templates/waiter_sector');
+		$tplWaiterProduct = new View('waiter_sector');
 
 		$products = "";
 
@@ -741,7 +742,7 @@ switch($_POST['action']) {
 
 	case "extra_block_product_none":
 
-		$tplWaiterSector = new View('templates/waiter_sector');
+		$tplWaiterSector = new View('waiter_sector');
 
 		Send($tplWaiterSector->getContent([], "EXTRA_BLOCK_WAITERSECTOR_PRODUCT_NONE"));
 
@@ -750,14 +751,14 @@ switch($_POST['action']) {
 	case "waitertable_entity_search_open":
 
 		$window = $_POST["window"];
-		$tplEntity = new View('templates/entity');
+		$tplEntity = new View('entity');
 
 		$data = [
 			"block_entity_autocomplete_search" => $tplEntity->getContent([], "BLOCK_ENTITY_AUTOCOMPLETE_SEARCH"),
 			"window" => $window
 		];
 
-		$tplWaiterOrder = new View('templates/waiter_order');
+		$tplWaiterOrder = new View('waiter_order');
 
 		Send($tplWaiterOrder->getContent($data, "EXTRA_BLOCK_WAITERORDER_ENTITY_SEARCH"));
 		break;
@@ -882,7 +883,7 @@ switch($_POST['action']) {
 
 				if ($row = $saleOrder->getResult()) {
 
-					$tplWaiterOrder = new View('templates/waiter_order');
+					$tplWaiterOrder = new View('waiter_order');
 
 					if ($row['id_entidade'] == null) {
 
@@ -898,7 +899,7 @@ switch($_POST['action']) {
 
 							$rowEntity = Entity::FormatFields($rowEntity);
 
-							$tplEntity = new View("templates/entity");
+							$tplEntity = new View("entity");
 
 							$rowEntity["window"] = $window;
 							$rowEntity["block_entity_nome"] = $tplEntity->getContent($rowEntity, "BLOCK_ENTITY_NOME");
@@ -1072,7 +1073,7 @@ switch($_POST['action']) {
 
 		$table = new Table();
 
-		$tplTable = new View("templates/waiter_table");
+		$tplTable = new View("waiter_table");
 
 		$table->Search($value);
 
@@ -1106,7 +1107,7 @@ switch($_POST['action']) {
 
 		$table = new Table();
 
-		$tplTable = new View("templates/waiter_table");
+		$tplTable = new View("waiter_table");
 
 		$table->Search($value);
 
@@ -1114,7 +1115,7 @@ switch($_POST['action']) {
 
 		if ($row = $table->getResult()) {
 
-			// $tplSelfService = new View('templates/waiter_self_service');
+			// $tplSelfService = new View('waiter_self_service');
 
 			do {
 
@@ -1170,7 +1171,7 @@ switch($_POST['action']) {
 
 			$row = Product::FormatFields($row);
 
-			$tplTable = new View("templates/waiter_sector");
+			$tplTable = new View("waiter_sector");
 
 			Send($tplTable->getContent($row, "EXTRA_BLOCK_POPUP_WAITERSECTOR_PESO"));
 

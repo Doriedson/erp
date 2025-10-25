@@ -1,8 +1,8 @@
 <?php
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\DeliveryDireto;
+use App\Legacy\DeliveryDireto;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -11,7 +11,7 @@ switch ($_POST['action']) {
 
     case "load":
 
-		$tplIntegrations = new View('templates/integrations');
+		$tplIntegrations = new View('integrations');
 
         $dd = new DeliveryDireto();
 

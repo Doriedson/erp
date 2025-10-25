@@ -1,11 +1,11 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\CashDrain;
-use database\CashAdd;
-use database\Calc;
+use App\Legacy\CashDrain;
+use App\Legacy\CashAdd;
+use App\Legacy\Calc;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -16,7 +16,7 @@ function CashdrainFormEdit($block, $message_error) {
 
 	$id_caixasangria = $_POST['id_caixasangria'];
 
-	$tplCashdrain = new View('templates/report_cashdrain');
+	$tplCashdrain = new View('report_cashdrain');
 
 	$cashdrain = new CashDrain();
 	$cashdrain->Read($id_caixasangria);
@@ -39,7 +39,7 @@ function CashdrainFormCancel($block, $message_error) {
 
 	$id_caixasangria = $_POST['id_caixasangria'];
 
-	$tplCashdrain = new View('templates/report_cashdrain');
+	$tplCashdrain = new View('report_cashdrain');
 
 	$cashdrain = new CashDrain();
 	$cashdrain->Read($id_caixasangria);
@@ -72,7 +72,7 @@ function CashdrainFormSave($field, $block, $message_error) {
 
 	$cashdrain->Update($data);
 
-	$tplCashdrain = new View('templates/report_cashdrain');
+	$tplCashdrain = new View('report_cashdrain');
 
 	$cashdrain->Read($id_caixasangria);
 
@@ -98,7 +98,7 @@ function CashaddFormEdit($block, $message_error) {
 
 	$id_caixareforco = $_POST['id_caixareforco'];
 
-	$tplCashadd = new View('templates/report_cashdrain');
+	$tplCashadd = new View('report_cashdrain');
 
 	$cashadd = new CashAdd();
 	$cashadd->Read($id_caixareforco);
@@ -121,7 +121,7 @@ function CashaddFormCancel($block, $message_error) {
 
 	$id_caixareforco = $_POST['id_caixareforco'];
 
-	$tplCashadd = new View('templates/report_cashdrain');
+	$tplCashadd = new View('report_cashdrain');
 
 	$cashadd = new CashAdd();
 	$cashadd->Read($id_caixareforco);
@@ -154,7 +154,7 @@ function CashaddFormSave($field, $block, $message_error) {
 
 	$cashadd->Update($data);
 
-	$tplCashadd = new View('templates/report_cashdrain');
+	$tplCashadd = new View('report_cashdrain');
 
 	$cashadd->Read($id_caixareforco);
 
@@ -180,7 +180,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplCashdrain = new View('templates/report_cashdrain');
+		$tplCashdrain = new View('report_cashdrain');
 
 		$data = [
 			'data' => date('Y-m-d'),
@@ -207,7 +207,7 @@ switch ($_POST['action']) {
 			$cashDrain->SearchByDate($dataini);
 		}
 
-		$tplCashdrain = new View('templates/report_cashdrain');
+		$tplCashdrain = new View('report_cashdrain');
 
 		$dataini_formatted = date_format(date_create($dataini), 'd/m/Y');
 		$datafim_formatted = date_format(date_create($datafim), 'd/m/Y');
@@ -375,7 +375,7 @@ switch ($_POST['action']) {
 
 			$row = CashDrain::FormatFields($row);
 
-			$tplCashdrain = new View("templates/report_cashdrain");
+			$tplCashdrain = new View("report_cashdrain");
 
 			Send($tplCashdrain->getContent($row, "EXTRA_BLOCK_POPUP_CASHDRAIN"));
 
@@ -398,7 +398,7 @@ switch ($_POST['action']) {
 
 			$row = CashAdd::FormatFields($row);
 
-			$tplCashdrain = new View("templates/report_cashdrain");
+			$tplCashdrain = new View("report_cashdrain");
 
 			Send($tplCashdrain->getContent($row, "EXTRA_BLOCK_POPUP_CASHADD"));
 
@@ -424,7 +424,7 @@ switch ($_POST['action']) {
 
 			$row = CashDrain::FormatFields($row);
 
-			$tplCashdrain = new View("templates/report_cashdrain");
+			$tplCashdrain = new View("report_cashdrain");
 
 			Notifier::Add("Sangria conferida!", Notifier::NOTIFIER_DONE);
 			Send($tplCashdrain->getContent($row, "EXTRA_BLOCK_CASHDRAIN_TR"));
@@ -451,7 +451,7 @@ switch ($_POST['action']) {
 
 			$row = CashAdd::FormatFields($row);
 
-			$tplCashdrain = new View("templates/report_cashdrain");
+			$tplCashdrain = new View("report_cashdrain");
 
 			Notifier::Add("Reforço conferido!", Notifier::NOTIFIER_DONE);
 			Send($tplCashdrain->getContent($row, "EXTRA_BLOCK_CASHADD_TR"));

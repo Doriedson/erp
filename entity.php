@@ -1,13 +1,13 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Company;
-use database\Entity;
-use database\EntityAddress;
-use database\ValidaCPFCNPJ;
-use database\FreightCEP;
+use App\Legacy\Company;
+use App\Legacy\Entity;
+use App\Legacy\EntityAddress;
+use App\Legacy\ValidaCPFCNPJ;
+use App\Legacy\FreightCEP;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -16,7 +16,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplEntity = new View('templates/entity');
+		$tplEntity = new View('entity');
 
 		Send($tplEntity->getContent([], "BLOCK_PAGE"));
 
@@ -33,7 +33,7 @@ switch ($_POST['action']) {
 
 		$entity = new Entity();
 
-		$tplEntity = new View("templates/entity");
+		$tplEntity = new View("entity");
 
 		if( is_numeric($value) ) {
 
@@ -98,7 +98,7 @@ switch ($_POST['action']) {
 
 		if ($row = $entity->getResult()) {
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			do {
 
@@ -144,13 +144,13 @@ switch ($_POST['action']) {
 
 		if($row = $entity->getResult()) {
 
-			$tplEntity = new View("templates/entity");
+			$tplEntity = new View("entity");
 
 			$row = Entity::FormatFields($row);
 
 			$row['extra_block_address'] = "";
 
-			$tplSale = new View("templates/sale_order");
+			$tplSale = new View("sale_order");
 
 			$row['block_history_order'] = "";// $tplSale->getContent(["id_entidade" => $id_entidade], "BLOCK_HISTORY_ORDER");
 
@@ -276,7 +276,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			$row['entity_bt_new_saleorder'] = "";
 
@@ -318,7 +318,7 @@ switch ($_POST['action']) {
 
 		ControlAccess::Check(ControlAccess::CA_SERVIDOR_CLIENTE);
 
-		$tplEntity = new View('templates/entity');
+		$tplEntity = new View('entity');
 
 		$entity = new Entity();
 		$entity->SearchByCode($_POST['id_entidade']);
@@ -337,7 +337,7 @@ switch ($_POST['action']) {
 
 	case "entity_nome_cancel":
 
-		$tplEntity = new View('templates/entity');
+		$tplEntity = new View('entity');
 
 		$entity = new Entity();
 		$entity->SearchByCode($_POST['id_entidade']);
@@ -372,7 +372,7 @@ switch ($_POST['action']) {
 
 		$entity->Update($data);
 
-		$tplEntity = new View('templates/entity');
+		$tplEntity = new View('entity');
 
 		$entity->Read($id_entidade);
 
@@ -399,7 +399,7 @@ switch ($_POST['action']) {
 
 	// 	$id_entidade = $_POST['id_entidade'];
 
-	// 	$tplEntity = new View('templates/entity');
+	// 	$tplEntity = new View('entity');
 
 	// 	$entity = new Entity();
 
@@ -426,7 +426,7 @@ switch ($_POST['action']) {
 
 	// 		$row['extra_block_address'] = $address;
 
-	// 		$tplSale = new View("templates/sale_order");
+	// 		$tplSale = new View("sale_order");
 
 	// 		$row['block_history_order'] = $tplSale->getContent(["id_entidade" => $id_entidade], "BLOCK_HISTORY_ORDER");
 
@@ -453,7 +453,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITY_CREDIT_EDIT"));
 
@@ -504,7 +504,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_CREDIT"));
 
@@ -528,7 +528,7 @@ switch ($_POST['action']) {
 
 	// 		$row = Entity::FormatFields($row);
 
-	// 		$tplEntity = new View('templates/entity');
+	// 		$tplEntity = new View('entity');
 
 	// 		Send($tplEntity->getContent($row, "BLOCK_ENTITY_CREDIT"));
 
@@ -553,7 +553,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITY_CPFCNPJ_FORM"));
 
@@ -577,7 +577,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_CPFCNPJ"));
 
@@ -638,7 +638,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_CPFCNPJ"));
 
@@ -664,7 +664,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITY_LIMITE_FORM"));
 
@@ -688,7 +688,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_LIMITE"));
 
@@ -725,7 +725,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_LIMITE"));
 
@@ -751,7 +751,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITY_EMAIL_FORM"));
 
@@ -775,7 +775,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_EMAIL"));
 
@@ -810,7 +810,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_EMAIL"));
 
@@ -836,7 +836,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITY_TELCELULAR_FORM"));
 
@@ -860,7 +860,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_TELCELULAR"));
 
@@ -906,7 +906,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_TELCELULAR"));
 
@@ -932,7 +932,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITY_TELRESIDENCIAL_FORM"));
 
@@ -956,7 +956,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_TELRESIDENCIAL"));
 
@@ -1002,7 +1002,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_TELRESIDENCIAL"));
 
@@ -1028,7 +1028,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITY_TELCOMERCIAL_FORM"));
 
@@ -1052,7 +1052,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_TELCOMERCIAL"));
 
@@ -1098,7 +1098,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_TELCOMERCIAL"));
 
@@ -1124,7 +1124,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITY_OBS_FORM"));
 
@@ -1148,7 +1148,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_OBS"));
 
@@ -1183,7 +1183,7 @@ switch ($_POST['action']) {
 
 			$row = Entity::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITY_OBS"));
 
@@ -1210,7 +1210,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITYADDRESS_NICKNAME_FORM"));
 
@@ -1235,7 +1235,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_NICKNAME"));
 
@@ -1271,7 +1271,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_NICKNAME"));
 
@@ -1298,7 +1298,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITYADDRESS_CEP_FORM"));
 
@@ -1323,7 +1323,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_CEP"));
 
@@ -1391,7 +1391,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			if ($saleorder == true) {
 
@@ -1432,7 +1432,7 @@ switch ($_POST['action']) {
 
 			$row = EntityAddress::FormatFields($row);
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_CEP"));
 
@@ -1453,7 +1453,7 @@ switch ($_POST['action']) {
 			"uf" => $_POST["uf"],
 		];
 
-		$tplEntity = new View('templates/entity');
+		$tplEntity = new View('entity');
 
 		Send($tplEntity->getContent($data, "EXTRA_BLOCK_CEP_ADDRESS_UPDATE"));
 
@@ -1474,7 +1474,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITYADDRESS_LOGRADOURO_FORM"));
 
@@ -1499,7 +1499,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_LOGRADOURO"));
 
@@ -1535,7 +1535,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_LOGRADOURO"));
 
@@ -1562,7 +1562,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITYADDRESS_NUMERO_FORM"));
 
@@ -1587,7 +1587,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_NUMERO"));
 
@@ -1628,7 +1628,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_NUMERO"));
 
@@ -1655,7 +1655,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITYADDRESS_COMPLEMENTO_FORM"));
 
@@ -1680,7 +1680,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_COMPLEMENTO"));
 
@@ -1716,7 +1716,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_COMPLEMENTO"));
 
@@ -1743,7 +1743,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITYADDRESS_BAIRRO_FORM"));
 
@@ -1768,7 +1768,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_BAIRRO"));
 
@@ -1804,7 +1804,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_BAIRRO"));
 
@@ -1831,7 +1831,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITYADDRESS_CIDADE_FORM"));
 
@@ -1856,7 +1856,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_CIDADE"));
 
@@ -1892,7 +1892,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_CIDADE"));
 
@@ -1937,7 +1937,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITYADDRESS_UF_FORM"));
 
@@ -1962,7 +1962,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_UF"));
 
@@ -1998,7 +1998,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_UF"));
 
@@ -2025,7 +2025,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "EXTRA_BLOCK_ENTITYADDRESS_OBS_FORM"));
 
@@ -2050,7 +2050,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_OBS"));
 
@@ -2086,7 +2086,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			Send($tplEntity->getContent($row, "BLOCK_ENTITYADDRESS_OBS"));
 
@@ -2108,7 +2108,7 @@ switch ($_POST['action']) {
 
 		if ($row = $entity->getResult()) {
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			$row = Entity::FormatFields($row);
 
@@ -2139,7 +2139,7 @@ switch ($_POST['action']) {
 
 		if ($row = $entity->getResult()) {
 
-			$tplEntity = new View("templates/entity");
+			$tplEntity = new View("entity");
 
 			$row = Entity::FormatFields($row);
 
@@ -2163,7 +2163,7 @@ switch ($_POST['action']) {
 
 		if ($row = $entity->getResult()) {
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			$row = Entity::FormatFields($row);
 
@@ -2193,7 +2193,7 @@ switch ($_POST['action']) {
 
 		if($row = $entity->getResult()) {
 
-			$tplEntity = new View("templates/entity");
+			$tplEntity = new View("entity");
 
 			$row = Entity::FormatFields($row);
 
@@ -2214,7 +2214,7 @@ switch ($_POST['action']) {
 
 			$row['extra_block_address'] = $address;
 
-			$tplSale = new View("templates/sale_order");
+			$tplSale = new View("sale_order");
 
 			$row['block_history_order'] = $tplSale->getContent(["id_entidade" => $id_entidade, "id_venda" => 0], "BLOCK_HISTORY_ORDER");
 
@@ -2232,7 +2232,7 @@ switch ($_POST['action']) {
 
 		$id_endereco = $_POST["id_endereco"];
 
-		$tplEntity = new View("templates/entity");
+		$tplEntity = new View("entity");
 
 		$uf_array = array('AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO');
 
@@ -2277,7 +2277,7 @@ switch ($_POST['action']) {
 		$id_endereco = $_POST["id_endereco"];
 		$datas = $_POST["data"];
 
-		$tplEntity = new View("templates/entity");
+		$tplEntity = new View("entity");
 
 		$response = "";
 
@@ -2351,7 +2351,7 @@ switch ($_POST['action']) {
 			$row = EntityAddress::FormatFields($row);
 			$row['extra_block_button_sale_address']="";
 
-			$tplEntity = new View('templates/entity');
+			$tplEntity = new View('entity');
 
 			if ($saleorder == true) {
 
@@ -2372,7 +2372,7 @@ switch ($_POST['action']) {
 
 	case "entity_cepsearchfreight_show":
 
-		$tplEntity = new View("templates/entity");
+		$tplEntity = new View("entity");
 
 		$uf_array = array('AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO');
 
@@ -2415,7 +2415,7 @@ switch ($_POST['action']) {
 
 		$datas = $_POST["data"];
 
-		$tplEntity = new View("templates/entity");
+		$tplEntity = new View("entity");
 
 		$response = "";
 

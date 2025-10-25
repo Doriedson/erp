@@ -156,7 +156,7 @@
 								<div class="addon">
 									<input
 										type="password"
-										id="pass"
+										id="senha"
 										class="textcenter fill"
 										maxlength="4"
 										pattern="[0-9]+"

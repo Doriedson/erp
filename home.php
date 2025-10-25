@@ -1,20 +1,20 @@
 <?php
 
-use database\Log;
-use database\Notifier;
-// use database\Company;
-// use database\ControlAccess;
-use database\PrinterConfig;
-use database\ProductExpDate;
+use App\Legacy\Log;
+use App\Legacy\Notifier;
+// use App\Legacy\Company;
+//
+use App\Legacy\PrinterConfig;
+use App\Legacy\ProductExpDate;
 use App\View\View;
-use database\Config;
+use App\Legacy\Config;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
 
 function CPFormEdit($block, $message_error) {
 
-	$tplCP = new View('templates/home');
+	$tplCP = new View('home');
 
 	$config = new Config();
 	$config->Read();
@@ -35,7 +35,7 @@ function CPFormEdit($block, $message_error) {
 
 function CPFormCancel($block, $message_error) {
 
-	$tplCP = new View('templates/home');
+	$tplCP = new View('home');
 
 	$config = new Config();
 	$config->Read();
@@ -66,7 +66,7 @@ function CPFormSave($field, $block, $message_error) {
 
 	$config->Update($data);
 
-	$tplCP = new View('templates/home');
+	$tplCP = new View('home');
 
 	$config->Read();
 
@@ -87,7 +87,7 @@ switch($_POST['action']) {
 
 	case "load":
 
-              $tplHome = new View("templates/home");
+              $tplHome = new View("home");
 
               //$company = new Company();
 
@@ -110,7 +110,7 @@ switch($_POST['action']) {
                      Send(null);
               }
 
-              $tplCP = new View("templates/home");
+              $tplCP = new View("home");
 
               $data = [
                      //"empresa" => $empresa,
@@ -145,7 +145,7 @@ switch($_POST['action']) {
 
               if (!is_null($product_list)) {
 
-                     $tplCP = new View("templates/home");
+                     $tplCP = new View("home");
 
                      $data = [
                             "data" => $product_list,
@@ -216,7 +216,7 @@ switch($_POST['action']) {
 
               if (!is_null($product_list)) {
 
-                     $tplCP = new View("templates/home");
+                     $tplCP = new View("home");
 
                      $cp_expdate_notfound = "hidden";
                      $productexpdate_bt_print = "";

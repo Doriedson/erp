@@ -1,7 +1,7 @@
 <?php
 
-use database\DeliveryDireto;
-use database\Notifier;
+use App\Legacy\DeliveryDireto;
+use App\Legacy\Notifier;
 use App\View\View;
 
 require "inc/config.inc.php";
@@ -52,7 +52,7 @@ switch ($_POST['action']) {
 
     case "deliverydireto_storeid_edit":
 
-        $tplDeliveryDireto = new View('templates/integrations');
+        $tplDeliveryDireto = new View('integrations');
 
         $dd = new DeliveryDireto();
 
@@ -80,7 +80,7 @@ switch ($_POST['action']) {
 
     case "deliverydireto_storeid_cancel":
 
-        $tplDeliveryDireto = new View('templates/integrations');
+        $tplDeliveryDireto = new View('integrations');
 
         $dd = new DeliveryDireto();
 
@@ -113,7 +113,7 @@ switch ($_POST['action']) {
 
         $dd->Update($data);
 
-        $tplDeliveryDireto = new View('templates/integrations');
+        $tplDeliveryDireto = new View('integrations');
 
         $dd->Read();
 
@@ -133,7 +133,7 @@ switch ($_POST['action']) {
 
     case "deliverydireto_usuario_edit":
 
-        $tplDeliveryDireto = new View('templates/integrations');
+        $tplDeliveryDireto = new View('integrations');
 
         $dd = new DeliveryDireto();
 
@@ -161,7 +161,7 @@ switch ($_POST['action']) {
 
     case "deliverydireto_usuario_cancel":
 
-        $tplDeliveryDireto = new View('templates/integrations');
+        $tplDeliveryDireto = new View('integrations');
 
         $dd = new DeliveryDireto();
 
@@ -194,7 +194,7 @@ switch ($_POST['action']) {
 
         $dd->Update($data);
 
-        $tplDeliveryDireto = new View('templates/integrations');
+        $tplDeliveryDireto = new View('integrations');
 
         $dd->Read();
 
@@ -214,7 +214,7 @@ switch ($_POST['action']) {
 
     case "deliverydireto_senha_edit":
 
-        $tplDeliveryDireto = new View('templates/integrations');
+        $tplDeliveryDireto = new View('integrations');
 
         $dd = new DeliveryDireto();
 
@@ -242,7 +242,7 @@ switch ($_POST['action']) {
 
     case "deliverydireto_senha_cancel":
 
-        $tplDeliveryDireto = new View('templates/integrations');
+        $tplDeliveryDireto = new View('integrations');
 
         $dd = new DeliveryDireto();
 
@@ -275,7 +275,7 @@ switch ($_POST['action']) {
 
         $dd->Update($data);
 
-        $tplDeliveryDireto = new View('templates/integrations');
+        $tplDeliveryDireto = new View('integrations');
 
         $dd->Read();
 

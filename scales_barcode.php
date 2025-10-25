@@ -1,16 +1,16 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Config;
+use App\Legacy\Config;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
 
 function ScalesBarcodeFormEdit($block, $message_error) {
 
-	$tplScaleBarcode = new View('templates/scales_barcode');
+	$tplScaleBarcode = new View('scales_barcode');
 
 	$config = new Config();
 	$config->Read();
@@ -42,7 +42,7 @@ function ScalesBarcodeFormEdit($block, $message_error) {
 
 function ScalesBarcodeFormCancel($block, $message_error) {
 
-	$tplScaleBarcode = new View('templates/scales_barcode');
+	$tplScaleBarcode = new View('scales_barcode');
 
 	$config = new Config();
 	$config->Read();
@@ -73,7 +73,7 @@ function ScalesBarcodeFormSave($field, $block, $message_error) {
 
     $config->Update($data);
 
-	$tplScaleBarcode = new View('templates/scales_barcode');
+	$tplScaleBarcode = new View('scales_barcode');
 
 	$config->Read();
 
@@ -94,7 +94,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplScaleBarcode = new View("templates/scales_barcode");
+		$tplScaleBarcode = new View("scales_barcode");
 
         $config = new Config();
 

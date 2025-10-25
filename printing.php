@@ -1,9 +1,9 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\PrinterConfig;
+use App\Legacy\PrinterConfig;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -14,7 +14,7 @@ function PrintingFormEdit($block, $message_error) {
 
 	$id_impressao = $_POST['id_impressao'];
 
-	$tplPrinting = new View('templates/printing');
+	$tplPrinting = new View('printing');
 
 	$printer = new PrinterConfig();
 	$printer->PrintingRead($id_impressao);
@@ -37,7 +37,7 @@ function PrintingFormCancel($block, $message_error) {
 
 	$id_impressao = $_POST['id_impressao'];
 
-	$tplPrinting = new View('templates/printing');
+	$tplPrinting = new View('printing');
 
 	$printer = new PrinterConfig();
 	$printer->PrintingRead($id_impressao);
@@ -75,7 +75,7 @@ function PrintingFormSave($field, $block, $message_error) {
 
 	$printer->PrintingUpdate($data);
 
-	$tplPrinting = new View('templates/printing');
+	$tplPrinting = new View('printing');
 
 	$printer->PrintingRead($id_impressao);
 
@@ -98,7 +98,7 @@ switch ($_POST['action']) {
 
 		$printer = new PrinterConfig();
 
-		$tplPrinting = new View('templates/printing');
+		$tplPrinting = new View('printing');
 
         $printer->getPrintingList();
 

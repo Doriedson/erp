@@ -1,15 +1,15 @@
 <?php
 
 use App\View\View;
-use database\Table;
-use database\Notifier;
+use App\Legacy\Table;
+use App\Legacy\Notifier;
 use App\Support\Version;
 
 require "./inc/config.inc.php";
 
 if (!isset($_POST['action'])) {
 
-    $tplIndex = new View("templates/index");
+    $tplIndex = new View("index");
 
     $content = [
         "version" => Version::get(),

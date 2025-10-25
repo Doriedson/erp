@@ -1,9 +1,9 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Config;
+use App\Legacy\Config;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -12,7 +12,7 @@ switch ($_POST["action"]) {
 
 	case "load":
 
-		$tplPdv = new View("templates/cashier_closing");
+		$tplPdv = new View("cashier_closing");
 
         $config = new Config();
 
@@ -123,7 +123,7 @@ switch ($_POST["action"]) {
 
             $row = Config::FormatFields($row);
 
-            $tplCashierClosing = new View("templates/cashier_closing");
+            $tplCashierClosing = new View("cashier_closing");
 
             Send($tplCashierClosing->getContent($row, "EXTRA_BLOCK_CASHIERCLOSING_PRODUCT_FORM"));
 
@@ -146,7 +146,7 @@ switch ($_POST["action"]) {
 
             $row = Config::FormatFields($row);
 
-            $tplCashierClosing = new View("templates/cashier_closing");
+            $tplCashierClosing = new View("cashier_closing");
 
             Send($tplCashierClosing->getContent($row, "BLOCK_CASHIERCLOSING_PRODUCT"));
 
@@ -176,7 +176,7 @@ switch ($_POST["action"]) {
 
             $row = Config::FormatFields($row);
 
-            $tplCashierClosing = new View("templates/cashier_closing");
+            $tplCashierClosing = new View("cashier_closing");
 
             Send($tplCashierClosing->getContent($row, "BLOCK_CASHIERCLOSING_PRODUCT"));
 

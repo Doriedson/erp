@@ -1,12 +1,12 @@
 ﻿<?php
 
-use database\ControlAccess;
-use database\EntityAddress;
-use database\FreightCEP;
-use database\FreightValue;
-use database\Notifier;
+
+use App\Legacy\EntityAddress;
+use App\Legacy\FreightCEP;
+use App\Legacy\FreightValue;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Freight;
+use App\Legacy\Freight;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -15,7 +15,7 @@ ControlAccess::Check(ControlAccess::CA_SERVIDOR_RELATORIO);
 
 function ShipmentFormEdit($block, $message_error) {
 
-	$tplShipment = new View('templates/config_shipment');
+	$tplShipment = new View('config_shipment');
 
 	$shipment = new Freight();
 	$shipment->Read();
@@ -35,7 +35,7 @@ function ShipmentFormEdit($block, $message_error) {
 
 function ShipmentFormCancel($block, $message_error) {
 
-	$tplShipment = new View('templates/config_shipment');
+	$tplShipment = new View('config_shipment');
 
 	$shipment = new Freight();
 	$shipment->Read();
@@ -66,7 +66,7 @@ function ShipmentFormSave($field, $block, $message_error) {
 
 	$billstopay->Update($data);
 
-	$tplShipment = new View('templates/config_shipment');
+	$tplShipment = new View('config_shipment');
 
 	$billstopay->Read();
 
@@ -85,7 +85,7 @@ function ShipmentFormSave($field, $block, $message_error) {
 
 function getFreightCEPList($id_fretevalor = 0) {
 
-	$tplShipment = new View('templates/config_shipment');
+	$tplShipment = new View('config_shipment');
 
 	$freightValue = new FreightValue();
 
@@ -120,7 +120,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$cep_list = "";
 		$freightcep_none = "hidden";
@@ -200,7 +200,7 @@ switch ($_POST['action']) {
 
 	case "freightcep_show_new":
 
-		$tplShipment = new View("templates/config_shipment");
+		$tplShipment = new View("config_shipment");
 
 		$cep_de = "";
 		$cep_ate = "";
@@ -227,7 +227,7 @@ switch ($_POST['action']) {
 
 		$freightValue->getList();
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$freight_value_list = "";
 
@@ -268,7 +268,7 @@ switch ($_POST['action']) {
 
 		if ($row = $freightValue->getResult()) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			$row = FreightValue::FormatFields($row);
 
@@ -295,7 +295,7 @@ switch ($_POST['action']) {
 
 		if ($freightValue->Delete($id_fretevalor) > 0) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			Send($tplShipment->getContent(["extra_block_freightvalue_option" => getFreightCEPList()], "BLOCK_FREIGHTVALUE_SELECT"));
 
@@ -316,7 +316,7 @@ switch ($_POST['action']) {
 
 		if ($row = $freightValue->getResult()) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			Send($tplShipment->getContent($row, "EXTRA_BLOCK_FREIGHTVALUE_DESCRICAO_FORM"));
 
@@ -338,7 +338,7 @@ switch ($_POST['action']) {
 
 		if ($row = $freightValue->getResult()) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			Send($tplShipment->getContent($row, "BLOCK_FREIGHTVALUE_DESCRICAO"));
 
@@ -367,7 +367,7 @@ switch ($_POST['action']) {
 
 		if ($row = $freightValue->getResult()) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			// Send($tplShipment->getContent($row, "BLOCK_FREIGHTVALUE_DESCRICAO"));
 
@@ -397,7 +397,7 @@ switch ($_POST['action']) {
 
 		if ($row = $freightValue->getResult()) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			$row = FreightValue::FormatFields($row);
 
@@ -421,7 +421,7 @@ switch ($_POST['action']) {
 
 		if ($row = $freightValue->getResult()) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			$row = FreightValue::FormatFields($row);
 
@@ -452,7 +452,7 @@ switch ($_POST['action']) {
 
 		if ($row = $freightValue->getResult()) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			$row = FreightValue::FormatFields($row);
 
@@ -505,7 +505,7 @@ switch ($_POST['action']) {
 
 				$row = FreightCEP::FormatFields($row);
 
-				$tplFreightCep = new View("templates/config_shipment");
+				$tplFreightCep = new View("config_shipment");
 
 				Notifier::Add("Nova faixa de CEP cadastrada.", Notifier::NOTIFIER_INFO);
 
@@ -564,7 +564,7 @@ switch ($_POST['action']) {
 
 		$id_fretecep = $_POST["id_fretecep"];
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$freightCep = new FreightCEP();
 
@@ -586,7 +586,7 @@ switch ($_POST['action']) {
 
 		$id_fretecep = $_POST["id_fretecep"];
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$freightCep = new FreightCEP();
 
@@ -609,7 +609,7 @@ switch ($_POST['action']) {
 		$id_fretecep = $_POST["id_fretecep"];
 		$descricao = $_POST["descricao"];
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$freightCep = new FreightCEP();
 
@@ -637,7 +637,7 @@ switch ($_POST['action']) {
 
 		$id_fretecep = $_POST["id_fretecep"];
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$freightCep = new FreightCEP();
 
@@ -661,7 +661,7 @@ switch ($_POST['action']) {
 
 		$id_fretecep = $_POST["id_fretecep"];
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$freightCep = new FreightCEP();
 
@@ -686,7 +686,7 @@ switch ($_POST['action']) {
 		$id_fretecep = $_POST["id_fretecep"];
 		$cep_de = $_POST["cep_de"];
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$freightCep = new FreightCEP();
 
@@ -738,7 +738,7 @@ switch ($_POST['action']) {
 
 		$id_fretecep = $_POST["id_fretecep"];
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$freightCep = new FreightCEP();
 
@@ -762,7 +762,7 @@ switch ($_POST['action']) {
 
 		$id_fretecep = $_POST["id_fretecep"];
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$freightCep = new FreightCEP();
 
@@ -787,7 +787,7 @@ switch ($_POST['action']) {
 		$id_fretecep = $_POST["id_fretecep"];
 		$cep_ate = $_POST["cep_ate"];
 
-		$tplShipment = new View('templates/config_shipment');
+		$tplShipment = new View('config_shipment');
 
 		$freightCep = new FreightCEP();
 
@@ -859,7 +859,7 @@ switch ($_POST['action']) {
 
 		if ($row = $freightValue->getResult()) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			$row = FreightValue::FormatFields($row);
 
@@ -888,7 +888,7 @@ switch ($_POST['action']) {
 
 		if ($row = $freightCep->getResult()) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			$row = FreightCEP::FormatFields($row);
 
@@ -919,7 +919,7 @@ switch ($_POST['action']) {
 
 		if ($row = $freightCep->getResult()) {
 
-			$tplShipment = new View('templates/config_shipment');
+			$tplShipment = new View('config_shipment');
 
 			$row = FreightCEP::FormatFields($row);
 
@@ -989,7 +989,7 @@ switch ($_POST['action']) {
 
 			$freightCep = new FreightCEP();
 
-			$tplShipment = new View("templates/config_shipment");
+			$tplShipment = new View("config_shipment");
 
 			do {
 
@@ -1020,8 +1020,8 @@ switch ($_POST['action']) {
 
 		$cep = $_POST["cep"];
 
-		$tplEntity = new View("templates/entity");
-		$tplShipment = new View("templates/config_shipment");
+		$tplEntity = new View("entity");
+		$tplShipment = new View("config_shipment");
 
 		$entityAddress = new EntityAddress();
 

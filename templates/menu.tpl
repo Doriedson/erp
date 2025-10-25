@@ -1,3 +1,4 @@
+<!-- BEGIN BLOCK_PAGE -->
 <div class="leftmenu-background button_menu"></div>
 
 <div class="menu">
@@ -304,3 +305,4 @@
 		</div>
 	</div>
 </div>
+<!-- END BLOCK_PAGE -->

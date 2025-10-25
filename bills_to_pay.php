@@ -1,10 +1,10 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\BillsToPay;
-use database\BillsToPaySector;
+use App\Legacy\BillsToPay;
+use App\Legacy\BillsToPaySector;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -15,7 +15,7 @@ function BillstopayFormEdit($block, $message_error) {
 
 	$id_contasapagar = $_POST['id_contasapagar'];
 
-	$tplBillstopay = new View('templates/bills_to_pay');
+	$tplBillstopay = new View('bills_to_pay');
 
 	$billstopay = new BillsToPay();
 	$billstopay->Read($id_contasapagar);
@@ -38,7 +38,7 @@ function BillstopayFormCancel($block, $message_error) {
 
 	$id_contasapagar = $_POST['id_contasapagar'];
 
-	$tplBillstopay = new View('templates/bills_to_pay');
+	$tplBillstopay = new View('bills_to_pay');
 
 	$billstopay = new BillsToPay();
 	$billstopay->Read($id_contasapagar);
@@ -71,7 +71,7 @@ function BillstopayFormSave($field, $block, $message_error) {
 
 	$billstopay->Update($data);
 
-	$tplBillsToPay = new View('templates/bills_to_pay');
+	$tplBillsToPay = new View('bills_to_pay');
 
 	$billstopay->Read($id_contasapagar);
 
@@ -115,7 +115,7 @@ function BillstopayFormSave($field, $block, $message_error) {
 
 function getBillsToPay($row) {
 
-	$tplBillsToPay = new View('templates/bills_to_pay');
+	$tplBillsToPay = new View('bills_to_pay');
 
 	$row = BillsToPay::FormatFields($row);
 
@@ -161,7 +161,7 @@ switch ($_POST['action']) {
 
 		$bills = "";
 
-		$tplBillsToPay = new View('templates/bills_to_pay');
+		$tplBillsToPay = new View('bills_to_pay');
 
 		$billstopay_none = "hidden";
 
@@ -201,7 +201,7 @@ switch ($_POST['action']) {
 			$sectorList .= "<option value='" . $row['id_contasapagarsetor'] . "'>" . $row['contasapagarsetor'] . "</option>";
 		}
 
-		$tplBillsToPay = new View('templates/bills_to_pay');
+		$tplBillsToPay = new View('bills_to_pay');
 
 		$data = [
 			'data' => date('Y-m-d'),
@@ -231,7 +231,7 @@ switch ($_POST['action']) {
 
 			if($row = $billsToPay->getResult()) {
 
-				$tplBillsToPay = new View('templates/bills_to_pay');
+				$tplBillsToPay = new View('bills_to_pay');
 
 				$row = BillsToPay::FormatFields($row);
 
@@ -269,7 +269,7 @@ switch ($_POST['action']) {
 
 	case "billstopay_popup_filter":
 
-		$tplBillsToPay = new View('templates/bills_to_pay');
+		$tplBillsToPay = new View('bills_to_pay');
 
 		$data["data"] = date('Y-m-d');
 
@@ -322,7 +322,7 @@ switch ($_POST['action']) {
 			$billsToPay->SearchByDate($dataini, $procura, $descricao, $setor);
 		}
 
-		$tplBillsToPay = new View('templates/bills_to_pay');
+		$tplBillsToPay = new View('bills_to_pay');
 
 		if ($row = $billsToPay->getResult()) {
 
@@ -366,7 +366,7 @@ switch ($_POST['action']) {
 
 		$billsToPay->getPendingList();
 
-		$tplBillsToPay = new View('templates/bills_to_pay');
+		$tplBillsToPay = new View('bills_to_pay');
 
 		if ($row = $billsToPay->getResult()) {
 
@@ -432,7 +432,7 @@ switch ($_POST['action']) {
 
 		if ($row = $billsToPay->getResult()) {
 
-			$tplBillsToPay = new View('templates/bills_to_pay');
+			$tplBillsToPay = new View('bills_to_pay');
 
 			$row = BillsToPay::FormatFields($row);
 
@@ -466,7 +466,7 @@ switch ($_POST['action']) {
 
 		$id_contasapagar = $_POST['id_contasapagar'];
 
-		$tplBillsToPay = new View("templates/bills_to_pay");
+		$tplBillsToPay = new View("bills_to_pay");
 
 		$billstopay = new BillsToPay();
 
@@ -491,7 +491,7 @@ switch ($_POST['action']) {
 
 		$id_contasapagar = $_POST['id_contasapagar'];
 
-		$tplBillsToPay = new View("templates/bills_to_pay");
+		$tplBillsToPay = new View("bills_to_pay");
 
 		$data = [
 			"id_contasapagar" => $id_contasapagar,
@@ -522,7 +522,7 @@ switch ($_POST['action']) {
 
 			$row = BillsToPay::FormatFields($row);
 
-			$tplBillsToPay = new View("templates/bills_to_pay");
+			$tplBillsToPay = new View("bills_to_pay");
 
 			if ($row['datapago'] != null) {
 

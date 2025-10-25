@@ -1,31 +1,32 @@
 <?php
 
-use database\CashChange;
-use database\CashAdd;
-use database\CashDrain;
-use database\CashDrawer;
-use database\Cashier;
-use database\Clean;
-use database\Collaborator;
-use database\Company;
-use database\Config;
-use database\Entity;
-use database\Freight;
-use database\Product;
-use database\SaleOrder;
-use database\SaleOrderItem;
-use database\SaleOrderAddress;
-use database\EntityAddress;
-use database\Printing;
-use database\Notifier;
-use database\SaleOrderStatusChange;
-use database\Table;
-use database\Pdv;
-use database\Log;
-use database\SaleOrderPay;
+use App\Legacy\CashChange;
+use App\Legacy\ControlAccess;
+use App\Legacy\CashAdd;
+use App\Legacy\CashDrain;
+use App\Legacy\CashDrawer;
+use App\Legacy\Cashier;
+use App\Legacy\Clean;
+use App\Legacy\Collaborator;
+use App\Legacy\Company;
+use App\Legacy\Config;
+use App\Legacy\Entity;
+use App\Legacy\Freight;
+use App\Legacy\Product;
+use App\Legacy\SaleOrder;
+use App\Legacy\SaleOrderItem;
+use App\Legacy\SaleOrderAddress;
+use App\Legacy\EntityAddress;
+use App\Legacy\Printing;
+use App\Legacy\Notifier;
+use App\Legacy\SaleOrderStatusChange;
+use App\Legacy\Table;
+use App\Legacy\Pdv;
+use App\Legacy\Log;
+use App\Legacy\SaleOrderPay;
 use App\View\View;
-use database\Calc;
-use database\ControlAccess;
+use App\Legacy\Calc;
+
 
 require "inc/config.inc.php";
 
@@ -1707,7 +1708,7 @@ switch($_POST['action']) {
 
         //     $cupom .= $line;
         // }
-        $tplReport = new View("templates/report_sale_total");
+        $tplReport = new View("report_sale_total");
 
         $data = [
             "cupom" => $cupom

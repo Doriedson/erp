@@ -1,29 +1,29 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Clean;
-use database\Printing;
-use database\Table;
-use database\SaleOrder;
-use database\SaleOrderItem;
-use database\Entity;
-use database\Product;
-use database\ProductKit;
-use database\ProductType;
-// use database\ProductSector;
-// use database\Collaborator;
+use App\Legacy\Clean;
+use App\Legacy\Printing;
+use App\Legacy\Table;
+use App\Legacy\SaleOrder;
+use App\Legacy\SaleOrderItem;
+use App\Legacy\Entity;
+use App\Legacy\Product;
+use App\Legacy\ProductKit;
+use App\Legacy\ProductType;
+// use App\Legacy\ProductSector;
+// use App\Legacy\Collaborator;
 
 require "./inc/config.inc.php";
 require "./inc/authorization.php";
 
 function LoadWaiterTableOrder($id_mesa) {
 
-	$tplWaiterOrder = new View('templates/waiter_order');
-	$tplWaiterOrderProducts = new View('templates/waiter_order_products');
+	$tplWaiterOrder = new View('waiter_order');
+	$tplWaiterOrderProducts = new View('waiter_order_products');
 
-	$tplEntity = new View('templates/entity');
+	$tplEntity = new View('entity');
 
 	$table = new Table();
 
@@ -125,8 +125,8 @@ function LoadWaiterTableOrder($id_mesa) {
 
 function LoadWaiterTableOrderRevision($id_mesa, $products) {
 
-	$tplWaiterOrder = new View('templates/waiter_order');
-	$tplEntity = new View('templates/entity');
+	$tplWaiterOrder = new View('waiter_order');
+	$tplEntity = new View('entity');
 
 	$table = new Table();
 
@@ -219,11 +219,11 @@ switch($_POST['action']) {
 
         ControlAccess::Check(ControlAccess::CA_WAITER);
 
-		$tplSelfService = new View("templates/waiter_self_service");
+		$tplSelfService = new View("waiter_self_service");
 
-		$tplProduct = new View("templates/product");
+		$tplProduct = new View("product");
 
-		$tplTable = new View("templates/waiter_table");
+		$tplTable = new View("waiter_table");
 
 		$table = new Table();
 
@@ -291,7 +291,7 @@ switch($_POST['action']) {
 				Send(null);
 			}
 
-			$tplSelfService = new View('templates/waiter_self_service');
+			$tplSelfService = new View('waiter_self_service');
 
 			$row = Product::FormatFields($row);
 
@@ -445,7 +445,7 @@ switch($_POST['action']) {
 
 			$tables = "";
 
-			$tplTable = new View("templates/waiter_table");
+			$tplTable = new View("waiter_table");
 
 			if ($rowTable = $table->getResult()) {
 

@@ -1,8 +1,8 @@
 ﻿<?php
 
-use database\Notifier;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Sound;
+use App\Legacy\Sound;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -11,7 +11,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplSound = new View('templates/sound');
+		$tplSound = new View('sound');
 
 		$sound = new Sound();
 
@@ -35,7 +35,7 @@ switch ($_POST['action']) {
 
 		$id_som = $_POST["id_som"];
 
-		$tplSound = new View("templates/sound");
+		$tplSound = new View("sound");
 
 		$sound = new Sound();
 
@@ -57,7 +57,7 @@ switch ($_POST['action']) {
 
 		$id_som = $_POST["id_som"];
 
-		$tplSound = new View("templates/sound");
+		$tplSound = new View("sound");
 
 		$sound = new Sound();
 
@@ -80,7 +80,7 @@ switch ($_POST['action']) {
 		$id_som = $_POST["id_som"];
 		$descricao = $_POST["descricao"];
 
-		$tplSound = new View("templates/sound");
+		$tplSound = new View("sound");
 
 		$sound = new Sound();
 
@@ -120,7 +120,7 @@ switch ($_POST['action']) {
 
 		$id_som = $_POST["id_som"];
 
-		$tplSound = new View("templates/sound");
+		$tplSound = new View("sound");
 
 		$sound = new Sound();
 
@@ -153,7 +153,7 @@ switch ($_POST['action']) {
 
 		$id_som = $_POST["id_som"];
 
-		$tplSound = new View("templates/sound");
+		$tplSound = new View("sound");
 
 		$sound = new Sound();
 
@@ -176,7 +176,7 @@ switch ($_POST['action']) {
 		$id_som = $_POST["id_som"];
 		$volume = $_POST["volume"];
 
-		$tplSound = new View("templates/sound");
+		$tplSound = new View("sound");
 
 		$sound = new Sound();
 

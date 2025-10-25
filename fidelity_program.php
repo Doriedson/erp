@@ -1,9 +1,9 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\FidelityProgram;
+use App\Legacy\FidelityProgram;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -14,7 +14,7 @@ function FidelityFormEdit($block, $message_error) {
 
 	$id_fidelidaderegra = $_POST['id_fidelidaderegra'];
 
-	$tplFidelity = new View('templates/fidelity_program');
+	$tplFidelity = new View('fidelity_program');
 
 	$fidelity = new FidelityProgram();
 	$fidelity->Read($id_fidelidaderegra);
@@ -37,7 +37,7 @@ function FidelityFormCancel($block, $message_error) {
 
 	$id_fidelidaderegra = $_POST['id_fidelidaderegra'];
 
-	$tplFidelity = new View('templates/fidelity_program');
+	$tplFidelity = new View('fidelity_program');
 
 	$fidelity = new FidelityProgram();
 	$fidelity->Read($id_fidelidaderegra);
@@ -70,7 +70,7 @@ function FidelityFormSave($field, $block, $message_error) {
 
 	$fidelity->Update($data);
 
-	$tplFidelity = new View('templates/fidelity_program');
+	$tplFidelity = new View('fidelity_program');
 
 	$fidelity->Read($id_fidelidaderegra);
 
@@ -89,7 +89,7 @@ function FidelityFormSave($field, $block, $message_error) {
 
 function FidelityGetRules() {
 
-	$tplFidelity = new View('templates/fidelity_program');
+	$tplFidelity = new View('fidelity_program');
 
 	$fidelity = new FidelityProgram();
 
@@ -118,7 +118,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplFidelity = new View('templates/fidelity_program');
+		$tplFidelity = new View('fidelity_program');
 
 		$fidelity = new FidelityProgram();
 
@@ -158,7 +158,7 @@ switch ($_POST['action']) {
 
 		if ($row = $fidelity->getResult()) {
 
-			$tplFidelity = new View("templates/fidelity_program");
+			$tplFidelity = new View("fidelity_program");
 
 			$row = FidelityProgram::FormatFields($row);
 
@@ -269,7 +269,7 @@ switch ($_POST['action']) {
 
 		if ($row = $fidelity->getResult()) {
 
-			$tplFidelity = new View("templates/fidelity_program");
+			$tplFidelity = new View("fidelity_program");
 
 			Send($tplFidelity->getContent($row, "EXTRA_BLOCK_DIAS_FORM"));
 
@@ -288,7 +288,7 @@ switch ($_POST['action']) {
 
 		if ($row = $fidelity->getResult()) {
 
-			$tplFidelity = new View("templates/fidelity_program");
+			$tplFidelity = new View("fidelity_program");
 
 			Send($tplFidelity->getContent($row, "BLOCK_DIAS"));
 
@@ -317,7 +317,7 @@ switch ($_POST['action']) {
 
 		if ($row = $fidelity->getResult()) {
 
-			$tplFidelity = new View("templates/fidelity_program");
+			$tplFidelity = new View("fidelity_program");
 
 			Send($tplFidelity->getContent($row, "BLOCK_DIAS"));
 

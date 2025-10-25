@@ -1,23 +1,24 @@
 <?php
 
-use database\ControlAccess;
+
 use App\View\View;
-use database\Clean;
-use database\Company;
-use database\Collaborator;
-use database\Session;
-use database\Notifier;
+use App\Legacy\Clean;
+use App\Legacy\Company;
+use App\Legacy\Collaborator;
+use App\Legacy\ControlAccess;
+use App\Legacy\Session;
+use App\Legacy\Notifier;
 use App\Support\Version;
 
 require "./inc/config.inc.php";
 
 if (!isset($_POST['action'])) {
 
-	$tplBackendIndex = new View("templates/backend_index");
+	$tplBackendIndex = new View("backend_index");
 
 	$module = $tplBackendIndex->getContent(["module" => 'backend'], "BLOCK_PAGE");
 
-	$tplIndex = new View("templates/index");
+	$tplIndex = new View("index");
 
 	$company = new Company();
 
@@ -30,7 +31,7 @@ if (!isset($_POST['action'])) {
 		$empresa = $row['empresa'];
 	}
 
-	// $tplEntity = new View('templates/entity');
+	// $tplEntity = new View('entity');
 
     $content = [
 			"version" => Version::get(),
@@ -65,7 +66,7 @@ switch($_POST['action']) {
 
 		$id_entidade = $_POST["id_entidade"];
 
-		$tplLogin = new View("templates/backend_login");
+		$tplLogin = new View("backend_login");
 
 		$collaborator = new Collaborator();
 
@@ -102,7 +103,7 @@ switch($_POST['action']) {
 
 			$page = Session::get('page');
 
-			$tplMenu = new View("templates/menu");
+			$tplMenu = new View("menu");
 
             Session::set('page', null);
 
@@ -148,7 +149,7 @@ switch($_POST['action']) {
 
 		ControlAccess::Check(ControlAccess::CA_SERVIDOR);
 
-		$tplMenu = new View("templates/menu");
+		$tplMenu = new View("menu");
 
 		$nome = strtok($GLOBALS['authorized_nome'], " ");
 
@@ -179,7 +180,7 @@ switch($_POST['action']) {
 
 	case "popup_authenticator":
 
-		$tplIndex = new View("templates/index");
+		$tplIndex = new View("index");
 
 		$collaborator = new Collaborator();
 

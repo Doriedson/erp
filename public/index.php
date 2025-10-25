@@ -20,9 +20,11 @@ use App\Http\Router;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\LegacyCompatController;
-use App\Auth\AuthService;
+use App\Http\Controllers\BackendController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\AuthUiController;
+use App\Http\Controllers\UiPageController;
+use App\Auth\AuthService;
 
 // Fuso horário do projeto
 @date_default_timezone_set('America/Sao_Paulo');
@@ -46,23 +48,40 @@ if ($debug === '1' || $debug === 'true') {
     ini_set('display_errors', '0');
 }
 
-// -----------------------------
-// Router
-// -----------------------------
 $router = new Router();
 
-/**
- * Dica: se quiser um healthcheck aqui (além do seu health.php estático):
- * $router->get('/health', fn() => ['ok' => true]);
- */
-
-// -----------------------------
-// Auth (API)
-// -----------------------------
-// POST /auth/login  – recebe {id_entidade, senha} (ou pass) e cria sessão
-// POST /auth/logout – encerra sessão
+// Auth
 $router->post('/auth/login',  [AuthController::class, 'login']);
 $router->post('/auth/logout', [AuthController::class, 'logout']);
+$router->get('/logout', function () {
+    (new AuthController())->logout(); // limpa sessão + cookie
+    header('Location: /');
+    return '';
+});
+
+$router->get('/ui/login', [AuthUiController::class, 'loginPage']);  // login page (não popup)
+
+// Mensagens (já migrado p/ View .tpl)
+$router->post('/ui/messages/load', [MessageController::class, 'load']);
+
+// Backend UI (menu da retaguarda)
+$router->post('/ui/backend/menu', [BackendController::class, 'menu']);
+$router->get('/ui/backend/menu', [AuthUiController::class, 'backendMenu']);
+
+// Módulos
+$router->get('/',          fn() => (new HomeController())->indexWithModule('backend'));
+$router->get('/garcom',    fn() => (new HomeController())->indexWithModule('waiter'));
+$router->get('/pdv',       fn() => (new HomeController())->indexWithModule('pdv'));
+
+$router->get('/auth/status', [AuthController::class, 'status']);
+
+$router->get('/ui/auth/popup', [AuthUiController::class, 'popup']); // entrega o HTML do formulário
+
+$router->get('/ui/pages/([a-zA-Z0-9_-]+)', [UiPageController::class, 'show']);
+
+
+
+
 
 // Healthcheck simples (app + DB)
 $router->get('/health', function () {
@@ -129,9 +148,6 @@ $router->get('/garcom',  [HomeController::class, 'indexWaiter']);  // Garçom
 
 /** ENDPOINTS LEGADOS (compat p/ JS atual) */
 $router->post('/message.php', [MessageController::class, 'load']);
-$router->post('/backend.php', [LegacyCompatController::class, 'backend']);
-$router->post('/waiter.php',  [LegacyCompatController::class, 'waiter']);
-$router->post('/pdv.php',     [LegacyCompatController::class, 'pdv']); // se usar
 
 // -----------------------------
 // Dispatch

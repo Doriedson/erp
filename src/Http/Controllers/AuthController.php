@@ -1,73 +1,49 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Response;
 use App\Auth\AuthService;
-use PDO;
-use PDOException;
+use \App\Legacy\ControlAccess;
 
 final class AuthController
 {
-    private function pdo(): PDO
-    {
-        $host = getenv('DB_HOST') ?: '127.0.0.1';
-        $port = getenv('DB_PORT') ?: '3306';
-        $db   = getenv('DB_DATABASE') ?: '';
-        $user = getenv('DB_USERNAME') ?: '';
-        $pass = getenv('DB_PASSWORD') ?: '';
+    public function login(): string {
 
-        $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
+        // Aceita senha de 'senha' ou 'pass' (legado)
+        $id_entidade = (int)($_POST['id_entidade'] ?? 0);
+        $senha       = (string)($_POST['senha'] ?? '');
 
-        $pdo = new PDO($dsn, $user, $pass, [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]);
-        return $pdo;
+        if ($id_entidade <= 0 || $senha === '') {
+            return Response::json(
+                ['error' => 'id_entidade e senha são obrigatórios'],
+                422
+            );
+        }
+
+        // exige acesso de servidor (ajuste se o módulo for outro)
+        ControlAccess::login(
+            $id_entidade,
+            $senha,
+            ControlAccess::CA_SERVIDOR,
+            true
+        );
+
+        // Se chegou aqui, sessão PHP está ativa e token foi gerado
+        return Response::json(['ok' => true]);
     }
 
-    public function login(): void
-    {
-        header('Content-Type: application/json; charset=utf-8');
-        if (session_status() !== PHP_SESSION_ACTIVE) { session_start(); }
+    public function logout(): string {
 
-        try {
-            // Aceita JSON ou form-urlencoded
-            $ct = $_SERVER['CONTENT_TYPE'] ?? '';
-            $in = (stripos($ct, 'application/json') !== false)
-                ? (json_decode(file_get_contents('php://input'), true) ?: [])
-                : $_POST;
-
-            $id_entidade = (int)($in['id_entidade'] ?? 0);
-            $senha       = (string)($in['senha'] ?? $in['pass'] ?? '');
-
-            $auth = new AuthService($this->pdo());
-            $user = $auth->authenticate($id_entidade, $senha);
-
-            $_SESSION['auth']  = true;
-            $_SESSION['uid']   = $user['id_entidade'];
-            $_SESSION['uname'] = $user['nome'];
-
-            echo json_encode(['ok' => true] + $user);
-        } catch (\Throwable $e) {
-            // Em produção, evite vazar detalhe de exceção
-            http_response_code(500);
-            $payload = ['error' => 'Internal Server Error'];
-            if (getenv('APP_DEBUG') === '1' || getenv('APP_DEBUG') === 'true') {
-                $payload['detail'] = $e->getMessage();
-            }
-            echo json_encode($payload);
-        }
+        (new AuthService())->logout();
+        return Response::json(['ok' => true]);
     }
 
-    public function logout(): void
-    {
-        header('Content-Type: application/json; charset=utf-8');
-        try {
-            $auth = new AuthService(); // guards não precisam de PDO
-            $auth->logout($_SESSION['uid'] ?? null);
-            echo json_encode(['ok' => true]);
-        } catch (\Throwable $e) {
-            http_response_code(500);
-            echo json_encode(['error' => 'Internal Server Error']);
-        }
+    public function status(): string {
+
+        if (session_status() !== \PHP_SESSION_ACTIVE) @session_start();
+
+        $auth = isset($_SESSION['auth']['id_entidade']);
+        $user = $auth ? ['id_entidade' => $_SESSION['auth']['id_entidade']] : null;
+        return Response::json(['authenticated' => $auth, 'user' => $user]);
     }
 }

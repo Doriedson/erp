@@ -1,15 +1,15 @@
 ﻿<?php
 
-use database\Notifier;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Config;
+use App\Legacy\Config;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
 
 function WaitertipFormEdit($block, $message_error) {
 
-	$tplWaitertip = new View('templates/waiter_tip');
+	$tplWaitertip = new View('waiter_tip');
 
 	$waitertip = new Config();
 	$waitertip->Read();
@@ -30,7 +30,7 @@ function WaitertipFormEdit($block, $message_error) {
 
 function WaitertipFormCancel($block, $message_error) {
 
-	$tplWaitertip = new View('templates/waiter_tip');
+	$tplWaitertip = new View('waiter_tip');
 
 	$waitertip = new Config();
 	$waitertip->Read();
@@ -61,7 +61,7 @@ function WaitertipFormSave($field, $block, $message_error) {
 
 	$billstopay->Update($data);
 
-	$tplWaitertip = new View('templates/waiter_tip');
+	$tplWaitertip = new View('waiter_tip');
 
 	$billstopay->Read();
 
@@ -82,7 +82,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplWaitertip = new View('templates/waiter_tip');
+		$tplWaitertip = new View('waiter_tip');
 
 		$config = new Config();
 

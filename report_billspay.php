@@ -1,9 +1,9 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\BillsToPay;
+use App\Legacy\BillsToPay;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -14,7 +14,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplBillspay = new View("templates/report_billspay");
+		$tplBillspay = new View("report_billspay");
 
 		$data = [
 			'data' => date('Y-m-d'),
@@ -30,8 +30,8 @@ switch ($_POST['action']) {
 		$intervalo = ($_POST['intervalo'] == "false")? false : true;
 		$procura = $_POST['procura'];
 
-		$tplBillspay = new View('templates/report_billspay');
-		$tplBillsToPay = new View('templates/bills_to_pay');
+		$tplBillspay = new View('report_billspay');
+		$tplBillsToPay = new View('bills_to_pay');
 
 		$bills = new BillsToPay();
 

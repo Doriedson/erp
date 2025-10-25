@@ -1,9 +1,9 @@
 <?php
 
-use database\Notifier;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Collaborator;
-use database\Wallet;
+use App\Legacy\Collaborator;
+use App\Legacy\Wallet;
 
 require "./inc/config.inc.php";
 require "./inc/authorization.php";
@@ -12,10 +12,10 @@ switch($_POST['action']) {
 
 	case "load":
 
-		$tplUser = new View("templates/user");
+		$tplUser = new View("user");
 
-		$tplWallets = new View("templates/wallets");
-		$tplWallet = new View("templates/wallet");
+		$tplWallets = new View("wallets");
+		$tplWallet = new View("wallet");
 
         $wallet = new Wallet();
 
@@ -83,7 +83,7 @@ switch($_POST['action']) {
 
 	case "collaborator_show_password":
 
-		$tplUser = new View("templates/user");
+		$tplUser = new View("user");
 
 		$data = [
 			"nome" => $GLOBALS["authorized_nome"]

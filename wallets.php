@@ -1,10 +1,10 @@
 <?php
 
-use database\Collaborator;
-use database\Entity;
-use database\Notifier;
+use App\Legacy\Collaborator;
+use App\Legacy\Entity;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Wallet;
+use App\Legacy\Wallet;
 
 require "./inc/config.inc.php";
 require "./inc/authorization.php";
@@ -13,7 +13,7 @@ function WalletsFormEdit($block, $message_error) {
 
 	$id_wallet = $_POST['id_wallet'];
 
-	$tplWallet = new View('templates/wallets');
+	$tplWallet = new View('wallets');
 
 	$wallet = new Wallet();
 
@@ -43,7 +43,7 @@ function WalletsFormCancel($block, $message_error) {
 
 	$id_wallet = $_POST['id_wallet'];
 
-	$tplWallet = new View('templates/wallets');
+	$tplWallet = new View('wallets');
 
 	$wallet = new Wallet();
 	$wallet->Read($id_wallet);
@@ -82,7 +82,7 @@ function WalletsFormSave($field, $block, $message_error) {
 
 	$wallet->Update($data);
 
-	$tplWallet = new View('templates/wallets');
+	$tplWallet = new View('wallets');
 
 	$wallet->Read($id_wallet);
 
@@ -101,8 +101,8 @@ switch($_POST['action']) {
 
 	case "load":
 
-		$tplWallets = new View("templates/wallets");
-		$tplWallet = new View("templates/wallet");
+		$tplWallets = new View("wallets");
+		$tplWallet = new View("wallet");
 
         $wallet = new Wallet();
 
@@ -188,8 +188,8 @@ switch($_POST['action']) {
 
 			if ($row = $wallet->getResult()) {
 
-				$tplWallets = new View('templates/wallets');
-				$tplWallet = new View('templates/wallet');
+				$tplWallets = new View('wallets');
+				$tplWallet = new View('wallet');
 
 				$row['saldototal_formatted'] = number_format($row['saldo'], 2, ',', '.');
 
@@ -249,7 +249,7 @@ switch($_POST['action']) {
 
 		$wallet = new Wallet();
 		$collaborator = new Collaborator();
-		$tplWallet = new View('templates/wallets');
+		$tplWallet = new View('wallets');
 
 		if ($wallet->isMyWallet($id_wallet) == false) {
 

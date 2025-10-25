@@ -1,40 +1,32 @@
 /**
   * Form to login
   */
-$(document).on("submit", "#frm_backend_login", async function(event) {
-	
+$(document).on("submit", "#frm_login", async function(event) {
+
 	event.preventDefault();
 
-	let id_entidade = this.id_entidade.value;
-	let pass = this.pass.value;
+	const form = $(this);
+	FormDisable(form);
 
-	let data = {
-		action: "login",
-		id_entidade: id_entidade,
-		pass: pass,
-		module: $('.body-container').data('module')
-	}
+	const payload = {
+		id_entidade: this.id_entidade.value,
+		senha: this.senha.value
+	};
 
-	let response = await Post("backend.php", data)
+	try {
+		// faz o login
+		const resp = await Post('/auth/login', payload);
 
-	if(response) {
+		// sucesso: dispara o pós-login único
+		await Authenticator.afterLogin();
 
-		$(".leftmenu_container").html(response['data']);
-		$(".leftmenu_container").removeClass("hidden");
-		$(".body-header").removeClass('hidden');
-		$("#body-container").html("");
+	} catch (e) {
 
-		localStorage.setItem("id_entidade", id_entidade);
+		const msg = (e && e.responseJSON && e.responseJSON.error)
+		? e.responseJSON.error
+		: 'Falha no login';
+		Message.Show(msg, Message.MSG_ERROR);
+		FormEnable(form);
 
-		if (response['page']) {
-
-			LoadPage(response['page']);
-
-		} else {
-
-			LoadPage('home.php');
-		}
-
-		observerStart.notify("login");
 	}
 });

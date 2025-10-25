@@ -1,11 +1,11 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\SaleOrder;
-use database\Product;
-use database\Calc;
+use App\Legacy\SaleOrder;
+use App\Legacy\Product;
+use App\Legacy\Calc;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -16,7 +16,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplStock = new View('templates/report_stockinout');
+		$tplStock = new View('report_stockinout');
 
 		$data = ['data' => date('Y-m-d')];
 
@@ -40,7 +40,7 @@ switch ($_POST['action']) {
 			$sale->SearchStockInOutByDate($dataini);
 		}
 
-		$tplStockinout = new View('templates/report_stockinout');
+		$tplStockinout = new View('report_stockinout');
 
 		if ($row = $sale->getResult()) {
 

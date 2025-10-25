@@ -78,47 +78,38 @@ $(document).on("click",".bt_about", async function() {
 	}
 });
 
-async function LoadPage(page, data = {}) {
+// Mapeia endpoints legados .php para rotas novas do front controller
+function legacyToUi(path) {
+
+  // já vem algo tipo "home.php"
+  if (path.endsWith('.php')) {
+    const slug = path.replace(/^\//, '').replace(/\.php$/, '');
+    // padrão novo: /ui/pages/{slug}
+    return `/ui/pages/${slug}`;
+  }
+  return path;
+}
+
+async function LoadPage(page, payload = {}) {
 
 	let page_id = page.split('/').pop();
 
 	WindowManager.page = page_id;
 
-	// if (page_id == "logout") {
+	const url = legacyToUi(page);
 
-	// 	Logout();
-	// 	return;
-	// }
+	payload['action'] = 'load';
 
-	data['action'] = 'load';
+	$("#body-container").html(imgLoading);
 
-	// if (page_id != "about.php") {
+	try {
+		// se sua página sempre retorna HTML, use GET + dataType:text
+		const html = await GET(url, payload);
 
-		$("#body-container").html(imgLoading);
-	// }
+		const $body = $('#body-container');
 
-	response = await Post(page, data);
-
-	if (response != null) {
-
-		let content = "";
-
-		if (response.data) {
-
-			content = $(response['data']);
-
-		} else {
-
-			content = $(response);
-		}
-
-		// if (page_id == "about.php") {
-
-		// 	Modal.Show(Modal.POPUP_SIZE_SMALL, "Sobre", content, null);
-		// 	return;
-		// }
-
-		$("#body-container").html(content);
+		if ($body.length) $body.html(html);
+		else console.error('#body-container não encontrado');
 
 		switch (page_id) {
 
@@ -178,10 +169,12 @@ async function LoadPage(page, data = {}) {
 				break;
 		}
 
-		AutoFocus(content);
+		AutoFocus(html);
 
-	} else {
+	} catch (e) {
 
+		console.error('Falha ao carregar página:', e);
+		Message.Show('Não foi possível carregar a página.', Message.MSG_ERROR);
 		$("#body-container").html("");
 	}
 }

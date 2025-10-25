@@ -1,10 +1,10 @@
 ﻿<?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\SaleOrder;
-use database\Product;
+use App\Legacy\SaleOrder;
+use App\Legacy\Product;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -15,7 +15,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplSaleProduct = new View('templates/report_sale_product');
+		$tplSaleProduct = new View('report_sale_product');
 
 		$data = ['data' => date('Y-m-d')];
 
@@ -29,7 +29,7 @@ switch ($_POST['action']) {
 		$datafim = $_POST['datafim'];
 		$intervalo = ($_POST['intervalo'] == "false")? false : true;
 
-		$tplSaleProduct = new View("templates/report_sale_product");
+		$tplSaleProduct = new View("report_sale_product");
 
 		$sale = new SaleOrder();
 		$saleDiscount = new SaleOrder();

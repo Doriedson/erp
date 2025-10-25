@@ -1,26 +1,26 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Clean;
-use database\Log;
-use database\Product;
-use database\ProductExpDate;
-use database\ProductType;
-use database\ProductKit;
-use database\ProductComposition;
-use database\ProductSector;
-use database\PriceTag;
-use database\BarCode;
-use database\Company;
+use App\Legacy\Clean;
+use App\Legacy\Log;
+use App\Legacy\Product;
+use App\Legacy\ProductExpDate;
+use App\Legacy\ProductType;
+use App\Legacy\ProductKit;
+use App\Legacy\ProductComposition;
+use App\Legacy\ProductSector;
+use App\Legacy\PriceTag;
+use App\Legacy\BarCode;
+use App\Legacy\Company;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
 
 function LoadProductSector() {
 
-	$tplProduct = new View('templates/digital_menu_config');
+	$tplProduct = new View('digital_menu_config');
 
 	$productsector = new ProductSector();
 	$productsector->getList();
@@ -46,7 +46,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplProduct = new View('templates/digital_menu_config');
+		$tplProduct = new View('digital_menu_config');
 
 		$company = new Company();
 
@@ -87,8 +87,8 @@ switch ($_POST['action']) {
 
 		$extra_block_product = "";
 
-		$tplDigitalMenu = new View('templates/digital_menu_config');
-		$tplProduct = new View('templates/product');
+		$tplDigitalMenu = new View('digital_menu_config');
+		$tplProduct = new View('product');
 
 		if ($row = $product->getResult()) {
 

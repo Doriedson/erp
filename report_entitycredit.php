@@ -1,10 +1,10 @@
 ﻿<?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\SaleOrder;
-use database\Entity;
+use App\Legacy\SaleOrder;
+use App\Legacy\Entity;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -17,7 +17,7 @@ switch ($_POST['action']) {
 
 		$data = ['data' => date('Y-m-d')];
 
-		$tplEntityCredit = new View('templates/report_entitycredit');
+		$tplEntityCredit = new View('report_entitycredit');
 
 		Send($tplEntityCredit->getContent($data, "BLOCK_PAGE"));
 	break;
@@ -37,7 +37,7 @@ switch ($_POST['action']) {
 
 		$entity->getEntityCreditByDateInterval($dataini, $datafim);
 
-		$tplEntityCredit = new View('templates/report_entitycredit');
+		$tplEntityCredit = new View('report_entitycredit');
 
 		$dataini_formatted = date_format(date_create($dataini), 'd/m/Y');
 		$datafim_formatted = date_format(date_create($datafim), 'd/m/Y');

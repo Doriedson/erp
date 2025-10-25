@@ -19,7 +19,7 @@ final class MessageInjector
 
         // Exemplos de templates; ajuste os nomes/blocks para seus arquivos reais:
         // Se você já tem 1 único message.tpl com múltiplos blocks, basta carregar um só e chamar getContent() para cada block.
-        if (is_file(__DIR__ . '/../../templates/message.tpl')) {
+        if (is_file(__DIR__ . '/../../message.tpl')) {
             $tpl = new View('message');
             // Ajuste os nomes dos blocks p/ os seus:
             $html[] = $tpl->getContent([], 'BLOCK_MODAL');      // overlay/modal base
@@ -29,7 +29,7 @@ final class MessageInjector
         }
 
         // Caso você tenha outros TPLs fragmentados:
-        // if (is_file(__DIR__ . '/../../templates/message_extra.tpl')) {
+        // if (is_file(__DIR__ . '/../../message_extra.tpl')) {
         //     $tplX = new View('message_extra');
         //     $html[] = $tplX->getContent([], 'BLOCK_EXTRA');
         // }

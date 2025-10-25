@@ -1,22 +1,22 @@
 <?php
 
-use database\ControlAccess;
+
 use App\View\View;
-use database\SaleOrder;
-use database\SaleOrderStatusChange;
-use database\SaleOrderItem;
-use database\SaleOrderAddress;
-use database\Entity;
-use database\EntityAddress;
-use database\Freight;
-use database\PaymentKind;
-use database\Product;
-use database\Log;
-use database\PrinterConfig;
-use database\SaleOrderPay;
-use database\Calc;
-use database\Notifier;
-use database\ProductComplement;
+use App\Legacy\SaleOrder;
+use App\Legacy\SaleOrderStatusChange;
+use App\Legacy\SaleOrderItem;
+use App\Legacy\SaleOrderAddress;
+use App\Legacy\Entity;
+use App\Legacy\EntityAddress;
+use App\Legacy\Freight;
+use App\Legacy\PaymentKind;
+use App\Legacy\Product;
+use App\Legacy\Log;
+use App\Legacy\PrinterConfig;
+use App\Legacy\SaleOrderPay;
+use App\Legacy\Calc;
+use App\Legacy\Notifier;
+use App\Legacy\ProductComplement;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -27,7 +27,7 @@ function SaleOrderGet(SaleOrder $sale, $menu_view) {
 
 	$response = null;
 
-	$tplSale = new View('templates/sale_order');
+	$tplSale = new View('sale_order');
 
 	// $total = 0;
 
@@ -113,7 +113,7 @@ function SaleOrderGet(SaleOrder $sale, $menu_view) {
 
 function Load($id_vendastatus, $id_venda = null) {
 
-	$tplSale = new View('templates/sale_order');
+	$tplSale = new View('sale_order');
 
 	$sale = new SaleOrder();
 
@@ -156,7 +156,7 @@ function Load($id_vendastatus, $id_venda = null) {
 		}
 	}
 
-	$tplEntity = new View('templates/entity');
+	$tplEntity = new View('entity');
 
 	$data['block_entity_autocomplete_search'] = $tplEntity->getContent([], "BLOCK_ENTITY_AUTOCOMPLETE_SEARCH");
 
@@ -494,10 +494,10 @@ switch ($_POST['action']) {
 
 			$id_entidade = $row['id_entidade'];
 
-			$tplSale = new View("templates/sale_order");
+			$tplSale = new View("sale_order");
 
 			$entityAddress = new EntityAddress();
-			$tplEntity = new View("templates/entity");
+			$tplEntity = new View("entity");
 
 			$entityAddress->getList($id_entidade);
 
@@ -562,7 +562,7 @@ switch ($_POST['action']) {
 
 			$frete = $sale->applyFreight($id_venda);
 
-			$tplSale = new View("templates/sale_order");
+			$tplSale = new View("sale_order");
 
 			$row['extra_block_saleaddress'] = SaleOrderAddress::getSaleAddress($id_venda);
 
@@ -610,7 +610,7 @@ switch ($_POST['action']) {
 
 		$frete = $sale->applyFreight($id_venda);
 
-		$tplSale = new View("templates/sale_order");
+		$tplSale = new View("sale_order");
 
 		$data['extra_block_saleaddress'] = $tplSale->getContent([], "EXTRA_BLOCK_NO_SALEADDRESS");
 
@@ -784,7 +784,7 @@ switch ($_POST['action']) {
 		if ($row = $sale->getResult()) {
 
 			$row = SaleOrder::FormatFields($row);
-			// $tplSale = new View("templates/sale_order");
+			// $tplSale = new View("sale_order");
 
 			// Send($tplSale->getContent($row, "BLOCK_OBS"));
 			Send([
@@ -824,7 +824,7 @@ switch ($_POST['action']) {
 			$product->SearchByString($produto, true);
 		}
 
-		$tplSale = new View("templates/sale_order");
+		$tplSale = new View("sale_order");
 
 		if ($row = $product->getResult()) {
 
@@ -966,7 +966,7 @@ switch ($_POST['action']) {
 
 				$row = SaleOrderItem::FormatFields($row);
 
-				$tplSale = new View("templates/sale_order");
+				$tplSale = new View("sale_order");
 
 				$data["item"] = $tplSale->getContent($row, "EXTRA_BLOCK_SALEORDER_ABERTO_ITEMS_REVERSED");
 
@@ -1034,7 +1034,7 @@ switch ($_POST['action']) {
 
 				$row = SaleOrderItem::FormatFields($row);
 
-				$tplSale = new View("templates/sale_order");
+				$tplSale = new View("sale_order");
 
 				$data["item"] = $tplSale->getContent($row, "EXTRA_BLOCK_SALEORDER_ABERTO_ITEMS");
 
@@ -1075,7 +1075,7 @@ switch ($_POST['action']) {
 
 		if ($row = $sale->getResult()) {
 
-			$tplSale = new View('templates/sale_order');
+			$tplSale = new View('sale_order');
 
 			Send($tplSale->getContent($row, "EXTRA_BLOCK_FORM_FRETE"));
 
@@ -1097,7 +1097,7 @@ switch ($_POST['action']) {
 
 		if ($row = $sale->getResult()) {
 
-			$tplSale = new View("templates/sale_order");
+			$tplSale = new View("sale_order");
 
 			$row = SaleOrder::FormatFields($row);
 
@@ -1132,7 +1132,7 @@ switch ($_POST['action']) {
 
 		if ($row = $sale->getResult()) {
 
-			$tplSale = new View("templates/sale_order");
+			$tplSale = new View("sale_order");
 
 			$row = SaleOrder::FormatFields($row);
 
@@ -1211,7 +1211,7 @@ switch ($_POST['action']) {
 		if ($row = $saleItem->getResult()) {
 
 			$row = SaleOrderItem::FormatFields($row);
-			// $tplSale = new View('templates/sale_order');
+			// $tplSale = new View('sale_order');
 
 			// Send($tplSale->getContent($row, "BLOCK_ITEM_OBS"));
 			Send([
@@ -1238,7 +1238,7 @@ switch ($_POST['action']) {
 
 		if ($row = $saleItem->getResult()) {
 
-			$tplSale = new View('templates/sale_order');
+			$tplSale = new View('sale_order');
 
 			Send($tplSale->getContent($row, "EXTRA_BLOCK_FORM_ITEM_QTD"));
 
@@ -1263,7 +1263,7 @@ switch ($_POST['action']) {
 
 			$row = SaleOrderItem::FormatFields($row);
 
-			$tplSale = new View('templates/sale_order');
+			$tplSale = new View('sale_order');
 
 			Send($tplSale->getContent($row, "BLOCK_ITEM_QTD"));
 
@@ -1318,7 +1318,7 @@ switch ($_POST['action']) {
 
 			$row = SaleOrderItem::FormatFields($row);
 
-			$tplSale = new View('templates/sale_order');
+			$tplSale = new View('sale_order');
 
 			$data["item"] = $tplSale->getContent($row, "EXTRA_BLOCK_SALEORDER_ABERTO_ITEMS");
 
@@ -1355,7 +1355,7 @@ switch ($_POST['action']) {
 
 		if ($row = $saleItem->getResult()) {
 
-			$tplSale = new View('templates/sale_order');
+			$tplSale = new View('sale_order');
 
 			Send($tplSale->getContent($row, "EXTRA_BLOCK_FORM_ITEM_PRECO"));
 
@@ -1380,7 +1380,7 @@ switch ($_POST['action']) {
 
 			$row = SaleOrderItem::FormatFields($row);
 
-			$tplSale = new View('templates/sale_order');
+			$tplSale = new View('sale_order');
 
 			Send($tplSale->getContent($row, "BLOCK_ITEM_PRECO"));
 
@@ -1426,7 +1426,7 @@ switch ($_POST['action']) {
 
 			$row = Product::FormatFields($row);
 
-			$tplSale = new View('templates/sale_order');
+			$tplSale = new View('sale_order');
 
 			$data["item"] = $tplSale->getContent($row, "EXTRA_BLOCK_SALEORDER_ABERTO_ITEMS");
 
@@ -1465,7 +1465,7 @@ switch ($_POST['action']) {
 
 			$row = SaleOrderItem::FormatFields($row);
 
-			$tplSale = new View('templates/sale_order');
+			$tplSale = new View('sale_order');
 
 			Send($tplSale->getContent($row, "EXTRA_BLOCK_FORM_ITEM_DESCONTO"));
 
@@ -1490,7 +1490,7 @@ switch ($_POST['action']) {
 
 			$row = SaleOrderItem::FormatFields($row);
 
-			$tplSale = new View('templates/sale_order');
+			$tplSale = new View('sale_order');
 
 			Send($tplSale->getContent($row, "BLOCK_ITEM_DESCONTO"));
 
@@ -1553,7 +1553,7 @@ switch ($_POST['action']) {
 
 			$row = Product::FormatFields($row);
 
-			$tplSale = new View('templates/sale_order');
+			$tplSale = new View('sale_order');
 
 			$data['item'] = $tplSale->getContent($row, "EXTRA_BLOCK_SALEORDER_ABERTO_ITEMS");
 
@@ -1664,7 +1664,7 @@ switch ($_POST['action']) {
 		$saleOrder = new SaleOrder();
 		$saleOrderStatus = new SaleOrderStatusChange();
 
-		$tplSale = new View('templates/sale_order');
+		$tplSale = new View('sale_order');
 
 		$saleOrder->ReadOnly($id_venda);
 
@@ -1809,8 +1809,8 @@ switch ($_POST['action']) {
 
 						if ($row = $saleOrder->getResult()) {
 
-							$tplSaleCoupon = new View('templates/report_sale_coupon');
-							$tplSale = new View('templates/sale_order');
+							$tplSaleCoupon = new View('report_sale_coupon');
+							$tplSale = new View('sale_order');
 
 							$row = SaleOrder::FormatFields($row);
 
@@ -1858,7 +1858,7 @@ switch ($_POST['action']) {
 
 						if ($row = $saleOrder->getResult()) {
 
-							$tplSale = new View('templates/sale_order');
+							$tplSale = new View('sale_order');
 
 							Notifier::Add("Cupom # $id_venda cancelado com sucesso.", Notifier::NOTIFIER_DONE);
 
@@ -1918,7 +1918,7 @@ switch ($_POST['action']) {
 
 			$row = SaleOrder::FormatFields($row);
 
-			$tplSale = new View("templates/sale_order");
+			$tplSale = new View("sale_order");
 
 			Send($tplSale->getContent($row, "EXTRA_BLOCK_SALEORDER_REVERSE"));
 
@@ -2238,7 +2238,7 @@ switch ($_POST['action']) {
 		$id_venda = $_POST['id_venda'];
 		$page = $_POST['page'];
 
-		$tplSale = new View("templates/sale_order");
+		$tplSale = new View("sale_order");
 
 		$sale = new SaleOrder();
 

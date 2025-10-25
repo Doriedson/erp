@@ -17,7 +17,7 @@ namespace Escpos\PrintConnectors;
 
 use Exception;
 use BadMethodCallException;
-use database\Notifier;
+use App\Legacy\Notifier;
 
 /**
  * Print connector that passes print data to CUPS print commands.

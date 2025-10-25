@@ -22,6 +22,15 @@ final class Response
         return json_encode($out, JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE);
     }
 
+    public static function raw(string $body, string $contentType = 'text/plain; charset=UTF-8', int $status = 200, array $headers = []): void
+    {
+
+        http_response_code($status);
+        header("Content-Type: {$contentType}");
+        foreach ($headers as $k => $v) header("$k: $v");
+        echo $body;
+    }
+
     public static function error(string $message, int $status = 400, $code = null, bool $envelope = true): string
     {
         $body = ['error' => $message];

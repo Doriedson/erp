@@ -12,19 +12,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 loadEnv(__DIR__ . '/../.env');
 
 // 2. Namespace da sua classe de Auth
-use database\Notifier;
+use App\Legacy\Notifier;
 use App\Auth\Authorization;
-use App\Support\Version;
 use App\Http\Response;
-
-// 3. Defina aqui as páginas públicas (sem autenticação)
-$publicPages = [
-    'index.php',
-    'login.php',
-    'backend.php',
-    'message.php'
-    // adicione outras rotas públicas, se houver
-];
 
 // 4. Verifica se a rota atual está na whitelist
 $currentPage = basename($_SERVER['SCRIPT_NAME']);

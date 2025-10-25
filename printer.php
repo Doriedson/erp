@@ -1,12 +1,12 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\PrinterConfig;
-use database\Printing;
-use database\Company;
-use database\Product;
+use App\Legacy\PrinterConfig;
+use App\Legacy\Printing;
+use App\Legacy\Company;
+use App\Legacy\Product;
 use Escpos\PrintConnectors\WindowsPrintConnector;
 
 require "inc/config.inc.php";
@@ -18,7 +18,7 @@ function PrinterFormEdit($block, $message_error) {
 
 	$id_impressora = $_POST['id_impressora'];
 
-	$tplPrinter = new View('templates/printer');
+	$tplPrinter = new View('printer');
 
 	$printer = new PrinterConfig();
 	$printer->Read($id_impressora);
@@ -46,7 +46,7 @@ function PrinterFormCancel($block, $message_error) {
 
 	$id_impressora = $_POST['id_impressora'];
 
-	$tplPrinter = new View('templates/printer');
+	$tplPrinter = new View('printer');
 
 	$printer = new PrinterConfig();
 	$printer->Read($id_impressora);
@@ -77,7 +77,7 @@ function PrinterFormSave($field, $block, $message_error) {
 
 	$printer->Update($data);
 
-	$tplPrinter = new View('templates/printer');
+	$tplPrinter = new View('printer');
 
 	$printer->Read($id_impressora);
 
@@ -100,7 +100,7 @@ switch ($_POST['action']) {
 
 		$printer = new PrinterConfig();
 
-		$tplPrinter = new View('templates/printer');
+		$tplPrinter = new View('printer');
 
 		$printers = PrinterConfig::getPrinters();
 
@@ -187,7 +187,7 @@ switch ($_POST['action']) {
 
             $printer->Read($id_impressora);
 
-            $tplPrinter = new View('templates/printer');
+            $tplPrinter = new View('printer');
 
             if ($row = $printer->getResult()) {
 
@@ -245,7 +245,7 @@ switch ($_POST['action']) {
 
 			$row = PrinterConfig::FormatFields($row);
 
-			$tplPrinter = new View("templates/printer");
+			$tplPrinter = new View("printer");
 
 			Send($tplPrinter->getContent($row, "BLOCK_IMPRESSORA"));
 
@@ -512,7 +512,7 @@ switch ($_POST['action']) {
 
 	case "printer_popup_impressora_new":
 
-		$tplPrinter = new View('templates/printer');
+		$tplPrinter = new View('printer');
 
 		$printers = PrinterConfig::getPrinters();
 

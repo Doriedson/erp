@@ -1,10 +1,10 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Receipt;
-use database\Entity;
+use App\Legacy\Receipt;
+use App\Legacy\Entity;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -15,7 +15,7 @@ switch ($_POST['action']) {
 
     case "load":
 
-        $tplReceipt = new View('templates/receipt');
+        $tplReceipt = new View('receipt');
 
         $receipt = new Receipt();
 
@@ -54,7 +54,7 @@ switch ($_POST['action']) {
         // $data['data'] = date('Y-m-d');
         $data['extra_block_receipt'] = $extra_block_receipt;
 
-        // $tplEntity = new View('templates/entity');
+        // $tplEntity = new View('entity');
 
 	    // $data['block_entity_autocomplete_search'] = $tplEntity->getContent([], "BLOCK_ENTITY_AUTOCOMPLETE_SEARCH");
 
@@ -97,7 +97,7 @@ switch ($_POST['action']) {
 
             if ($row = $receipt->getResult()) {
 
-                $tplReceipt = new View('templates/receipt');
+                $tplReceipt = new View('receipt');
 
                 $row = Receipt::FormatFields($row);
 
@@ -136,7 +136,7 @@ switch ($_POST['action']) {
 
             } else {
 
-                $tplReceipt = new View('templates/receipt');
+                $tplReceipt = new View('receipt');
 
                 Notifier::Add("Recibo removido com sucesso.", Notifier::NOTIFIER_DONE);
                 Send($tplReceipt->getContent([], "EXTRA_BLOCK_RECEIPT_NONE"));
@@ -155,7 +155,7 @@ switch ($_POST['action']) {
 
         if($receipt->DeleteAll()) {
 
-            $tplReceipt = new View('templates/receipt');
+            $tplReceipt = new View('receipt');
 
             Notifier::Add("Todos os rebibos foram removidos com sucesso.", Notifier::NOTIFIER_DONE);
             Send($tplReceipt->getContent([], "EXTRA_BLOCK_RECEIPT_NONE"));
@@ -175,7 +175,7 @@ switch ($_POST['action']) {
 
         if ($row = $receipt->getResult()) {
 
-            $tplReceipt = new View("templates/receipt_print");
+            $tplReceipt = new View("receipt_print");
 
             $response = "";
 
@@ -200,8 +200,8 @@ switch ($_POST['action']) {
         $id_entidade = $_POST['id_entidade'];
         $nome = $_POST['nome'];
 
-        $tplReceipt = new View("templates/receipt");
-        $tplEntity = new View('templates/entity');
+        $tplReceipt = new View("receipt");
+        $tplEntity = new View('entity');
 
         $data = [
             "id_entidade" => $id_entidade,

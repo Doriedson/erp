@@ -1,6 +1,7 @@
 <?php
 namespace App\Auth;
 
+use App\Database\Connection;
 use PDO;
 
 final class AuthService
@@ -15,42 +16,37 @@ final class AuthService
         }
     }
 
-    public function authenticate(int $id_entidade, string $senha): array
-    {
-        if ($this->pdo === null) {
-            throw new \RuntimeException('Conexão com DB indisponível');
-        }
-        if ($id_entidade <= 0 || $senha === '') {
-            throw new \RuntimeException('Parâmetros inválidos');
-        }
-
-        $sql = "SELECT c.id_entidade, c.hash, c.acesso, e.nome
+    public function authenticate(int $id_entidade, string $senha): bool {
+        $pdo = Connection::pdo();
+        $sql = "SELECT c.hash, e.ativo
                   FROM tab_colaborador c
-                  JOIN tab_entidade   e USING (id_entidade)
-                 WHERE c.id_entidade = :id
-                 LIMIT 1";
-        $st = $this->pdo->prepare($sql);
+                  JOIN tab_entidade e ON e.id_entidade = c.id_entidade
+                 WHERE c.id_entidade = :id";
+        $st = $pdo->prepare($sql);
         $st->execute([':id' => $id_entidade]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
+        if (!$row) return false;
+        if ((int)$row['ativo'] !== 1) return false;                 // opcional: só loga ativo
+        if (!password_verify($senha, $row['hash'])) return false;   // hash é bcrypt
 
-        if (!$row || !password_verify($senha, (string)($row['hash'] ?? ''))) {
-            throw new \RuntimeException('Credenciais inválidas');
-        }
+        if (session_status() !== \PHP_SESSION_ACTIVE) @session_start();
+        session_regenerate_id(true);
+        $_SESSION['auth'] = ['id_entidade' => $id_entidade];
 
-        return [
-            'id_entidade' => (int)$row['id_entidade'],
-            'nome'        => (string)($row['nome'] ?? ''),
-            'acesso'      => (string)($row['acesso'] ?? ''),
-        ];
+        return true;
     }
 
-    public function logout(?int $id_entidade = null): void
-    {
-        // Se quiser, zere token persistido aqui.
+    public function logout(): void {
+
+        if (session_status() !== \PHP_SESSION_ACTIVE) @session_start();
+
         $_SESSION = [];
+
         if (ini_get('session.use_cookies')) {
-            $p = session_get_cookie_params();
-            setcookie(session_name(), '', time()-42000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params['path'], $params['domain'], $params['secure'], $params['httponly']
+            );
         }
         session_destroy();
     }
@@ -62,10 +58,11 @@ final class AuthService
 
     public function requireAuthForApi(): void
     {
-        if ($this->check()) return;
+        if ($this->isAuthenticated()) return;
+
         http_response_code(401);
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['error' => 'unauthorized']);
+        echo json_encode(['error' => 'Unauthorized', 'code' => 'AUTH_REQUIRED']);
         exit;
     }
 
@@ -74,5 +71,18 @@ final class AuthService
         if ($this->check()) return;
         header('Location: ' . $loginPath);
         exit;
+    }
+
+    public function isAuthenticated(): bool
+    {
+        if (session_status() !== \PHP_SESSION_ACTIVE) {
+            @session_start();
+        }
+        return isset($_SESSION['auth']['id_entidade']);
+    }
+
+    public function userId(): ?int
+    {
+        return $_SESSION['auth']['id_entidade'] ?? null;
     }
 }

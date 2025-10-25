@@ -1,11 +1,11 @@
 <?php
 
-use database\ControlAccess;
-use database\Entity;
-use database\Notifier;
+
+use App\Legacy\Entity;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\SaleOrder;
-use database\Calc;
+use App\Legacy\SaleOrder;
+use App\Legacy\Calc;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -16,7 +16,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplSaleCoupon = new View("templates/report_sale_coupon");
+		$tplSaleCoupon = new View("report_sale_coupon");
 
 		$data = ['data' => date('Y-m-d')];
 
@@ -46,7 +46,7 @@ switch ($_POST['action']) {
 
 		$sale = new SaleOrder();
 
-		$tplSaleCoupon = new View('templates/report_sale_coupon');
+		$tplSaleCoupon = new View('report_sale_coupon');
 
 		$sale->getCouponsByDate($data, $id_vendastatus);
 
@@ -56,7 +56,7 @@ switch ($_POST['action']) {
 			$total = 0;
 			$counter = 0;
 
-			$tplSale= new View("templates/sale_order");
+			$tplSale= new View("sale_order");
 
 			do {
 
@@ -131,7 +131,7 @@ switch ($_POST['action']) {
 
 		$sale = new SaleOrder();
 
-		$tplSaleCoupon = new View('templates/report_sale_coupon');
+		$tplSaleCoupon = new View('report_sale_coupon');
 
 		$sale->Read($id_venda);
 
@@ -141,7 +141,7 @@ switch ($_POST['action']) {
 			$total = 0;
 			$counter = 0;
 
-			$tplSale= new View("templates/sale_order");
+			$tplSale= new View("sale_order");
 
 			do {
 

@@ -1,10 +1,10 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Collaborator;
-use database\Entity;
+use App\Legacy\Collaborator;
+use App\Legacy\Entity;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -15,7 +15,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplCollaborator = new View('templates/collaborator');
+		$tplCollaborator = new View('collaborator');
 
 		$extra_block_collaborator = "";
 
@@ -33,7 +33,7 @@ switch ($_POST['action']) {
 
 		$data['extra_block_collaborator'] = $extra_block_collaborator;
 
-        $tplEntity = new View('templates/entity');
+        $tplEntity = new View('entity');
 
 	    $data['block_entity_autocomplete_search'] = $tplEntity->getContent([], "BLOCK_ENTITY_AUTOCOMPLETE_SEARCH");
 
@@ -77,7 +77,7 @@ switch ($_POST['action']) {
 
                 if ($row = $collaborator->getResult()) {
 
-                    $tplCollaborator = new View('templates/collaborator');
+                    $tplCollaborator = new View('collaborator');
 
                     $row = Collaborator::FormatFields($row);
 
@@ -174,7 +174,7 @@ switch ($_POST['action']) {
 
                 $row = Collaborator::FormatFields($row);
 
-                $tplCollaborator = new View("templates/collaborator");
+                $tplCollaborator = new View("collaborator");
 
                 Send($tplCollaborator->getContent($row, "BLOCK_ACCESS"));
 

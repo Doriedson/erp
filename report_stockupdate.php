@@ -1,12 +1,12 @@
 ﻿<?php
 
-use database\ControlAccess;
-use database\Entity;
-use database\Notifier;
+
+use App\Legacy\Entity;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Log;
-use database\Product;
-use database\Calc;
+use App\Legacy\Log;
+use App\Legacy\Product;
+use App\Legacy\Calc;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -17,9 +17,9 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplStockupdate = new View('templates/report_stockupdate');
+		$tplStockupdate = new View('report_stockupdate');
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$data = [
 			'data' => date('Y-m-d'),
@@ -93,13 +93,13 @@ switch ($_POST['action']) {
 		// 	}
 		// }
 
-		$tplStockin = new View('templates/report_stockupdate');
+		$tplStockin = new View('report_stockupdate');
 
 		if ($row = $log->getResult()) {
 
 			$entity = new Entity();
 
-			$tplStockupdate = new View('templates/report_stockupdate');
+			$tplStockupdate = new View('report_stockupdate');
 
 			$dataini_formatted = date_format(date_create($dataini), 'd/m/Y');
 			$datafim_formatted = date_format(date_create($datafim), 'd/m/Y');

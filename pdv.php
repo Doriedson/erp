@@ -1,10 +1,11 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Clean;
-use database\Collaborator;
+use App\Legacy\Clean;
+use App\Legacy\Collaborator;
+use App\Legacy\ControlAccess;
 use App\Support\Version;
 
 require "./inc/config.inc.php";
@@ -19,11 +20,11 @@ if (!isset($_COOKIE['id_pdv'])) {
 
 if (!isset($_POST['action'])) {
 
-    $tplPDVIndex = new View("templates/pdv_index");
+    $tplPDVIndex = new View("pdv_index");
 
     $module = $tplPDVIndex->getContent(["module" => 'pdv'], "BLOCK_PAGE");
 
-    $tplIndex = new View("templates/index");
+    $tplIndex = new View("index");
 
     $content = [
         "version" => Version::get(),
@@ -50,7 +51,7 @@ require "./inc/authorization.php";
 
 //         ControlAccess::Check(ControlAccess::CA_PDV);
 
-//         $tplPdv = new View("templates/pdv_closed");
+//         $tplPdv = new View("pdv_closed");
 
 //         Send($tplPdv->getContent([], VIEW::ALL));
 
@@ -69,7 +70,7 @@ switch($_POST['action']) {
 
 		$id_entidade = $_POST["id_entidade"];
 
-		$tplLogin = new View("templates/pdv_login");
+		$tplLogin = new View("pdv_login");
 
 		$collaborator = new Collaborator();
 
@@ -120,7 +121,7 @@ switch($_POST['action']) {
 
             if (ControlAccess::Login($user, $pass, ControlAccess::CA_PDV)) {
 
-                $tplMenu = new View("templates/pdv_menu");
+                $tplMenu = new View("pdv_menu");
 
                 Send([
                     "data" => "",
@@ -140,8 +141,8 @@ switch($_POST['action']) {
 
 		ControlAccess::Check(ControlAccess::CA_PDV);
 
-		$tplMenu = new View("templates/pdv_menu");
-		$tplPDV = new View("templates/pdv_index");
+		$tplMenu = new View("pdv_menu");
+		$tplPDV = new View("pdv_index");
 
 		Send([
 			"data" => $tplPDV->getContent([], "EXTRA_BLOCK_SALE_CONTAINER"),

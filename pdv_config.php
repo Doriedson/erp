@@ -1,9 +1,9 @@
 <?php
 
-use database\ControlAccess;
+
 use App\View\View;
-use database\Pdv;
-use database\Notifier;
+use App\Legacy\Pdv;
+use App\Legacy\Notifier;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -12,7 +12,7 @@ function PDVFormEdit($block, $message_error) {
 
 	$id_pdv = $_POST['id_pdv'];
 
-	$tplPdv = new View('templates/pdv_config');
+	$tplPdv = new View('pdv_config');
 
 	$pdv = new Pdv();
 	$pdv->Read($id_pdv);
@@ -34,7 +34,7 @@ function PDVFormCancel($block, $message_error) {
 
 	$id_pdv = $_POST['id_pdv'];
 
-	$tplPdv = new View('templates/pdv_config');
+	$tplPdv = new View('pdv_config');
 
 	$pdv = new Pdv();
 	$pdv->Read($id_pdv);
@@ -72,7 +72,7 @@ function PDVFormSave($field, $block, $message_error) {
 
     $pdv->Update($data);
 
-	$tplPdv = new View('templates/pdv_config');
+	$tplPdv = new View('pdv_config');
 
 	$pdv->Read($id_pdv);
 
@@ -93,7 +93,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplPdv = new View("templates/pdv_config");
+		$tplPdv = new View("pdv_config");
 
 		$data = ['data' => date('Y-m-d')];
 

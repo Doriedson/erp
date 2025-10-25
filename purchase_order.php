@@ -1,18 +1,18 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\PurchaseOrder;
-use database\PurchaseOrderItem;
-use database\PurchaseList;
-use database\PurchaseListItem;
-use database\Product;
-use database\ProductType;
-use database\ProductComposition;
-use database\ProductKit;
-use database\Provider;
-use database\Calc;
+use App\Legacy\PurchaseOrder;
+use App\Legacy\PurchaseOrderItem;
+use App\Legacy\PurchaseList;
+use App\Legacy\PurchaseListItem;
+use App\Legacy\Product;
+use App\Legacy\ProductType;
+use App\Legacy\ProductComposition;
+use App\Legacy\ProductKit;
+use App\Legacy\Provider;
+use App\Legacy\Calc;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -59,7 +59,7 @@ function PurchaseOrderGet(PurchaseOrder $purchase) {
 
 		$total = 0;
 
-		$tplPurchase = new View('templates/purchase_order');
+		$tplPurchase = new View('purchase_order');
 
 		$response = "";
 
@@ -110,7 +110,7 @@ function PurchaseOrderGet(PurchaseOrder $purchase) {
 function PurchaseOrderGetComposition($row) {
 
 	$composition = "";
-	$tplProduct = new View("templates/product");
+	$tplProduct = new View("product");
 
 	if ($row['id_produtotipo'] == ProductType::PRODUTO) {
 
@@ -120,7 +120,7 @@ function PurchaseOrderGetComposition($row) {
 
 		if ($rowComposition = $productComposition->getResult()) {
 
-			$tplPurchase = new View("templates/purchase_order");
+			$tplPurchase = new View("purchase_order");
 
 			$product = new Product();
 
@@ -167,8 +167,8 @@ function PurchaseOrderProductList(PurchaseOrder $purchase) {
 
 	if ($row = $purchase->getResult()) {
 
-		$tplPurchase = new View("templates/purchase_order");
-		$tplProduct = new View("templates/product");
+		$tplPurchase = new View("purchase_order");
+		$tplProduct = new View("product");
 
 		$row = PurchaseOrder::FormatFields($row);
 
@@ -217,7 +217,7 @@ function PurchaseOrderProductList(PurchaseOrder $purchase) {
 
 				$data['total'] = number_format($total,2,',','.');
 
-				$tplProduct = new View("templates/product");
+				$tplProduct = new View("product");
 
 				$data["block_product_autocomplete_search"] = $tplProduct->getContent([], "BLOCK_PRODUCT_AUTOCOMPLETE_SEARCH");
 
@@ -307,8 +307,8 @@ function PurchaseOrderProductList(PurchaseOrder $purchase) {
 
 function PurchaseOrderGetItem($row, $id_vendastatus) {
 
-	$tplPurchase = new View('templates/purchase_order');
-	$tplProduct = new View('templates/product');
+	$tplPurchase = new View('purchase_order');
+	$tplProduct = new View('product');
 
 	$ret = null;
 
@@ -356,8 +356,8 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplPurchase = new View('templates/purchase_order');
-		$tplProduct = new View('templates/product');
+		$tplPurchase = new View('purchase_order');
+		$tplProduct = new View('product');
 
 		$purchase = new PurchaseOrder();
 
@@ -544,7 +544,7 @@ switch ($_POST['action']) {
 				$list .= "<option value='" . $row['id_compralista'] . "'>" . $row['descricao'] . "</option>";
 			}
 
-			$tplProvider = new View('templates/provider');
+			$tplProvider = new View('provider');
 
 			$data = [
 				'date' => date('Y-m-d'),
@@ -554,7 +554,7 @@ switch ($_POST['action']) {
 				'block_provider_autocomplete_search' => $tplProvider->getContent([], "BLOCK_PROVIDER_AUTOCOMPLETE_SEARCH")
 			];
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			Send([
 				"page" => $tplPurchase->getContent($data, "BLOCK_PAGE"),
@@ -627,7 +627,7 @@ switch ($_POST['action']) {
 
 		$id_compra = $_POST['id_compra'];
 
-		$tplPurchase = new View('templates/purchase_order');
+		$tplPurchase = new View('purchase_order');
 
 		$purchaseOrder = new PurchaseOrder();
 
@@ -655,7 +655,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchase->getResult()) {
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			$row = PurchaseOrder::FormatFields($row);
 
@@ -741,9 +741,9 @@ switch ($_POST['action']) {
 
 				$row = PurchaseOrderItem::FormatFields($row);
 
-				$tplPurchase = new View('templates/purchase_order');
+				$tplPurchase = new View('purchase_order');
 
-				$tplProduct = new View("templates/product");
+				$tplProduct = new View("product");
 
 				$row["block_product_menu"] = $tplProduct->getContent($row, "BLOCK_PRODUCT_MENU");
 
@@ -780,7 +780,7 @@ switch ($_POST['action']) {
 
 			} else {
 
-				$tplPurchase = new View('templates/purchase_order');
+				$tplPurchase = new View('purchase_order');
 				$data = $tplPurchase->getContent($row, "EXTRA_BLOCK_PURCHASE_CONTAINER_ITEM_NONE");
 			}
 
@@ -834,7 +834,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchase->getResult()) {
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			$row = PurchaseOrder::FormatFields($row);
 
@@ -865,7 +865,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchase->getResult()) {
 
-			$tplPurchase = new View("templates/purchase_order");
+			$tplPurchase = new View("purchase_order");
 
 			$row = PurchaseOrder::FormatFields($row);
 
@@ -889,7 +889,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchase->getResult()) {
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			$row = PurchaseOrder::FormatFields($row);
 
@@ -912,8 +912,8 @@ switch ($_POST['action']) {
 
 		if ($row = $purchase->getResult()) {
 
-			$tplPurchase = new View('templates/purchase_order');
-			$tplProvider = new View('templates/provider');
+			$tplPurchase = new View('purchase_order');
+			$tplProvider = new View('provider');
 
 			$row = PurchaseOrder::FormatFields($row);
 			$row['block_provider_autocomplete_search'] = $tplProvider->getContent([], "BLOCK_PROVIDER_AUTOCOMPLETE_SEARCH");
@@ -958,7 +958,7 @@ switch ($_POST['action']) {
 
 			if ($row = $purchase->getResult()) {
 
-				$tplPurchase = new View('templates/purchase_order');
+				$tplPurchase = new View('purchase_order');
 
 				$row = PurchaseOrder::FormatFields($row);
 
@@ -988,7 +988,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchase->getResult()) {
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			$row = PurchaseOrder::FormatFields($row);
 
@@ -1019,12 +1019,12 @@ switch ($_POST['action']) {
 
 		if ($row = $purchase->getResult()) {
 
-			// $tplPurchase = new View("templates/purchase_order");
+			// $tplPurchase = new View("purchase_order");
 
 			$row = PurchaseOrder::FormatFields($row);
 
 			// $row = SaleOrder::FormatFields($row);
-			// $tplSale = new View("templates/sale_order");
+			// $tplSale = new View("sale_order");
 
 			// Send($tplSale->getContent($row, "BLOCK_OBS"));
 			Send($row['extra_block_purchaseorder_obs']);
@@ -1047,7 +1047,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchase->getResult()) {
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			$row = PurchaseOrder::FormatFields($row);
 
@@ -1078,7 +1078,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseItem->getResult()) {
 
-			$tplPurchase = new View("templates/purchase_order");
+			$tplPurchase = new View("purchase_order");
 
 			// $row = Product::FormatFields($row);
 			$row = PurchaseOrderItem::FormatFields($row);
@@ -1102,7 +1102,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseItem->getResult()) {
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			$row = Product::FormatFields($row);
 			$row = PurchaseOrderItem::FormatFields($row);
@@ -1275,7 +1275,7 @@ switch ($_POST['action']) {
 			$row['id_compraitem'] = $id_compraitem;
 			// $row = PurchaseOrderItem::FormatFields($row);
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			Send($tplPurchase->getContent($row, "EXTRA_BLOCK_FORM_PRECO"));
 
@@ -1302,7 +1302,7 @@ switch ($_POST['action']) {
 	// 		$row['id_compraitem'] = $id_compraitem;
 	// 		// $row = PurchaseOrderItem::FormatFields($row);
 
-	// 		$tplPurchase = new View('templates/purchase_order');
+	// 		$tplPurchase = new View('purchase_order');
 
 	// 		Send($tplPurchase->getContent($row, "BLOCK_PRODUCT_PRECO"));
 
@@ -1347,8 +1347,8 @@ switch ($_POST['action']) {
 
 	// 		if ($row = $purchaseItem->getResult()) {
 
-	// 			$tplPurchase = new View('templates/purchase_order');
-	// 			$tplProduct = new View('templates/product');
+	// 			$tplPurchase = new View('purchase_order');
+	// 			$tplProduct = new View('product');
 
 	// 			//Product is composition
 	// 			if ($row['id_produto'] != $id_produto) {
@@ -1409,7 +1409,7 @@ switch ($_POST['action']) {
 		// 	$row['id_compraitem'] = $id_compraitem;
 		// 	// $row = PurchaseOrderItem::FormatFields($row);
 
-		// 	$tplPurchase = new View('templates/purchase_order');
+		// 	$tplPurchase = new View('purchase_order');
 
 		// 	Send($tplPurchase->getContent($row, "BLOCK_PROMO"));
 
@@ -1439,7 +1439,7 @@ switch ($_POST['action']) {
 	// 		$row['id_compraitem'] = $id_compraitem;
 	// 		// $row = PurchaseOrderItem::FormatFields($row);
 
-	// 		$tplPurchase = new View('templates/purchase_order');
+	// 		$tplPurchase = new View('purchase_order');
 
 	// 		Send($tplPurchase->getContent($row, "EXTRA_BLOCK_FORM_PROMO"));
 
@@ -1484,8 +1484,8 @@ switch ($_POST['action']) {
 
 	// 		if ($row = $purchaseItem->getResult()) {
 
-	// 			$tplPurchase = new View('templates/purchase_order');
-	// 			$tplProduct = new View('templates/product');
+	// 			$tplPurchase = new View('purchase_order');
+	// 			$tplProduct = new View('product');
 
 	// 			//Product is composition
 	// 			if ($row['id_produto'] != $id_produto) {
@@ -1537,7 +1537,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseItem->getResult()) {
 
-			$tplPurchase = new View("templates/purchase_order");
+			$tplPurchase = new View("purchase_order");
 
 			$row = Product::FormatFields($row);
 			$row['vol_formatted'] = number_format($row['vol'],3,',','.');
@@ -1563,7 +1563,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseItem->getResult()) {
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			$row = Product::FormatFields($row);
 			$row['vol_formatted'] = number_format($row['vol'],3,',','.');
@@ -1680,7 +1680,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseItem->getResult()) {
 
-			$tplPurchase = new View("templates/purchase_order");
+			$tplPurchase = new View("purchase_order");
 
 			$row = Product::FormatFields($row);
 			$row['custo_formatted'] = number_format($row['custo'],2,',','.');
@@ -1706,7 +1706,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseItem->getResult()) {
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			$row = Product::FormatFields($row);
 			$row['custo_formatted'] = number_format($row['custo'],2,',','.');
@@ -1774,7 +1774,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseItem->getResult()) {
 
-			$tplPurchase = new View("templates/purchase_order");
+			$tplPurchase = new View("purchase_order");
 
 			$row = Product::FormatFields($row);
 			$row['qtdvol_formatted'] = number_format($row['qtdvol'],3,',','.');
@@ -1800,7 +1800,7 @@ switch ($_POST['action']) {
 
 		if ($row = $purchaseItem->getResult()) {
 
-			$tplPurchase = new View('templates/purchase_order');
+			$tplPurchase = new View('purchase_order');
 
 			$row = Product::FormatFields($row);
 			$row['qtdvol_formatted'] = number_format($row['qtdvol'],3,',','.');
@@ -1992,8 +1992,8 @@ switch ($_POST['action']) {
 
 	case "purchaseorder_popup_new":
 
-		$tplPurchase = new View('templates/purchase_order');
-		$tplProvider = new View("templates/provider");
+		$tplPurchase = new View('purchase_order');
+		$tplProvider = new View("provider");
 
 		$purchaseList = new PurchaseList();
 		$purchaseList->getList();

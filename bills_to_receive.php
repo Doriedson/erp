@@ -1,10 +1,10 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\SaleOrder;
-use database\Entity;
+use App\Legacy\SaleOrder;
+use App\Legacy\Entity;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -45,8 +45,8 @@ switch ($_POST['action']) {
 
 	case "load":
 
-        $tplBillsToReceive = new View('templates/bills_to_receive');
-		$tplEntity = new View("templates/entity");
+        $tplBillsToReceive = new View('bills_to_receive');
+		$tplEntity = new View("entity");
 
         $sale = new SaleOrder();
 
@@ -108,8 +108,8 @@ switch ($_POST['action']) {
 
 		$id_entidade = $_POST['id_entidade'];
 
-		$tplBills = new View("templates/bills_to_receive");
-		$tplSale = new View("templates/sale_order");
+		$tplBills = new View("bills_to_receive");
+		$tplSale = new View("sale_order");
 
 		$sale = new SaleOrder();
 

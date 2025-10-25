@@ -1,19 +1,19 @@
 <?php
 
-use database\PrinterConfig;
-use database\Printing;
-use database\Company;
-use database\SaleOrder;
-use database\SaleOrderAddress;
-use database\SaleOrderItem;
-use database\PurchaseOrder;
-use database\PurchaseOrderItem;
-use database\Entity;
-use database\EntityAddress;
-use database\Product;
-use database\Notifier;
-use database\Calc;
-use database\OS;
+use App\Legacy\PrinterConfig;
+use App\Legacy\Printing;
+use App\Legacy\Company;
+use App\Legacy\SaleOrder;
+use App\Legacy\SaleOrderAddress;
+use App\Legacy\SaleOrderItem;
+use App\Legacy\PurchaseOrder;
+use App\Legacy\PurchaseOrderItem;
+use App\Legacy\Entity;
+use App\Legacy\EntityAddress;
+use App\Legacy\Product;
+use App\Legacy\Notifier;
+use App\Legacy\Calc;
+use App\Legacy\OS;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";

@@ -1,11 +1,11 @@
 <?php
 
-use database\Notifier;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Wallet;
-use database\WalletSector;
-use database\WalletCashType;
-use database\Calc;
+use App\Legacy\Wallet;
+use App\Legacy\WalletSector;
+use App\Legacy\WalletCashType;
+use App\Legacy\Calc;
 
 require "./inc/config.inc.php";
 require "./inc/authorization.php";
@@ -14,7 +14,7 @@ function WalletDespesaFormEdit($block, $message_error) {
 
 	$id_walletdespesa = $_POST['id_walletdespesa'];
 
-	$tplWallet = new View('templates/wallet');
+	$tplWallet = new View('wallet');
 
 	$wallet = new Wallet();
 
@@ -80,7 +80,7 @@ function WalletDespesaFormCancel($block, $message_error) {
 
 	$id_walletdespesa = $_POST['id_walletdespesa'];
 
-	$tplWallet = new View('templates/wallet');
+	$tplWallet = new View('wallet');
 
 	$wallet = new Wallet();
 	$wallet->ReadDespesa($id_walletdespesa);
@@ -113,7 +113,7 @@ function WalletDespesaFormSave($field, $block, $message_error) {
 
 	$wallet->UpdateDespesa($data);
 
-	$tplWallet = new View('templates/wallet');
+	$tplWallet = new View('wallet');
 
 	$wallet->ReadDespesa($id_walletdespesa);
 
@@ -144,7 +144,7 @@ function WalletReceitaFormEdit($block, $message_error) {
 
 	$id_walletreceita = $_POST['id_walletreceita'];
 
-	$tplWallet = new View('templates/wallet');
+	$tplWallet = new View('wallet');
 
 	$wallet = new Wallet();
 
@@ -168,7 +168,7 @@ function WalletReceitaFormCancel($block, $message_error) {
 
 	$id_walletreceita = $_POST['id_walletreceita'];
 
-	$tplWallet = new View('templates/wallet');
+	$tplWallet = new View('wallet');
 
 	$wallet = new Wallet();
 	$wallet->ReadReceita($id_walletreceita);
@@ -201,7 +201,7 @@ function WalletReceitaFormSave($field, $block, $message_error) {
 
 	$wallet->UpdateReceita($data);
 
-	$tplWallet = new View('templates/wallet');
+	$tplWallet = new View('wallet');
 
 	$wallet->ReadReceita($id_walletreceita);
 
@@ -236,7 +236,7 @@ function WalletGetSaldo($id_wallet) {
 
 	if ($row = $wallet->getResult()) {
 
-		$tplWallet = new View('templates/wallet');
+		$tplWallet = new View('wallet');
 
 		$row['saldototal_formatted'] = number_format($row['saldo'], 2, ',', '.');
 
@@ -309,7 +309,7 @@ function Walletfilter($id_wallet, $dataini, $intervalo, $datafim, $id_walletcash
 		}
 	}
 
-	$tplWallet = new View('templates/wallet');
+	$tplWallet = new View('wallet');
 
 	$description = $mes[date_format($dataini, 'm') - 1] . ", " . date_format($dataini, 'Y');
 
@@ -495,7 +495,7 @@ switch($_POST['action']) {
 
 		$data = Walletfilter($id_wallet, $date, false, null, null, null);
 
-		$tplWallet = new View("templates/wallet");
+		$tplWallet = new View("wallet");
 
 		Send([
 			"data" => $tplWallet->getContent($data, "BLOCK_PAGE"),
@@ -650,7 +650,7 @@ switch($_POST['action']) {
 
 			if ($row = $wallet->getResult()) {
 
-				$tplWallet = new View('templates/wallet');
+				$tplWallet = new View('wallet');
 
 				$row = Wallet::FormatFieldsDespesa($row);
 
@@ -710,7 +710,7 @@ switch($_POST['action']) {
 
 				if ($row = $wallet->getResult()) {
 
-					$tplWallet = new View('templates/wallet');
+					$tplWallet = new View('wallet');
 
 					$row = Wallet::FormatFieldsDespesa($row);
 
@@ -749,7 +749,7 @@ switch($_POST['action']) {
 
 		if ($row = $wallet->getResult()) {
 
-			$tplWallet = new View('templates/wallet');
+			$tplWallet = new View('wallet');
 
 			$row = Wallet::FormatFieldsReceita($row);
 
@@ -1030,7 +1030,7 @@ switch($_POST['action']) {
 
 		$id_wallet = $_POST['id_wallet'];
 
-		$tplWallet = new View('templates/wallet');
+		$tplWallet = new View('wallet');
 
 		$walletSector = new WalletSector();
 
@@ -1092,7 +1092,7 @@ switch($_POST['action']) {
 
 		$id_wallet = $_POST['id_wallet'];
 
-		$tplWallet = new View('templates/wallet');
+		$tplWallet = new View('wallet');
 
 		$data = [
 			"id_wallet" => $id_wallet,
@@ -1123,7 +1123,7 @@ switch($_POST['action']) {
 
 		if ($row = $wallet->getResult()) {
 
-			$tplWallet = new View('templates/wallet');
+			$tplWallet = new View('wallet');
 
 			$row = Wallet::FormatFieldsDespesa($row);
 
@@ -1161,7 +1161,7 @@ switch($_POST['action']) {
 
 		if ($row = $wallet->getResult()) {
 
-			$tplWallet = new View('templates/wallet');
+			$tplWallet = new View('wallet');
 
 			$row = Wallet::FormatFieldsReceita($row);
 
@@ -1237,7 +1237,7 @@ switch($_POST['action']) {
 			Send(null);
 		}
 
-		$tplWallet = new View("templates/wallet");
+		$tplWallet = new View("wallet");
 
 		$month = date('m');
 		$year = date('Y');
@@ -1349,7 +1349,7 @@ switch($_POST['action']) {
 
 		if ($row = $wallet->getResult()) {
 
-			$tplWallet = new View("templates/wallet");
+			$tplWallet = new View("wallet");
 
 			$row = Wallet::FormatFieldsDespesa($row);
 

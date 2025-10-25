@@ -1,8 +1,8 @@
 <?php
 
-use database\Notifier;
+use App\Legacy\Notifier;
 use App\View\View;
-use database\PaymentKind;
+use App\Legacy\PaymentKind;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -11,7 +11,7 @@ function PaymentKindFormEdit($block, $message_error) {
 
 	$id_especie = $_POST['id_especie'];
 
-	$tplPaymentKind = new View('templates/sale_cashtype');
+	$tplPaymentKind = new View('sale_cashtype');
 
 	$paymentKind = new PaymentKind();
 	$paymentKind->Read($id_especie);
@@ -34,7 +34,7 @@ function PaymentKindFormCancel($block, $message_error) {
 
 	$id_especie = $_POST['id_especie'];
 
-	$tplPaymentKind = new View('templates/sale_cashtype');
+	$tplPaymentKind = new View('sale_cashtype');
 
 	$paymentKind = new PaymentKind();
 	$paymentKind->Read($id_especie);
@@ -68,7 +68,7 @@ function PaymentKindFormSave($field, $block, $message_error) {
 
 	$paymentKind->Update($id_especie, $especie);
 
-	$tplPaymentKind = new View('templates/sale_cashtype');
+	$tplPaymentKind = new View('sale_cashtype');
 
 	$paymentKind->Read($id_especie);
 
@@ -92,7 +92,7 @@ switch ($_POST['action']) {
 		$paymentKind = new PaymentKind();
 		$paymentKind->getList();
 
-		$tplCashtype = new View('templates/sale_cashtype');
+		$tplCashtype = new View('sale_cashtype');
 
 		$cashtype = "";
 
@@ -120,7 +120,7 @@ switch ($_POST['action']) {
 
             $paymentKind->Read($id_especie);
 
-            $tplCashtype = new View('templates/sale_cashtype');
+            $tplCashtype = new View('sale_cashtype');
 
             if ($row = $paymentKind->getResult()) {
 
@@ -224,7 +224,7 @@ switch ($_POST['action']) {
 
 	case "salecashtype_popup_new":
 
-		$tplPaymentKind = new View('templates/sale_cashtype');
+		$tplPaymentKind = new View('sale_cashtype');
 
 		Send($tplPaymentKind->getContent([], "EXTRA_BLOCK_POPUP_SALECASHTYPE_NEW"));
 

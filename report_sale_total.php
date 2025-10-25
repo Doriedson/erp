@@ -1,14 +1,14 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\CashChange;
-use database\Cashier;
-use database\CashAdd;
-use database\CashDrain;
-use database\SaleOrder;
-use database\Calc;
+use App\Legacy\CashChange;
+use App\Legacy\Cashier;
+use App\Legacy\CashAdd;
+use App\Legacy\CashDrain;
+use App\Legacy\SaleOrder;
+use App\Legacy\Calc;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -19,7 +19,7 @@ function ReportCashChangeFormEdit($block, $message_error) {
 
 	$id_caixa = $_POST['id_caixa'];
 
-	$tplPdv = new View('templates/report_sale_total');
+	$tplPdv = new View('report_sale_total');
 
 	$cashChange = new CashChange();
 	$cashChange->Read($id_caixa);
@@ -41,7 +41,7 @@ function ReportCashChangeFormCancel($block, $message_error) {
 
 	$id_caixa = $_POST['id_caixa'];
 
-	$tplPdv = new View('templates/report_sale_total');
+	$tplPdv = new View('report_sale_total');
 
 	$cashChange = new CashChange();
 	$cashChange->Read($id_caixa);
@@ -96,7 +96,7 @@ function ReportCashChangeFormSave($field, $block, $message_error) {
 
 	$cashChange->Update($data);
 
-	$tplPdv = new View('templates/report_sale_total');
+	$tplPdv = new View('report_sale_total');
 
 	$sale = new SaleOrder();
 
@@ -134,7 +134,7 @@ function ReportPDVFormEdit($block, $message_error) {
 
 	$id_caixa = $_POST['id_caixa'];
 
-	$tplPdv = new View('templates/report_sale_total');
+	$tplPdv = new View('report_sale_total');
 
 	$pdv = new Cashier();
 	$pdv->Read($id_caixa);
@@ -156,7 +156,7 @@ function ReportPDVFormCancel($block, $message_error) {
 
 	$id_caixa = $_POST['id_caixa'];
 
-	$tplPdv = new View('templates/report_sale_total');
+	$tplPdv = new View('report_sale_total');
 
 	$pdv = new Cashier();
 	$pdv->Read($id_caixa);
@@ -270,7 +270,7 @@ function ReportPDVFormSave($field, $block, $message_error) {
 
 	}
 
-	$tplPdv = new View('templates/report_sale_total');
+	$tplPdv = new View('report_sale_total');
 
 	$sale = new SaleOrder();
 
@@ -310,7 +310,7 @@ function getCashChange($id_caixa) {
 
 	$cashChange->Read($id_caixa);
 
-	$tplSalesTotal = new View("templates/report_sale_total");
+	$tplSalesTotal = new View("report_sale_total");
 
 	if ($row = $cashChange->getResult()) {
 
@@ -338,7 +338,7 @@ function getCashChange($id_caixa) {
 
 function getSaleTotalReport(SaleOrder $sale, $row, $pdv, $intervalo, $dataini, $datafim) {
 
-	$tplSalesTotal = new View("templates/report_sale_total");
+	$tplSalesTotal = new View("report_sale_total");
 
 	$saleDiscount = new SaleOrder();
 	$saleCashBreak = new SaleOrder();
@@ -559,7 +559,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplSalesTotal = new View("templates/report_sale_total");
+		$tplSalesTotal = new View("report_sale_total");
 
 		$data = ['data' => date('Y-m-d')];
 
@@ -839,7 +839,7 @@ switch ($_POST['action']) {
 
 		$id_caixa = $_POST['id_caixa'];
 
-		// $tplSalesTotal = new View("templates/report_sale_total");
+		// $tplSalesTotal = new View("report_sale_total");
 
 		// $result = [
 		// 	'id_caixa' => $id_caixa,
@@ -871,7 +871,7 @@ switch ($_POST['action']) {
 
 			$row = Cashier::FormatFields($row);
 
-			$tplPdvReport = new View("templates/report_sale_total");
+			$tplPdvReport = new View("report_sale_total");
 
 			Send($tplPdvReport->getContent($row, "EXTRA_BLOCK_PDVREPORT_OBS"));
 

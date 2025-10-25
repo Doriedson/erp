@@ -1,23 +1,23 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Clean;
-use database\Calc;
-use database\Config;
-use database\Log;
-use database\Product;
-use database\ProductExpDate;
-use database\ProductType;
-use database\ProductKit;
-use database\ProductComposition;
-use database\ProductSector;
-use database\PriceTag;
-use database\BarCode;
-use database\PurchaseOrderItem;
-use database\PurchaseOrder;
-use database\ProductComplement;
+use App\Legacy\Clean;
+use App\Legacy\Calc;
+use App\Legacy\Config;
+use App\Legacy\Log;
+use App\Legacy\Product;
+use App\Legacy\ProductExpDate;
+use App\Legacy\ProductType;
+use App\Legacy\ProductKit;
+use App\Legacy\ProductComposition;
+use App\Legacy\ProductSector;
+use App\Legacy\PriceTag;
+use App\Legacy\BarCode;
+use App\Legacy\PurchaseOrderItem;
+use App\Legacy\PurchaseOrder;
+use App\Legacy\ProductComplement;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -66,7 +66,7 @@ function ProductPriceSave($id_produto, $field, $value, $page, $kit_skip = false)
 				$priceTag->Create($id_produto);
 			}
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$product->Read($id_produto);
 
@@ -165,7 +165,7 @@ function ProductFormEdit($block, $message_error) {
 
 	$id_produto = $_POST['id_produto'];
 
-	$tplProduct = new View('templates/product');
+	$tplProduct = new View('product');
 
 	$product = new Product();
 	$product->Read($id_produto);
@@ -195,7 +195,7 @@ function ProductFormCancel($block, $message_error) {
 
 	$id_produto = $_POST['id_produto'];
 
-	$tplProduct = new View('templates/product');
+	$tplProduct = new View('product');
 
 	$product = new Product();
 	$product->Read($id_produto);
@@ -243,7 +243,7 @@ function ProductFormSave($field, $block, $message_error, $page = null) {
 		}
 	}
 
-	$tplProduct = new View('templates/product');
+	$tplProduct = new View('product');
 
 	$product->Read($id_produto);
 
@@ -274,7 +274,7 @@ function ProductKitFormEdit($block, $message_error) {
 	$id_produto = $_POST['id_produto'];
 	$id_kit = $_POST['id_kit'];
 
-	$tplProduct = new View('templates/product');
+	$tplProduct = new View('product');
 
 	$productKit = new ProductKit();
 
@@ -300,7 +300,7 @@ function ProductKitFormCancel($block, $message_error) {
 	$id_produto = $_POST['id_produto'];
 	$id_kit = $_POST['id_kit'];
 
-	$tplProduct = new View('templates/product');
+	$tplProduct = new View('product');
 
 	$productKit = new ProductKit();
 
@@ -355,7 +355,7 @@ function ProductKitFormSave($field, $block, $message_error) {
 
 		UpdatePrecoKit($id_kit, $row['preco'], $row['produto']);
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$product->Read($id_kit);
 
@@ -370,7 +370,7 @@ function ProductKitFormSave($field, $block, $message_error) {
 
 		if ($row = $productKit->getResult()) {
 
-			$tplProduct = new View("templates/product");
+			$tplProduct = new View("product");
 
 			$row = ProductKit::FormatFields($row);
 
@@ -398,7 +398,7 @@ function ProductKitFormSave($field, $block, $message_error) {
 
 function LoadProductSector() {
 
-	$tplProduct = new View('templates/product');
+	$tplProduct = new View('product');
 
 	$productsector = new ProductSector();
 	$productsector->getList();
@@ -424,7 +424,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$sector_list = LoadProductSector();
 
@@ -450,7 +450,7 @@ switch ($_POST['action']) {
 		$sort = $_POST['sort'];
 		$active_only = false;
 
-		$tplProduct = new View("templates/product");
+		$tplProduct = new View("product");
 
 		$product = new Product();
 
@@ -568,7 +568,7 @@ switch ($_POST['action']) {
 
 					$sector_list = "";
 
-					$tplSector = new View('templates/waiter_sector');
+					$tplSector = new View('waiter_sector');
 
 					do {
 
@@ -659,7 +659,7 @@ switch ($_POST['action']) {
 
 			$row = Product::FormatFields($row);
 
-			$tplProduct = new View("templates/product");
+			$tplProduct = new View("product");
 
 			Send($row['extra_block_product_button_status']);
 
@@ -761,7 +761,7 @@ switch ($_POST['action']) {
 
 			// ProductFormEdit("EXTRA_BLOCK_PRODUCT_PRECO_FORM", "Produto não encontrado para edição de preço!");
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -786,7 +786,7 @@ switch ($_POST['action']) {
 		$id_produto = $_POST['id_produto'];
 		$page = $_POST["page"];
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$product = new Product();
 		$product->Read($id_produto);
@@ -842,7 +842,7 @@ switch ($_POST['action']) {
 
 			}
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -867,7 +867,7 @@ switch ($_POST['action']) {
 		$id_produto = $_POST['id_produto'];
 		$page = $_POST["page"];
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$product = new Product();
 		$product->Read($id_produto);
@@ -935,7 +935,7 @@ switch ($_POST['action']) {
 
 			// sort($files);
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$option = "<option value='' data-img='" . Product::getImageFromName($row['produto']) . "'>Imagem padrão (primeira letra)</option>";
 
@@ -982,7 +982,7 @@ switch ($_POST['action']) {
 
 			$row = Product::FormatFields($row);
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			Send($tplProduct->getContent($row, "EXTRA_BLOCK_PRODUCT"));
 
@@ -1017,7 +1017,7 @@ switch ($_POST['action']) {
 		$barCode = new BarCode();
 		$barCode->getList($id_produto);
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$tableLine = "";
 
@@ -1063,7 +1063,7 @@ switch ($_POST['action']) {
 
 			$barCode->Create($id_produto, $value);
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$barCode->Read($value);
 
@@ -1126,8 +1126,8 @@ switch ($_POST['action']) {
 		$validade = new ProductExpDate();
 		$validade->getList($id_produto);
 
-		$tplProduct = new View('templates/product');
-		$tplCP = new View('templates/home');
+		$tplProduct = new View('product');
+		$tplCP = new View('home');
 
 		$tableLine = "";
 
@@ -1193,13 +1193,13 @@ switch ($_POST['action']) {
 
 				if ($row = $productExpDate->getResult()) {
 
-					$tplProduct = new View('templates/product');
+					$tplProduct = new View('product');
 
 					$row = ProductExpDate::FormatFields($row);
 
 					$row = Product::FormatFields($row);
 
-					$tplCP = new View('templates/home');
+					$tplCP = new View('home');
 
 					if ($row["dias"] <= 0) {
 
@@ -1287,7 +1287,7 @@ switch ($_POST['action']) {
 
 		if ($rowProduct = $product->getResult()) {
 
-			$tplProduct = new View("templates/product");
+			$tplProduct = new View("product");
 
 			$rowProduct = Product::FormatFields($rowProduct);
 
@@ -1311,7 +1311,7 @@ switch ($_POST['action']) {
 
 		if ($rowProduct = $product->getResult()) {
 
-			$tplProduct = new View("templates/product");
+			$tplProduct = new View("product");
 
 			$rowProduct = Product::FormatFields($rowProduct);
 
@@ -1335,7 +1335,7 @@ switch ($_POST['action']) {
 
 		if ($rowProduct = $product->getResult()) {
 
-			$tplProduct = new View("templates/product");
+			$tplProduct = new View("product");
 
 			$rowProduct = Product::FormatFields($rowProduct);
 
@@ -1366,7 +1366,7 @@ switch ($_POST['action']) {
 
 		if ($rowProduct = $product->getResult()) {
 
-			$tplProduct = new View("templates/product");
+			$tplProduct = new View("product");
 
 			$rowProduct = Product::FormatFields($rowProduct);
 
@@ -1396,7 +1396,7 @@ switch ($_POST['action']) {
 				Send(null);
 			}
 
-			$tplProduct = new View("templates/product");
+			$tplProduct = new View("product");
 
 			$rowProduct = Product::FormatFields($rowProduct);
 
@@ -1420,7 +1420,7 @@ switch ($_POST['action']) {
 
 		if ($rowProduct = $product->getResult()) {
 
-			$tplProduct = new View("templates/product");
+			$tplProduct = new View("product");
 
 			$rowProduct = Product::FormatFields($rowProduct);
 
@@ -1444,7 +1444,7 @@ switch ($_POST['action']) {
 
 		if ($rowProduct = $product->getResult()) {
 
-			$tplProduct = new View("templates/product");
+			$tplProduct = new View("product");
 
 			$rowProduct = Product::FormatFields($rowProduct);
 
@@ -1475,7 +1475,7 @@ switch ($_POST['action']) {
 
 		if ($rowProduct = $product->getResult()) {
 
-			$tplProduct = new View("templates/product");
+			$tplProduct = new View("product");
 
 			$rowProduct = Product::FormatFields($rowProduct);
 
@@ -1493,7 +1493,7 @@ switch ($_POST['action']) {
 
 		$id_produto = $_POST['id_produto'];
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$product = new Product();
 
@@ -1560,7 +1560,7 @@ switch ($_POST['action']) {
 
 		$id_produto = $_POST['id_produto'];
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$productComp = new ProductComplement();
 
@@ -1598,7 +1598,7 @@ switch ($_POST['action']) {
 
 		$id_produto = $_POST['id_produto'];
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$product = new Product();
 
@@ -1666,7 +1666,7 @@ switch ($_POST['action']) {
 
 			if ($row = $productComp->getResult()) {
 
-				$tplProduct = new View('templates/product');
+				$tplProduct = new View('product');
 
 				$row = ProductComplement::FormatFieldsComplementGroup($row);
 
@@ -1723,7 +1723,7 @@ switch ($_POST['action']) {
 
 		if ($row = $productComp->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = ProductComplement::FormatFieldsComplementGroup($row);
 
@@ -1764,7 +1764,7 @@ switch ($_POST['action']) {
 
 		$id_complementogrupo = $_POST["id_complementogrupo"];
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$data = [
 			"id_complementogrupo" => $id_complementogrupo,
@@ -1784,7 +1784,7 @@ switch ($_POST['action']) {
 
 		if ($id_produtocomplemento = $productComp->addComplement($id_produto, $id_complementogrupo)) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$productComp->getComplement($id_produtocomplemento);
 
@@ -1821,7 +1821,7 @@ switch ($_POST['action']) {
 
 		if ($row = $productComp->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$product = new Product();
 
@@ -1880,7 +1880,7 @@ switch ($_POST['action']) {
 
 		if ($row = $productComp->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			Send($tplProduct->getContent($row, "EXTRA_BLOCK_COMPLEMENTGROUP_DESCRICAO_FORM"));
 
@@ -1902,7 +1902,7 @@ switch ($_POST['action']) {
 
 		if ($row = $productComp->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			Send($tplProduct->getContent($row, "BLOCK_COMPLEMENTGROUP_DESCRICAO"));
 
@@ -1927,7 +1927,7 @@ switch ($_POST['action']) {
 
 			if ($row = $productComp->getResult()) {
 
-				$tplProduct = new View('templates/product');
+				$tplProduct = new View('product');
 
 				Send($tplProduct->getContent($row, "BLOCK_COMPLEMENTGROUP_DESCRICAO"));
 
@@ -1957,7 +1957,7 @@ switch ($_POST['action']) {
 
 		if ($row = $productComp->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = ProductComplement::FormatFieldsComplementGroup($row);
 
@@ -1983,7 +1983,7 @@ switch ($_POST['action']) {
 
 		if ($row = $productComp->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = ProductComplement::FormatFieldsComplementGroup($row);
 
@@ -2009,7 +2009,7 @@ switch ($_POST['action']) {
 
 		if ($row = $productComp->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = ProductComplement::FormatFieldsComplementGroup($row);
 
@@ -2035,7 +2035,7 @@ switch ($_POST['action']) {
 
 		if ($row = $productComp->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = ProductComplement::FormatFieldsComplementGroup($row);
 
@@ -2106,7 +2106,7 @@ switch ($_POST['action']) {
 
 		$productComposition->getList($id_produto);
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$tableLine = "";
 
@@ -2230,7 +2230,7 @@ switch ($_POST['action']) {
 
 						if ($row = $productComposition->getResult()) {
 
-							$tplProduct = new View('templates/product');
+							$tplProduct = new View('product');
 
 							$row = Product::FormatFields($row);
 							$row['qtd'] = number_format($row['qtd'],3,",",".");
@@ -2305,7 +2305,7 @@ switch ($_POST['action']) {
 
 		$composition = new ProductComposition();
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$product = new Product();
 
@@ -2362,7 +2362,7 @@ switch ($_POST['action']) {
 
 		if ($row = $composition->getResult()) {
 
-			$tplComposition = new View("templates/product");
+			$tplComposition = new View("product");
 
 			$row['qtd'] = number_format($row['qtd'],3,",",".");
 
@@ -2387,7 +2387,7 @@ switch ($_POST['action']) {
 
 		if ($row = $composition->getResult()) {
 
-			$tplComposition = new View("templates/product");
+			$tplComposition = new View("product");
 
 			$row['qtd'] = number_format($row['qtd'],3,",",".");
 
@@ -2433,7 +2433,7 @@ switch ($_POST['action']) {
 
 		if ($row = $composition->getResult()) {
 
-			$tplComposition = new View("templates/product");
+			$tplComposition = new View("product");
 
 			$row['qtd'] = number_format($row['qtd'],3,",",".");
 
@@ -2478,7 +2478,7 @@ switch ($_POST['action']) {
 
 		$productKit->getList($id_produto);
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$tableLine = "";
 
@@ -2603,7 +2603,7 @@ switch ($_POST['action']) {
 
 						if ($row = $productKit->getResult()) {
 
-							$tplProduct = new View('templates/product');
+							$tplProduct = new View('product');
 
 							$row = ProductKit::FormatFields($row);
 
@@ -2696,7 +2696,7 @@ switch ($_POST['action']) {
 
 				UpdatePrecoKit($id_kit, $row['preco'], $row['produto']);
 
-				$tplProduct = new View('templates/product');
+				$tplProduct = new View('product');
 
 				$product->Read($id_kit);
 
@@ -2880,7 +2880,7 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -2939,7 +2939,7 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -3027,7 +3027,7 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -3096,7 +3096,7 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -3201,7 +3201,7 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -3249,7 +3249,7 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -3316,7 +3316,7 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -3385,7 +3385,7 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -3434,7 +3434,7 @@ switch ($_POST['action']) {
 
 		if ($row = $product->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row = Product::FormatFields($row);
 
@@ -3463,7 +3463,7 @@ switch ($_POST['action']) {
 
 		$extra_block_product = "";
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		// $hidden = "";
 
@@ -3496,7 +3496,7 @@ switch ($_POST['action']) {
 
 	case "produtosetor_new":
 
-		$tplProduct = new View("templates/product");
+		$tplProduct = new View("product");
 
 		Send($tplProduct->getContent([], "EXTRA_BLOCK_POPUP_PRODUCTSECTOR"));
 
@@ -3514,7 +3514,7 @@ switch ($_POST['action']) {
 
 		if ($row = $productComp->getResult()) {
 
-			$tplProduct = new View('templates/product');
+			$tplProduct = new View('product');
 
 			$row['preco_complemento_formatted'] = number_format($row['preco_complemento'], 2, ",", ".");
 
@@ -3539,7 +3539,7 @@ switch ($_POST['action']) {
 
 		$id_produtocomplemento = $_POST['id_produtocomplemento'];
 
-		$tplProduct = new View('templates/product');
+		$tplProduct = new View('product');
 
 		$productComp = new ProductComplement();
 		$productComp->getComplement($id_produtocomplemento);
@@ -3573,7 +3573,7 @@ switch ($_POST['action']) {
 
 			if ($row = $productComp->getResult()) {
 
-				$tplProduct = new View('templates/product');
+				$tplProduct = new View('product');
 
 				$row['preco_complemento_formatted'] = number_format($row['preco_complemento'], 2, ",", ".");
 

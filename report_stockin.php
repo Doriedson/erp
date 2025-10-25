@@ -1,10 +1,10 @@
 ﻿<?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\PurchaseOrder;
-use database\Product;
+use App\Legacy\PurchaseOrder;
+use App\Legacy\Product;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -17,7 +17,7 @@ switch ($_POST['action']) {
 
 		$data = ['data' => date('Y-m-d')];
 
-		$tplStockin = new View('templates/report_stockin');
+		$tplStockin = new View('report_stockin');
 
 		Send($tplStockin->getContent($data, "BLOCK_PAGE"));
 	break;
@@ -39,7 +39,7 @@ switch ($_POST['action']) {
 			$purchase->SearchStockInByDate($dataini);
 		}
 
-		$tplStockin = new View('templates/report_stockin');
+		$tplStockin = new View('report_stockin');
 
 		if ($row = $purchase->getResult()) {
 

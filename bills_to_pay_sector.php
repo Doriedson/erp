@@ -1,10 +1,10 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\BillsToPay;
-use database\BillsToPaySector;
+use App\Legacy\BillsToPay;
+use App\Legacy\BillsToPaySector;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -18,7 +18,7 @@ switch ($_POST['action']) {
 		$billsSector = new BillsToPaySector();
 		$billsSector->getList();
 
-		$tplSector = new View('templates/bills_to_pay_sector');
+		$tplSector = new View('bills_to_pay_sector');
 
 		$tr = "";
 
@@ -40,7 +40,7 @@ switch ($_POST['action']) {
 
 	case "billstopay_popup_newsector":
 
-        $tplSector = new View('templates/bills_to_pay_sector');
+        $tplSector = new View('bills_to_pay_sector');
 
 		Send($tplSector->getContent($row, "EXTRA_BLOCK_POPUP_BILLSTOPAY_NEWSECTOR"));
 
@@ -56,7 +56,7 @@ switch ($_POST['action']) {
 
 		if ($row = $billsSector->getResult()) {
 
-            $tplSector = new View('templates/bills_to_pay_sector');
+            $tplSector = new View('bills_to_pay_sector');
 
 			Send($tplSector->getContent($row, "EXTRA_BLOCK_BILLSTOPAY"));
 
@@ -76,7 +76,7 @@ switch ($_POST['action']) {
 
         if ($row = $billsSector->getResult()) {
 
-            $tplSector = new View('templates/bills_to_pay_sector');
+            $tplSector = new View('bills_to_pay_sector');
 
             Send($tplSector->getContent($row, "EXTRA_BLOCK_CONTASAPAGARSETOR_FORM"));
 
@@ -95,7 +95,7 @@ switch ($_POST['action']) {
 
 		if ($row = $billsSector->getResult()) {
 
-            $tplSector = new View('templates/bills_to_pay_sector');
+            $tplSector = new View('bills_to_pay_sector');
 
 			Send($tplSector->getContent($row, "BLOCK_CONTASAPAGARSETOR"));
 
@@ -123,7 +123,7 @@ switch ($_POST['action']) {
 
 		if ($row = $billsSector->getResult()) {
 
-			$tplSector = new View("templates/bills_to_pay_sector");
+			$tplSector = new View("bills_to_pay_sector");
 
 			Send($tplSector->getContent($row, "BLOCK_CONTASAPAGARSETOR"));
 
@@ -160,7 +160,7 @@ switch ($_POST['action']) {
 
 				} else {
 
-					$tplSector = new View("templates/bills_to_pay_sector");
+					$tplSector = new View("bills_to_pay_sector");
 
 					Notifier::Add("Setor removido com sucesso!", Notifier::NOTIFIER_DONE);
 					Send($tplSector->getContent([], 'EXTRA_BLOCK_BILLSTOPAY_NONE'));

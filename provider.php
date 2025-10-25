@@ -1,10 +1,10 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Clean;
-use database\Provider;
+use App\Legacy\Clean;
+use App\Legacy\Provider;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -15,7 +15,7 @@ function ProviderFormEdit($block, $message_error) {
 
 	$id_fornecedor = $_POST['id_fornecedor'];
 
-	$tplProvider = new View('templates/provider');
+	$tplProvider = new View('provider');
 
 	$provider = new Provider();
 	$provider->Read($id_fornecedor);
@@ -38,7 +38,7 @@ function ProviderFormCancel($block, $message_error) {
 
 	$id_fornecedor = $_POST['id_fornecedor'];
 
-	$tplProvider = new View('templates/provider');
+	$tplProvider = new View('provider');
 
 	$provider = new Provider();
 	$provider->Read($id_fornecedor);
@@ -71,7 +71,7 @@ function ProviderFormSave($field, $block, $message_error) {
 
 	$provider->Update($data);
 
-	$tplProvider = new View('templates/provider');
+	$tplProvider = new View('provider');
 
 	$provider->Read($id_fornecedor);
 
@@ -92,7 +92,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplEntity = new View('templates/provider');
+		$tplEntity = new View('provider');
 
 		Send($tplEntity->getContent([], "BLOCK_PAGE"));
 
@@ -108,7 +108,7 @@ switch ($_POST['action']) {
 
         if ($row = $provider->getResult()) {
 
-            $tplProvider = new View('templates/provider');
+            $tplProvider = new View('provider');
 
             $row = Provider::FormatFields($row);
 
@@ -137,7 +137,7 @@ switch ($_POST['action']) {
 	// 		$provider->Search($value);
 	// 	}
 
-	// 	$tplProvider = new View('templates/provider');
+	// 	$tplProvider = new View('provider');
 
 	// 	if ($row = $provider->getResult()) {
 
@@ -167,7 +167,7 @@ switch ($_POST['action']) {
 
 		$provider = new Provider();
 
-		$tplProvider = new View("templates/provider");
+		$tplProvider = new View("provider");
 
         if( is_numeric($value) ) {
 
@@ -239,7 +239,7 @@ switch ($_POST['action']) {
 
         if ($row = $provider->getResult()) {
 
-            $tplProvider = new View('templates/provider');
+            $tplProvider = new View('provider');
 
             do {
 
@@ -288,7 +288,7 @@ switch ($_POST['action']) {
 
 		$id_fornecedor = $_POST['id_fornecedor'];
 
-        $tplProvider = new View('templates/provider');
+        $tplProvider = new View('provider');
 
         $provider = new Provider();
 

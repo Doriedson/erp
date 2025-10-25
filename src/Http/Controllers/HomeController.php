@@ -18,6 +18,7 @@ final class HomeController
 
         // Empresa (legado, fica igual)
         $empresa = 'Nome da Empresa';
+
         try {
             $company = new Company();
             if (method_exists($company, 'Read')) { $company->Read(); }
@@ -28,6 +29,7 @@ final class HomeController
 
         // Carrega o TPL do módulo: backend_index / garcom_index (BLOCK_PAGE)
         $tplModule = new View($module === 'backend' ? 'backend_index' : 'garcom_index');
+
         $moduleHtml = $tplModule->getContent(['module' => $module], 'BLOCK_PAGE');
 
         // Index shell

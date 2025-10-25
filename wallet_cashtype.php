@@ -1,9 +1,9 @@
 <?php
 
 use App\View\View;
-use database\Wallet;
-use database\WalletCashType;
-use database\Notifier;
+use App\Legacy\Wallet;
+use App\Legacy\WalletCashType;
+use App\Legacy\Notifier;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -12,7 +12,7 @@ function WalletcashtypeFormEdit($block, $message_error) {
 
 	$id_walletcashtype = $_POST['id_walletcashtype'];
 
-	$tplWalletcashtype = new View('templates/wallet');
+	$tplWalletcashtype = new View('wallet');
 
 	$walletcashtype = new WalletCashType();
 	$walletcashtype->Read($id_walletcashtype);
@@ -35,7 +35,7 @@ function WalletcashtypeFormCancel($block, $message_error) {
 
 	$id_walletcashtype = $_POST['id_walletcashtype'];
 
-	$tplWalletcashtype = new View('templates/wallet');
+	$tplWalletcashtype = new View('wallet');
 
 	$walletcashtype = new WalletCashType();
 	$walletcashtype->Read($id_walletcashtype);
@@ -88,7 +88,7 @@ function WalletcashtypeFormSave($field, $block, $message_error) {
 
 	$walletcashtype->Update($data);
 
-	$tplWalletcashtype = new View('templates/wallet');
+	$tplWalletcashtype = new View('wallet');
 
 	$walletcashtype->Read($id_walletcashtype);
 
@@ -98,7 +98,7 @@ function WalletcashtypeFormSave($field, $block, $message_error) {
 
 		$extra_block_walletdespesa_cashtype_option = "";
 
-		$tplWallet = new View('templates/wallet');
+		$tplWallet = new View('wallet');
 
 		while ($row_list = $walletcashtype->getResult()) {
 
@@ -141,7 +141,7 @@ switch ($_POST['action']) {
 		$walletcashtype = new WalletCashType();
 		$walletcashtype->getList($id_wallet);
 
-		$tplWallet = new View('templates/wallet');
+		$tplWallet = new View('wallet');
 
 		$cashtype = "";
 
@@ -175,7 +175,7 @@ switch ($_POST['action']) {
 		$walletcashtype = $_POST['walletcashtype'];
 		// $source = $_POST['source'];
 
-		$tplWallet = new View('templates/wallet');
+		$tplWallet = new View('wallet');
 		$cashtype = new WalletCashType();
 
 		$wallet = new Wallet();
@@ -290,7 +290,7 @@ switch ($_POST['action']) {
 
 				$extra_block_walletdespesa_cashtype_option = "";
 
-				$tplWallet = new View('templates/wallet');
+				$tplWallet = new View('wallet');
 
 				while ($row = $walletcashtype->getResult()) {
 
@@ -320,7 +320,7 @@ switch ($_POST['action']) {
 
 		$id_wallet = $_POST["id_wallet"];
 
-		$tplWallet = new View("templates/wallet");
+		$tplWallet = new View("wallet");
 
 		$data = [
 			"id_wallet" => $id_wallet

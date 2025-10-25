@@ -4,7 +4,7 @@ use App\Support\Version;
 
 require "./inc/config.inc.php";
 
-$tplAbout = new View("templates/about");
+$tplAbout = new View("about");
 
 // $text="Doriedson Alves Galdino de Olivei, 15689 abcedfghijklhagsfdteudikfjdyh casa 2";
 

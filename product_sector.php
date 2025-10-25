@@ -1,10 +1,10 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\Product;
-use database\ProductSector;
+use App\Legacy\Product;
+use App\Legacy\ProductSector;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -15,7 +15,7 @@ function ProductsectorFormEdit($block, $message_error) {
 
 	$id_produtosetor = $_POST['id_produtosetor'];
 
-	$tplProductsector = new View('templates/product');
+	$tplProductsector = new View('product');
 
 	$productsector = new ProductSector();
 	$productsector->Read($id_produtosetor);
@@ -38,7 +38,7 @@ function ProductsectorFormCancel($block, $message_error) {
 
 	$id_produtosetor = $_POST['id_produtosetor'];
 
-	$tplProductsector = new View('templates/product');
+	$tplProductsector = new View('product');
 
 	$productsector = new ProductSector();
 	$productsector->Read($id_produtosetor);
@@ -71,7 +71,7 @@ function ProductsectorFormSave($field, $block, $message_error) {
 
 	$productsector->Update($data);
 
-	$tplProductsector = new View('templates/product');
+	$tplProductsector = new View('product');
 
 	$productsector->Read($id_produtosetor);
 
@@ -95,7 +95,7 @@ switch ($_POST['action']) {
 	// 	$productsector = new ProductSector();
 	// 	$productsector->getList();
 
-	// 	$tplSector = new View('templates/product_sector');
+	// 	$tplSector = new View('product_sector');
 
 	// 	$sector = "";
 
@@ -122,7 +122,7 @@ switch ($_POST['action']) {
 
 		$product_sector->Read($id_sector);
 
-		$tplSector = new View('templates/product');
+		$tplSector = new View('product');
 
 		if ($row = $product_sector->getResult()) {
 
@@ -196,7 +196,7 @@ switch ($_POST['action']) {
 
 		if ($row = $productSector->getResult()) {
 
-			// $tplSector = new View('templates/product_sector');
+			// $tplSector = new View('product_sector');
 
 			$row = ProductSector::FormatFields($row);
 

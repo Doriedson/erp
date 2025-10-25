@@ -1,16 +1,16 @@
 <?php
 
-use database\ControlAccess;
+
 use App\View\View;
-use database\Clean;
-use database\Company;
-use database\Product;
-use database\ProductSector;
+use App\Legacy\Clean;
+use App\Legacy\Company;
+use App\Legacy\Product;
+use App\Legacy\ProductSector;
 use App\Support\Version;
 
 require __DIR__ . "/../inc/config.inc.php";
 
-$tplDigitalMenu = new View("templates/digital_menu");
+$tplDigitalMenu = new View("digital_menu");
 
 $company = new Company();
 

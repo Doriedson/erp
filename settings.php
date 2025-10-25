@@ -1,9 +1,9 @@
 <?php
 
-use database\ControlAccess;
-use database\Notifier;
+
+use App\Legacy\Notifier;
 use App\View\View;
-use database\BlackFriday;
+use App\Legacy\BlackFriday;
 
 require "inc/config.inc.php";
 require "inc/authorization.php";
@@ -14,7 +14,7 @@ switch ($_POST['action']) {
 
 	case "load":
 
-		$tplSettings = new View("templates/settings");
+		$tplSettings = new View("settings");
 
         Send($tplSettings->getContent([], "BLOCK_PAGE"));
 

@@ -3,133 +3,7 @@
   */
 $(window).on("load", async function() {
 
-	// ServiceWorkerInit();
-
-	// let sUsrAg = navigator.userAgent;
-
-	let data = {
-		action: "load"
-	}
-
-	let response = await Post("message.php", data);
-
-	if (response != null) {
-
-		if (response['message_info'] != null) Message.Set(response['message_info'], Message.MSG_INFO);
-		if (response['message_error'] != null) Message.Set(response['message_error'], Message.MSG_ERROR);
-		if (response['message_done'] != null) Message.Set(response['message_done'], Message.MSG_DONE);
-		if (response['message_alert'] != null) Message.Set(response['message_alert'], Message.MSG_ALERT);
-
-		if (response['popup']) Modal.window = $(response['popup']);
-
-		if (response['messagebox']) MessageBox.window = $(response['messagebox']);
-	}
-
-	// data = {
-	// 	action: "popup_load"
-	// }
-
-	// response = await Post("backend.php", data);
-
-	// if (response != null) {
-
-	// 	Modal.window = $(response);
-	// }
-
-	console.log(Modal.window);
-	// if(sUsrAg.indexOf("Chrome") == -1) {
-	// 	sBrowser = "Google Chrome"; <<- Compatível
-	// } else if (sUsrAg.indexOf("Safari") > -1) {
-	// 	sBrowser = "Apple Safari"; <<- Compatível
-	// } else if (sUsrAg.indexOf("Opera") > -1) {
-	// 	sBrowser = "Opera";
-	// } else if (sUsrAg.indexOf("Firefox") > -1) {
-	// 	sBrowser = "Mozilla Firefox";
-	// } else if (sUsrAg.indexOf("MSIE") > -1) {
-	// 	sBrowser = "Microsoft Internet Explorer";
-		// Message.Show("Navegador incompatível!<br> Use:<br>Google Chrome<br>Opera Safari", Message.MSG_ERROR);
-		// return;
-	// }
-
-	setTimeout( async function() {
-
-		let module = $('#body-container').data('module');
-
-		data = {
-			action: "auth"
-		}
-
-		switch (module) {
-
-			case "backend":
-
-				response = await Post("backend.php", data);
-
-				if (response != null) {
-
-					$(".leftmenu_container").html(response);
-					$(".leftmenu_container").removeClass("hidden");
-					$(".body-header").removeClass("hidden");
-					$("#body-container").html("");
-
-					LoadPage("home.php");
-
-					observerStart.notify("authenticated");
-
-				} else {
-
-					if (localStorage.getItem('token') !== null) {
-
-						Message.Show("Sessão expirou!", Message.MSG_INFO);
-					}
-				}
-			break;
-
-			case "waiter":
-
-				response = await Post("waiter.php", data);
-
-				if (response != null) {
-
-					WaiterInit(response);
-
-				} else {
-
-					if (localStorage.getItem('token')) {
-
-						Message.Show("Sessão expirou!", Message.MSG_INFO);
-					}
-
-					// Logout();
-				}
-			break;
-
-			case "pdv":
-
-				response = await Post("pdv.php", data);
-
-				if (response != null) {
-
-					PdvInit(response);
-
-				} else {
-
-					if (localStorage.getItem('token')) {
-
-						Message.Show("Sessão expirou!", Message.MSG_INFO);
-					}
-
-					// Logout();
-				}
-			break;
-
-			default:
-
-				Message.Show("Módulo não definido!", Message.MSG_ERROR);
-
-				break;
-		}
-	}, 500);
+	Authenticator.bootstrap();
 
 	/* AutoUpdate to Vendas/Delivery/Pedidos Screen */
 	setInterval(async function(){
@@ -175,3 +49,17 @@ $(window).on("load", async function() {
 		}
 	}, 30000);
 });
+
+// Helper que busca o HTML do menu e monta a UI
+async function loadBackendMenu() {
+
+  const r = await $.ajax({ url: '/ui/backend/menu', method: 'POST', dataType: 'json' });
+  const payload = r && r.data ? r.data : r;
+
+  $(".leftmenu_container").html(payload.html).removeClass("hidden");
+  $(".body-header").removeClass("hidden");
+  $("#body-container").empty();
+
+  LoadPage("home.php");           // como você já fazia
+//   observerStart.notify("authenticated");
+}
