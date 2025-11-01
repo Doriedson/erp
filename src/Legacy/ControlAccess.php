@@ -98,6 +98,8 @@ final class ControlAccess
         $row = $col->getResult();
         if (!$row || !password_verify($pass, $row['hash'] ?? '')) self::unauthorized();
 
+        $nome = $row['nome'];
+
         $acc = json_decode($row['acesso'] ?? '[]', true) ?: [];
         if (!isset($acc[$access_type]) || (int)$acc[$access_type] !== 1) self::unauthorized();
 
@@ -110,7 +112,7 @@ final class ControlAccess
         // Sessão PHP do ERP
         if (session_status() !== \PHP_SESSION_ACTIVE) @session_start();
         session_regenerate_id(true);
-        $_SESSION['auth'] = ['id_entidade' => $id_entidade];
+        // $_SESSION['auth'] = ['id_entidade' => $id_entidade];
 
         // JWT compat (igual ao legado), usando segredo configurável
         $secret = $_ENV['JWT_SECRET'] ?? 'minha-senha';
@@ -125,6 +127,7 @@ final class ControlAccess
         return [
             'token'       => $token,
             'id_entidade' => $id_entidade,
+            'nome' => $nome,
         ];
     }
 }

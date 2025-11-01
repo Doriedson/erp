@@ -15,7 +15,7 @@
 
 
 			<button type="button" class="bt_load button-white button-icon" data-page="home" title="Home">
-				<i class="fa-solid fa-grip"></i>
+				<i class="fa-solid fa-gauge"></i>
 			</button>
 
 		</div>
@@ -25,7 +25,7 @@
 			<div class="leftmenu-container leftmenu_container hidden">
 			</div>
 
-			<div id="body-container" class="body-container" data-module="{module}">
+			<div id="body-container" class="body-container">
 				<div class="login no-margin">
 					<h1 class="splash-screen">Bem Vindo!</h1>
 				</div>

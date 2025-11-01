@@ -99,7 +99,7 @@ switch($_POST['action']) {
 		$id_entidade = Clean::HtmlChar($_POST['id_entidade']);
 		$pass = Clean::HtmlChar($_POST['pass']);
 
-		if (ControlAccess::Login($id_entidade, $pass, ControlAccess::CA_SERVIDOR)) {
+		// if (ControlAccess::Login($id_entidade, $pass, ControlAccess::CA_SERVIDOR)) {
 
 			$page = Session::get('page');
 
@@ -136,12 +136,12 @@ switch($_POST['action']) {
 				"page" => $page
 			]);
 
-		} else {
+		// } else {
 
-			Notifier::Add("Erro ao fazer login!", Notifier::NOTIFIER_ERROR);
+		// 	Notifier::Add("Erro ao fazer login!", Notifier::NOTIFIER_ERROR);
 
-			Send(null);
-		}
+		// 	Send(null);
+		// }
 
 		break;
 

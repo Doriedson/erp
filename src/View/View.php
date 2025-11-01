@@ -29,36 +29,18 @@ final class View {
 	 */
 	public function __construct(string $template){
 
-		$template = ltrim($template, '/');
-		// $template = (string) __DIR__ . "/../../templates/" . $template . ".tpl";
-		$path = __DIR__ . '/../../templates/' . $template . '.tpl';
+		$base = \dirname(__DIR__, 2); // sai de src/View -> src -> raiz do projeto
+		$file = $base . '/templates/' . $template . '.tpl';
 
-		if (!is_file($path)) {
-            echo "File $path does not exist.";
-            return;
-        }
-
-		// if (!file_exists($template)) {
-
-		// 	echo "File $template does not exist.";
-
-		// 	return;
-		// }
-
-		// $this->template = preg_replace("/<!--[^ ].*?-->/smi", "", file_get_contents($template));
-
-		// Remove comentários <!-- ... --> de topo e carrega
-        $this->template = preg_replace("/<!--[^ ].*?-->/smi", "", file_get_contents($path) ?: '');
-
-		// if (empty($this->template)) {
-
-		// 	echo "file $template is empty";
-		// 	return;
-		// }
+		if (!file_exists($file)) {
+			echo "File $file does not exist.";
+			return;
+		}
+		$this->template = preg_replace("/<!--[^ ].*?-->/smi", "", file_get_contents($file));
 
 		if ($this->template === '') {
 
-            echo "file $path is empty";
+            echo "file $file is empty";
             return;
         }
 

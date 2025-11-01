@@ -2,9 +2,10 @@
 namespace App\Http\Controllers;
 
 use App\View\View;
-use App\Legacy\Company;        // sua Company migrada para App\Legacy
 use App\Modules\Registry;
 use App\Support\Version;
+use App\Database\Connection;
+use Throwable;
 
 final class HomeController
 {
@@ -16,21 +17,20 @@ final class HomeController
     {
         header('Content-Type: text/html; charset=utf-8');
 
-        // Empresa (legado, fica igual)
-        $empresa = 'Nome da Empresa';
+        $pdo = Connection::pdo();
 
         try {
-            $company = new Company();
-            if (method_exists($company, 'Read')) { $company->Read(); }
-            if (method_exists($company, 'getResult') && ($row = $company->getResult())) {
-                $empresa = $row['empresa'] ?? $empresa;
-            }
-        } catch (\Throwable $e) {}
+
+            $empresa = (string)($pdo->query("SELECT empresa FROM tab_empresa LIMIT 1")->fetchColumn() ?: 'Empresa');
+
+        } catch (Throwable $e) {
+            // log opcional
+        }
 
         // Carrega o TPL do módulo: backend_index / garcom_index (BLOCK_PAGE)
         $tplModule = new View($module === 'backend' ? 'backend_index' : 'garcom_index');
 
-        $moduleHtml = $tplModule->getContent(['module' => $module], 'BLOCK_PAGE');
+        $moduleHtml = $tplModule->getContent(['empresa' => $empresa], 'BLOCK_PAGE');
 
         // Index shell
 
@@ -42,9 +42,6 @@ final class HomeController
             'title'    => 'Retaguarda',
             'module'   => $moduleHtml,
             'manifest' => 'backend_manifest.json',
-            'empresa'  => $empresa,
-            // IMPORTANTE: o JS atual lê esse data-module
-            'data_module_attr' => $module,
         ], 'BLOCK_PAGE');
 
         return '';

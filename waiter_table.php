@@ -14,7 +14,6 @@ if (!isset($_POST['action'])) {
     $content = [
         "version" => Version::get(),
         "title" => 'Hortifruti - Garçom',
-        "module" => 'waiter',
         'manifest' => 'waiter_manifest.json'
     ];
 

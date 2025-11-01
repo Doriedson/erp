@@ -1,7 +1,6 @@
 <?php
 /**
  * ERP – Front Controller
- * Rotas principais da aplicação (Auth + API + Admin)
  */
 
 declare(strict_types=1);
@@ -20,10 +19,12 @@ use App\Http\Router;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BackendController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\AuthUiController;
 use App\Http\Controllers\UiPageController;
+use App\Http\Controllers\UiBackendController;
+use App\Http\Controllers\CollaboratorController;
+use App\Http\Controllers\CollaboratorLegacyController;
 use App\Auth\AuthService;
 
 // Fuso horário do projeto
@@ -31,6 +32,13 @@ use App\Auth\AuthService;
 
 // Sessão (usada no guard de rotas)
 if (session_status() !== PHP_SESSION_ACTIVE) {
+
+    session_set_cookie_params([
+        'httponly' => true,
+        'samesite' => 'Lax',
+        'secure'   => false, // true em https
+    ]);
+
     session_start();
 }
 
@@ -53,43 +61,62 @@ $router = new Router();
 // Auth
 $router->post('/auth/login',  [AuthController::class, 'login']);
 $router->post('/auth/logout', [AuthController::class, 'logout']);
+
+// Logout via GET => só limpa sessão e redireciona (não escreve corpo)
 $router->get('/logout', function () {
-    (new AuthController())->logout(); // limpa sessão + cookie
+    (new AuthService())->logout();
     header('Location: /');
     return '';
 });
 
-$router->get('/ui/login', [AuthUiController::class, 'loginPage']);  // login page (não popup)
-
-// Mensagens (já migrado p/ View .tpl)
-$router->post('/ui/messages/load', [MessageController::class, 'load']);
-
-// Backend UI (menu da retaguarda)
-$router->post('/ui/backend/menu', [BackendController::class, 'menu']);
-$router->get('/ui/backend/menu', [AuthUiController::class, 'backendMenu']);
-
-// Módulos
-$router->get('/',          fn() => (new HomeController())->indexWithModule('backend'));
-$router->get('/garcom',    fn() => (new HomeController())->indexWithModule('waiter'));
-$router->get('/pdv',       fn() => (new HomeController())->indexWithModule('pdv'));
-
 $router->get('/auth/status', [AuthController::class, 'status']);
 
-$router->get('/ui/auth/popup', [AuthUiController::class, 'popup']); // entrega o HTML do formulário
+/** LOGIN UI (HTML puro) */
+$router->get('/ui/login', [AuthUiController::class, 'loginPage']);   // usado pelo JS atual
+$router->get('/login',     [AuthUiController::class, 'loginPageHtml']); // compat opcional (também HTML)
+$router->get('/ui/auth/popup', [AuthUiController::class, 'popup']); // popup HTML (se usado)
 
-$router->get('/ui/pages/([a-zA-Z0-9_-]+)', [UiPageController::class, 'show']);
+/** MENSAGENS (legacy compat) */
+$router->post('/message.php',       [MessageController::class, 'load']);         // legado
+$router->post('/ui/messages/load',  [MessageController::class, 'load']);         // nova rota idem
 
+// Backend UI (menu da retaguarda)
+$router->get('/ui/backend/menu', [UiBackendController::class, 'menu']);
 
+/** PÁGINAS (carregam index.tpl + módulo) */
+$router->get('/',       [HomeController::class, 'indexBackend']); // Retaguarda
+$router->get('/garcom', [HomeController::class, 'indexWaiter']);  // Garçom
+$router->get('/pdv',    [HomeController::class, 'indexPdv']);     // PDV
 
+// $router->get('/ui/pages/home', [UiPageController::class, 'home']);
 
+// Popup: lista de produtos por validade (HTML para o bloco EXTRA_BLOCK_CP_EXPDATE_TR)
+$router->get('/ui/home/expirations', [UiPageController::class, 'expirationsList']);
 
-// Healthcheck simples (app + DB)
+// Atualiza preferência “dias para expirar” (opcional; guarda em tab_config)
+// $router->post('/ui/home/expirations/days', [UiPageController::class, 'saveExpirationDays']);
+
+$router->post('/ui/home/expirations/days', [UiPageController::class, 'expirationDays']);
+$router->get('/ui/home/expirations', [UiPageController::class, 'listExpirations']); // Linhas (HTML) da lista
+
+// 1) Rotas ESPECÍFICAS (têm lógica própria)
+$router->get('/ui/pages/home', [UiPageController::class, 'home']);                  // HTML da Home
+
+/** PÁGINAS ESTÁTICAS/GENÉRICAS (HTML) */
+$router->get('/ui/pages/(.+)', [UiPageController::class, 'show']);
+
+// public/index.php (rotas novas)
+$router->post('/admin/collaborators/add',  [CollaboratorController::class, 'add']);
+$router->post('/admin/collaborators/del',  [CollaboratorController::class, 'del']);
+$router->post('/admin/collaborators/acl',  [CollaboratorController::class, 'toggleAcl']);
+
+// Ponte de compatibilidade com o JS legado (mesmo endpoint)
+$router->post('/collaborator.php', [CollaboratorLegacyController::class, 'handleAction']);
+
+/** HEALTH */
 $router->get('/health', function () {
     header('Content-Type: application/json; charset=utf-8');
-
     $out = ['app' => 'ok'];
-
-    // Ping do banco (usando variáveis de ambiente já configuradas)
     try {
         $dsn = sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
@@ -97,16 +124,15 @@ $router->get('/health', function () {
             getenv('DB_PORT') ?: '3306',
             getenv('DB_DATABASE') ?: ''
         );
-        $pdo = new PDO($dsn, getenv('DB_USERNAME') ?: '', getenv('DB_PASSWORD') ?: '');
-        $pdo->query('SELECT 1'); // ping
+        $pdo = new \PDO($dsn, getenv('DB_USERNAME') ?: '', getenv('DB_PASSWORD') ?: '');
+        $pdo->query('SELECT 1');
         $out['db'] = 'ok';
-    } catch (Throwable $e) {
+    } catch (\Throwable $e) {
         http_response_code(503);
         $out['db'] = 'down';
         $out['error'] = 'DB connection failed';
     }
-
-    return $out; // o Router converte array em JSON
+    return $out; // Router deve responder JSON para arrays
 });
 
 // -----------------------------
@@ -131,23 +157,11 @@ $router->mount('/api', function (Router $r) {
     });
 });
 
-// -----------------------------
-// Páginas administrativas
-// -----------------------------
-// Qualquer rota começando com /admin/ exige sessão.
-// O retorno vazio deixa o Nginx servir os estáticos via try_files.
+/** ADMIN — protege qualquer /admin/* e deixa Nginx servir estático */
 $router->get('/admin/.*', function () {
-
     (new AuthService())->requireAuthForPage();
-    return ''; // Nginx/estático resolve (HTML, CSS, JS, etc).
+    return ''; // Nginx resolve via try_files
 });
-
-/** PÁGINAS (render de index.tpl + módulo) */
-$router->get('/',        [HomeController::class, 'indexBackend']); // Retaguarda
-$router->get('/garcom',  [HomeController::class, 'indexWaiter']);  // Garçom
-
-/** ENDPOINTS LEGADOS (compat p/ JS atual) */
-$router->post('/message.php', [MessageController::class, 'load']);
 
 // -----------------------------
 // Dispatch

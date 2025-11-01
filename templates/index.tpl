@@ -252,7 +252,7 @@ $("textarea").bind("input", function(e) {
 			<div class="header-container"></div>
 		</div>
 
-		<div id="body-container" class="body-container" data-module="{module}">
+		<div id="body-container" class="body-container" >
 			<div class="login no-margin">
 				<h1 class="splash-screen">Bem Vindo!</h1>
 			</div>

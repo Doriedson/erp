@@ -22,7 +22,7 @@
     background-color: white;
 }
 
-.menu .ul {
+.menu .ul, ul{
 
 	list-style: none;
 	margin: 0;
@@ -30,7 +30,7 @@
     text-align: left;
 }
 
-.menu .ul .li {
+.menu .ul .li, li {
 
     line-height: 60px;;
     /* min-height: 60px; */
@@ -56,6 +56,31 @@
 	border: 1px solid transparent;
 }
 
+.user-link {
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;   /* cresce e encolhe */
+  min-width: 0;     /* necessário para o text-overflow funcionar em flex */
+  text-decoration: none;
+}
+
+.user-name {
+
+  display: block;           /* garante controle do box */
+  white-space: nowrap;      /* sem quebra de linha */
+  overflow: hidden;         /* oculta excedente */
+  text-overflow: ellipsis;  /* ... */
+  max-width: 100%;          /* respeita o espaço disponível */
+}
+
+/* Botão logout sempre à direita */
+.logout-btn {
+
+  margin-left: auto;        /* empurra para a direita */
+  flex: 0 0 auto;           /* não encolhe */
+}
 /* .menu .ul .li a {
 
 	flex: 1;
@@ -147,13 +172,13 @@
     border-left: 5px solid var(--color-green);
 }
 
-.menu-container a {
+.menu-container a, li a {
 
     border-left: 5px solid transparent;
     padding-left: 5px;
 }
 
-.menu-container a:hover {
+.menu-container a:hover, li a:hover {
 
     border-left: 5px solid var(--color-green);
 }

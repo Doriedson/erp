@@ -1,38 +1,7 @@
-/**
-  * Events
-  */
-// $(document).on("mouseenter",".menu .ul .li", function() {
-
-// 	var width = window.innerWidth
-// 	|| document.documentElement.clientWidth
-// 	|| document.body.clientWidth;
-
-// 	if (width > 767) {
-
-// 		$(this).find(".submenu").css('display','block');
-// 	}
-// });
-
-// $(document).on("mouseleave",".menu .ul .li", function() {
-
-// 	var width = window.innerWidth
-// 	|| document.documentElement.clientWidth
-// 	|| document.body.clientWidth;
-
-// 	if (width > 767) {
-
-// 		$(this).find(".submenu").css('display','none');
-// 	}
-// });
-
 $(document).on("click",".menu .ul .li", function(event) {
 
 	event.stopPropagation();
-	// var width = window.innerWidth
-	// || document.documentElement.clientWidth
-	// || document.body.clientWidth;
 
-	// if (width <= 767) {
 	let submenu_visible = $(this).find(".submenu").is(":visible");
 
 	SubMenuClose();
@@ -46,13 +15,6 @@ $(document).on("click",".menu .ul .li", function(event) {
 			submenu[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 		})
 	}
-		// submenu.css('display', "block");
-
-	// } else {
-
-	// 	submenu.css('display', "none");
-	// }
-	// }
 });
 
 $(document).on("click",".bt_logout", function(event) {
@@ -78,93 +40,75 @@ $(document).on("click",".bt_about", async function() {
 	}
 });
 
-// Mapeia endpoints legados .php para rotas novas do front controller
+// Mapeia endpoints legados (.php) para rotas novas do front controller
 function legacyToUi(path) {
+  try {
+    // Normaliza quando vier absoluto (ex.: this.href => http://localhost:8080/home.php)
+    const u = new URL(path, window.location.origin);
+    const pathname = u.pathname; // "/home.php"
+    const search   = u.search    || '';
 
-  // já vem algo tipo "home.php"
-  if (path.endsWith('.php')) {
-    const slug = path.replace(/^\//, '').replace(/\.php$/, '');
-    // padrão novo: /ui/pages/{slug}
-    return `/ui/pages/${slug}`;
+    if (pathname.endsWith('.php')) {
+      const slug = pathname.replace(/^\//, '').replace(/\.php$/, '');
+      return `/ui/pages/${slug}${search}`;   // ex.: /ui/pages/home?...
+    }
+    // se já for uma rota nova, mantém
+    return pathname + search;
+  } catch {
+    // fallback simples
+    if (path.endsWith('.php')) {
+      const slug = path.replace(/^\//, '').replace(/\.php$/, '');
+      return `/ui/pages/${slug}`;
+    }
+    return path;
   }
-  return path;
 }
 
-async function LoadPage(page, payload = {}) {
 
-	let page_id = page.split('/').pop();
-
-	WindowManager.page = page_id;
-
-	const url = legacyToUi(page);
-
-	payload['action'] = 'load';
-
-	$("#body-container").html(imgLoading);
+async function LoadPage(path, payload = {}) {
 
 	try {
-		// se sua página sempre retorna HTML, use GET + dataType:text
-		const html = await GET(url, payload);
+		$("#body-container").html(imgLoading);
+
+		// Para páginas UI não precisamos forçar action=load
+		const html = await GET_HTML(path, payload);
 
 		const $body = $('#body-container');
 
 		if ($body.length) $body.html(html);
-		else console.error('#body-container não encontrado');
+
+		// pós-carregamento (mantém seus cases)
+		const page_id = cleanPath(path).split('/').pop();
+
+		WindowManager.page = page_id;
 
 		switch (page_id) {
 
-			case "bills_to_pay.php":
-
+			case 'bills_to_pay.php':
 				billstopayChart = new MyChart($("#billstopay_chart"), MyChart.DOUGHNUT);
 				billstopayChartPending = new MyChart($("#billstopay_pendingchart"), MyChart.DOUGHNUT);
-
 				BillstopayUpdateChart();
-
 				break;
 
-			case "wallet.php":
-
+			case 'wallet.php':
 				walletDespesaChart = new MyChart($("#wallet_expense_chart"), MyChart.DOUGHNUT);
 				walletReceitaChart = new MyChart($("#wallet_receita_chart"), MyChart.DOUGHNUT);
-
 				WalletUpdateChart();
-
-				if($('.body-container').data('module') == "waiter") {
-
-					// $('.waiter-display').html("Garçom");
-					$('.waiter-hud').html("Garçom");
-				}
+				$('.waiter-hud').html("Garçom");
 
 				break;
 
-			case "waiter_table.php":
-
-				// $('.waiter-display').html("Seleção de mesa");
+			case 'waiter_table.php':
+			case 'waiter_self_service.php':
+			case 'waiter_table_transf.php':
 				$('.waiter-hud').html($('.w_waitertable_header').html());
-
 				break;
 
-			case "waiter_self_service.php":
-
-				// $('.waiter-display').html("Self-Service");
-				$('.waiter-hud').html($('.w_waitertable_header').html());
-
-				break;
-
-			case "waiter_table_transf.php":
-
-				// $('.waiter-display').html("Transferência de mesa");
-				$('.waiter-hud').html($('.w_waitertable_header').html());
-
-				break;
-
-			case "sale_order.php":
-
+			case 'sale_order.php':
 				$('.saleorder_loading').addClass('hidden');
 				break;
 
-			case "report_cashdrain.php":
-
+			case 'report_cashdrain.php':
 				$('#frm_report_cashdrain').submit();
 				break;
 		}
@@ -172,30 +116,24 @@ async function LoadPage(page, payload = {}) {
 		AutoFocus(html);
 
 	} catch (e) {
-
-		console.error('Falha ao carregar página:', e);
+		console.error('Falha ao carregar página:', e, path);
 		Message.Show('Não foi possível carregar a página.', Message.MSG_ERROR);
 		$("#body-container").html("");
 	}
+
 }
 
 $(document).on("click",".menu a", async function(event) {
 
 	event.preventDefault();
-// console.log("click " + this.href);
-	// var width = window.innerWidth
-	// || document.documentElement.clientWidth
-	// || document.body.clientWidth;
 
-	// $(this).closest(".submenu").css('display','none');
 	SubMenuClose();
 
-	// if (width < 1190) {
+	$(".leftmenu_container").removeClass('leftmenu-open');
 
-		$(".leftmenu_container").removeClass('leftmenu-open');
-	// }
-
-	LoadPage(this.href);
+	const a   = $(this);
+	const raw = a.attr('data-page') || a.attr('href') || '';
+	LoadPage(raw);
 });
 
 $(document).on("click",".button_menu", async function() {

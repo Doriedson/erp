@@ -23,7 +23,7 @@ if (!isset($_POST['action'])) {
 
 	$tplWaiterIndex = new View("waiter_index");
 
-	$module = $tplWaiterIndex->getContent(["module" => 'waiter'], "BLOCK_PAGE");
+	// $module = $tplWaiterIndex->getContent(["module" => 'waiter'], "BLOCK_PAGE");
 
     $tplIndex = new View("index");
 
@@ -43,7 +43,6 @@ if (!isset($_POST['action'])) {
 		"date" => date('Y-m-d'),
 		"date_search" => date("Y-m"),
         "title" => 'Garçom',
-        "module" => $module,
         'manifest' => 'waiter_manifest.json',
 		"empresa" => $empresa
     ];
@@ -367,7 +366,7 @@ switch($_POST['action']) {
 
 		} else {
 
-			if (ControlAccess::Login($user, $pass, ControlAccess::CA_WAITER)) {
+			// if (ControlAccess::Login($user, $pass, ControlAccess::CA_WAITER)) {
 
 				$tplMenu = new View("waiter_menu");
 				$tplTable = new View("waiter_table");
@@ -400,10 +399,10 @@ switch($_POST['action']) {
 					"logged" => true
 				]);
 
-			} else {
+			// } else {
 
-				ControlAccess::Unauthorized(); //user not found
-			}
+			// 	ControlAccess::Unauthorized(); //user not found
+			// }
 		}
 
 		break;

@@ -1,3 +1,72 @@
+<!-- BEGIN BLOCK_MENU -->
+<div class="leftmenu-background button_menu"></div>
+
+<div class="menu">
+
+	<div class="menu-btclose not-desktop">
+		<button type="button" class="button_menu button-white button-icon fa-solid fa-angle-left"></button>
+	</div>
+
+	<div class="left_menu">
+
+		<div class="ul flex flex-dc">
+
+			<div class="flex flex-jc-center" style="width: 215px; padding-left: 15px">
+
+				<div class="button bt_about flex flex-ai-center flex-jc-center" style="
+					width: 135px;
+					height: 135px;
+					min-width: 135px;
+					min-height: 135px;
+					border-radius:50%;
+					background-color: white;
+					box-shadow: 0px 3px 5px 0px gray;">
+					<img src="./assets/icons/icon-128x128.png?t={timestamp}">
+				</div>
+
+				<!-- <div class="desktop">
+					<a href="home.php" title="Home" class="pos-abs" style="left: 170px;">
+						<div class="flex flex-ai-center flex-jc-center">
+							<i class="icon fa-solid fa-grip"></i>
+						</div>
+					</a>
+				</div> -->
+
+			</div>
+			<!-- <div class="flex flex-jc-center"><img src="./assets/icons/icon-96x96.png"></div> -->
+			<div class="menu-title padding-t10 padding-b20 padding-h5 textcenter" style="width: 215px; padding-left: 15px">
+				<span class="company">{empresa}</span>
+			</div>
+		</div>
+
+		<ul class="ul menu">
+			<!-- BEGIN EXTRA_BLOCK_MENU_ITEM -->
+			<li class="li menu-container">
+				<a href="{path}" class="flex flex-ai-center gap-10">
+					<i class="icon {icon}"></i>
+					<span>{label}</span>
+				</a>
+			</li>
+			<!-- END EXTRA_BLOCK_MENU_ITEM -->
+
+			{items}
+
+			<li class="li menu-container flex gap-10">
+				<a href="user.php" class="user-link">
+					<i class="icon fa-solid fa-user"></i>
+					<span class="user-name entity_{id_entidade}_nick">{nome}</span>
+				</a>
+				<div class="flex flex-ai-center">
+					<button type="button" class="bt_logout logout-btn button-transparent-gray" title="Sair">
+						<i class="icon fa-solid fa-right-from-bracket"></i>
+					</button>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+<!-- END BLOCK_MENU -->
+
 <!-- BEGIN BLOCK_PAGE -->
 <div class="leftmenu-background button_menu"></div>
 

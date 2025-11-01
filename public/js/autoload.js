@@ -49,17 +49,3 @@ $(window).on("load", async function() {
 		}
 	}, 30000);
 });
-
-// Helper que busca o HTML do menu e monta a UI
-async function loadBackendMenu() {
-
-  const r = await $.ajax({ url: '/ui/backend/menu', method: 'POST', dataType: 'json' });
-  const payload = r && r.data ? r.data : r;
-
-  $(".leftmenu_container").html(payload.html).removeClass("hidden");
-  $(".body-header").removeClass("hidden");
-  $("#body-container").empty();
-
-  LoadPage("home.php");           // como você já fazia
-//   observerStart.notify("authenticated");
-}

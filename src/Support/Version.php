@@ -7,6 +7,6 @@ final class Version
 
     public static function get(): string
     {
-		return self::$cached;
+		  return self::$cached;
     }
 }

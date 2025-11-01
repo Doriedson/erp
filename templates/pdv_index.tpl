@@ -1,6 +1,6 @@
 <!-- BEGIN BLOCK_PAGE -->
 	<div class="pdv">
-		<div id="body-container" class="pdv-body-container flex-1 margin" data-module="{module}" style="background-color: #e9e9e9;
+		<div id="body-container" class="pdv-body-container flex-1 margin" style="background-color: #e9e9e9;
 		border: 2px solid #858585;
 		box-shadow: 0px 0px 2px 2px #fff;">
 			<div class="login no-margin">

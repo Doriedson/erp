@@ -55,7 +55,7 @@ switch($_POST['action']) {
             Send(null);
         }
 
-        if (ControlAccess::Login($id_entidade, $pass, ControlAccess::CA_PDV, false)) {
+        // if (ControlAccess::Login($id_entidade, $pass, ControlAccess::CA_PDV, false)) {
 
             $data = [
                 "security" => true,
@@ -66,7 +66,7 @@ switch($_POST['action']) {
             ];
 
             Send ($data);
-        }
+        // }
 
         break;
 

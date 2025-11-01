@@ -338,24 +338,43 @@
     </div>
     <!-- END EXTRA_BLOCK_COLLABORATOR -->
 </div>
-
-<!-- <div class="footer mobile">
-	<div class="footer-container gap-10">
-		<button class="collaborator_bt_show_new button-blue" title="Inclui colaborador para acesso ao sistema">Adicionar colaborador</button>
-	</div>
-</div> -->
-
-<!-- <div class="footer-popup flex-jc-fe mobile">
-	<div class="popup-menu">
-		<button class="popup-main-button fa-solid fa-ellipsis-vertical button-pink"></button>
-
-		<ul>
-
-			<li class="flex flex-ai-center gap-10">
-				<label>Adicionar colaborador</label>
-				<button type="button" class="collaborator_bt_show_new button-blue " title="Inclui colaborador para acesso ao sistema"></button>
-			</li>
-		</ul>
-	</div>
-</div> -->
 <!-- END BLOCK_PAGE -->
+
+<!-- BEGIN BLOCK_COLLABORATOR -->
+<div class="w-collaborator" data-id_entidade="{id_entidade}">
+  <div class="header">
+    <span class="name">{nome}</span>
+    <button class="collaborator_bt_del" data-text="{nome}">Remover</button>
+  </div>
+
+  <div class="w-collaborator-accesslist">
+    {acl_html}
+  </div>
+</div>
+<!-- END BLOCK_COLLABORATOR -->
+
+<!-- BEGIN BLOCK_COLLABORATOR_ACCESSLIST -->
+<div class="w-collaborator-accesslist">
+  {acl_html}
+</div>
+<!-- END BLOCK_COLLABORATOR_ACCESSLIST -->
+
+<!-- BEGIN EXTRA_BLOCK_ACL_ITEM -->
+<div class="acl-row" data-module="{module}">
+  <span class="acl-module">{module}</span>
+  <label>
+    <input type="checkbox"
+           class="collaborator_access"
+           data-key="{module}.view"
+           {checked_view}>
+    Ver
+  </label>
+  <label>
+    <input type="checkbox"
+           class="collaborator_access"
+           data-key="{module}.edit"
+           {checked_edit}>
+    Editar
+  </label>
+</div>
+<!-- END EXTRA_BLOCK_ACL_ITEM -->

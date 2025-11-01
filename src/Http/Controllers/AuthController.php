@@ -1,49 +1,61 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Response;
 use App\Auth\AuthService;
-use \App\Legacy\ControlAccess;
+use App\Http\Response;
+use Throwable;
 
 final class AuthController
 {
-    public function login(): string {
+    public function login()
+    {
+        try {
+            // 1) Campos obrigatórios
+            $id_entidade = isset($_POST['id_entidade']) ? (int)$_POST['id_entidade'] : 0;
+            $senha       = isset($_POST['senha']) ? (string)$_POST['senha'] : '';
 
-        // Aceita senha de 'senha' ou 'pass' (legado)
-        $id_entidade = (int)($_POST['id_entidade'] ?? 0);
-        $senha       = (string)($_POST['senha'] ?? '');
+            if ($id_entidade <= 0 || $senha === '') {
+                return Response::json(['error' => 'Parâmetros inválidos'], 422);
+            }
 
-        if ($id_entidade <= 0 || $senha === '') {
-            return Response::json(
-                ['error' => 'id_entidade e senha são obrigatórios'],
-                422
-            );
+            // 2) Autentica
+            $auth = new AuthService();
+            $ok = $auth->authenticate($id_entidade, $senha);
+
+            if (!$ok) {
+                // senha errada, usuário inativo, etc.
+                return Response::json(['error' => 'Credenciais inválidas'], 401);
+            }
+
+            // 3) Sucesso
+            return Response::json([
+                'ok'   => true,
+                'user' => ['id_entidade' => $auth->userId()],
+            ], 200);
+
+        } catch (Throwable $e) {
+            // Erro inesperado -> 500 (logar para depuração)
+            error_log("[/auth/login] ".$e->getMessage()."\n".$e->getTraceAsString());
+            $debug = getenv('APP_DEBUG');
+            $msg = ($debug === '1' || $debug === 'true')
+                ? ('Erro interno: '.$e->getMessage())
+                : 'Erro interno';
+            return Response::json(['error' => $msg], 500);
         }
-
-        // exige acesso de servidor (ajuste se o módulo for outro)
-        ControlAccess::login(
-            $id_entidade,
-            $senha,
-            ControlAccess::CA_SERVIDOR,
-            true
-        );
-
-        // Se chegou aqui, sessão PHP está ativa e token foi gerado
-        return Response::json(['ok' => true]);
     }
 
-    public function logout(): string {
-
+    public function logout()
+    {
         (new AuthService())->logout();
-        return Response::json(['ok' => true]);
+        return Response::json(['ok' => true], 200);
     }
 
-    public function status(): string {
-
-        if (session_status() !== \PHP_SESSION_ACTIVE) @session_start();
-
-        $auth = isset($_SESSION['auth']['id_entidade']);
-        $user = $auth ? ['id_entidade' => $_SESSION['auth']['id_entidade']] : null;
-        return Response::json(['authenticated' => $auth, 'user' => $user]);
+    public function status()
+    {
+        $auth = new AuthService();
+        return Response::json([
+            'authenticated' => $auth->isAuthenticated(),
+            'user' => $auth->isAuthenticated() ? ['id_entidade' => $auth->userId()] : null,
+        ], 200);
     }
 }

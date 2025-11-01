@@ -1,10 +1,10 @@
-async function CPFormEdit(container, button, action) {
+async function CPFormEdit(container, button, path) {
 
-	data = {
-		action: action
+	const data = {
+		action: 'edit'
 	}
 
-	return await FormEdit(container, button, data, "home.php");
+	return await FormEdit(container, button, data, path);
 }
 
 async function CPFormCancel(container, field, action) {
@@ -28,16 +28,16 @@ async function CPFormSave(container, form, field, action) {
 	return await FormSave(container, form, field, data, "home.php");
 }
 
-$(document).on("click",".bt_load", function(event) {
+$(document).on('click', '.bt_load', function () {
 
-    let button = $(this);
+  const page = $(this).data('page'); // 'product', 'entity', 'sale_order'
 
-    Disable(button);
+  if (!page) return;
 
-    LoadPage(button.data("page") + ".php");
+  LoadPage(`${page}.php`);
 
-    Enable(button);
 });
+
 
 $(document).on("click",".bt_module", async function(event) {
 
@@ -79,9 +79,11 @@ $(document).on("click",".bt_module", async function(event) {
 /**
   * Opens "product_expirate_days" edition
   */
- $(document).on("click", ".product_bt_expiratedays", async function() {
+$(document).on("click", ".product_bt_expiratedays", async function() {
 
-	CPFormEdit($(this), $(this), 'cp_expiratedays_edit');
+	const button = $(this);
+
+	CPFormEdit(button, button, '/ui/home/expirations/days');
 });
 
 /**
@@ -89,6 +91,13 @@ $(document).on("click",".bt_module", async function(event) {
   */
  $(document).on("focusout", "#frm_product_expiratedays #product_expirate_days", async function() {
 
+	const form = field.closest('form');
+
+	data = {
+		action: action
+	}
+
+	return await FormCancel(container, form, field, data, "home.php");
 	CPFormCancel($(this).closest('form'), $(this), 'cp_expiratedays_cancel');
 });
 
@@ -99,21 +108,14 @@ $(document).on("submit", "#frm_product_expiratedays", async function(event) {
 
 	event.preventDefault();
 
-	let form = $(this);
-
-	let table = $('.cp_expdate_table');
-
+	const form = $(this);
 	FormDisable(form);
 
-	await CPFormSave(form, form, $(this.product_expirate_days), 'cp_expiratedays_save');
-
-    let data = {
-        action: "cp_expiratedays_update"
-    }
+	const table = $('.cp_expdate_table');
 
     $('.productexpdate_bt_print').addClass('hidden');
 
-	if (table.length > 0) {
+	if (table.length) {
 
 		table.html(imgLoading);
 
@@ -123,27 +125,44 @@ $(document).on("submit", "#frm_product_expiratedays", async function(event) {
 	$(".productexpdate_expirated").html(imgLoading);
 	$(".productexpdate_toexpirate").html(imgLoading);
 
-	let response = await Post('home.php', data);
+	const d = parseInt($('#product_expirate_days').val(), 10);
 
-	if (response != null) {
+	if (isNaN(d) || d < 0 || d > 365) {
+		Message.Show('Informe um número entre 0 e 365.', Message.MSG_INFO);
+		FormEnable(form);
+		return;
+	}
 
-		if (table.length > 0) {
+	try {
 
-			table.html(response["data"]);
+		const resp = await Post('/ui/home/expirations/days', { days: d });
+		const data = resp?.data || {};
 
-			if (response["expirated"] == 0 && response["toexpirate"] == 0) {
-
-				$('.cp_expdate_notfound').removeClass('hidden');
-
-			} else {
-
-				$('.productexpdate_bt_print').removeClass('hidden');
-			}
+		// Atualiza contadores do topo
+		if (typeof data.expirated !== 'undefined') {
+			$(".productexpdate_expirated").text(data.expirated);
+		}
+		if (typeof data.toexpirate !== 'undefined') {
+			$(".productexpdate_toexpirate").text(data.toexpirate);
 		}
 
-		$(".productexpdate_expirated").html(response["expirated"]);
-		$(".productexpdate_toexpirate").html(response["toexpirate"]);
-		$(".product_bt_expiratedays").replaceWith(response["extra_block_expiratedays"]);
+		// Substitui o botão/“chip” de {extra_block_expiratedays}
+		if (data.extra_block_expiratedays) {
+		// ajuste o seletor exato do local onde o bloco aparece no topo
+		// exemplo: o primeiro .box-container de “Controle de Validade…”
+		const $box = $('.box-container:has(.box-header i.fa-calendar-days)').first();
+		// pega o container que hoje envolve o chip
+		$box.find('.addon').first().html(data.extra_block_expiratedays);
+		}
+
+		// Caso a lista esteja aberta em algum popup, você pode recarregá-la:
+		// opcionalmente: chamar a rota de lista e injetar
+
+		Message.Show('Preferência salva.', Message.MSG_DONE);
+	} catch (e) {
+		Message.Show('Falha ao salvar preferência.', Message.MSG_ERROR);
+	} finally {
+		FormEnable(form);
 	}
 });
 
@@ -174,15 +193,19 @@ $(document).on("click", ".productexpdate_bt_list", async function() {
 
     Disable(button);
 
-	let data = {
-		action: 'productexpdate_popup_list',
-	}
+	try {
+		// carrega HTML das linhas
+		const days = $('#product_expirate_days').val() || '';
+		const html = await GET(`/ui/home/expirations?days=${encodeURIComponent(days)}`);
 
-	let response = await Post("home.php", data);
-
-	if (response != null) {
-
-		Modal.Show(Modal.POPUP_SIZE_LARGE, "Controle de Validade dos Produtos", response, null);
+		// monta popup usando o bloco EXTRA_BLOCK_POPUP_CP_EXPDATE (já no template)
+		// aqui podemos simplesmente injetar as linhas no contêiner esperado:
+		Modal.Show(Modal.POPUP_SIZE_LARGE, 'Produtos com validade próxima',
+		`<div class="cp_expdate_table table tbody flex flex-dc">${html}</div>`,
+		null, false, '<i class="fa-solid fa-calendar-days"></i>'
+		);
+	} catch (e) {
+		Message.Show('Não foi possível carregar a lista.', Message.MSG_ERROR);
 	}
 
     Enable(button);

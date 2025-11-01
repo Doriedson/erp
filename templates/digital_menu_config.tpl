@@ -49,7 +49,7 @@
     <div class="font-size-14 textcenter color-gray-darkest padding-h10 padding-v20">{empresa}</div>
 
     <div class="fill flex flex-jc-fe">
-        <button type="button" class="bt_module button-blue" data-module="digitalmenu">Ver Cardápio</button>
+        <button type="button" class="bt_module button-blue">Ver Cardápio</button>
     </div>
 </div>
 

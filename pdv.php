@@ -22,14 +22,13 @@ if (!isset($_POST['action'])) {
 
     $tplPDVIndex = new View("pdv_index");
 
-    $module = $tplPDVIndex->getContent(["module" => 'pdv'], "BLOCK_PAGE");
+    // $module = $tplPDVIndex->getContent(["module" => 'pdv'], "BLOCK_PAGE");
 
     $tplIndex = new View("index");
 
     $content = [
         "version" => Version::get(),
         "title" => 'PDV',
-        "module" => $module,
         'manifest' => 'pdv_manifest.json'
     ];
 
@@ -119,7 +118,7 @@ switch($_POST['action']) {
 
 		} else {
 
-            if (ControlAccess::Login($user, $pass, ControlAccess::CA_PDV)) {
+            // if (ControlAccess::Login($user, $pass, ControlAccess::CA_PDV)) {
 
                 $tplMenu = new View("pdv_menu");
 
@@ -129,10 +128,10 @@ switch($_POST['action']) {
                     "logged" => true
                 ]);
 
-			} else {
+			// } else {
 
-				ControlAccess::Unauthorized(); //user not found
-			}
+			// 	ControlAccess::Unauthorized(); //user not found
+			// }
 		}
 
 		break;

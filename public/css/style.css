@@ -2826,7 +2826,7 @@ span.Ativo {
 	/* color: white;
     background-color: var(--color-black); */
 
-	color: var(--color-black);
+	color: var(--color);
     background-color: var(--color-white);
     border: 1px solid var(--color-white);
 }

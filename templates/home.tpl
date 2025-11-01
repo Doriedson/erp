@@ -201,7 +201,7 @@
 </div>
 <!-- END EXTRA_BLOCK_POPUP_CP_EXPDATE -->
 
-<div class="box-container flex flex-dc gap-10">
+<!-- <div class="box-container flex flex-dc gap-10">
 	<div class="box-header flex flex-ai-center gap-10">
 		<i class="icon fa-solid fa-sliders"></i>
 		Módulos
@@ -209,10 +209,10 @@
 
 	<div class="flex-table gap-10">
 
-		<button type="button" class="bt_module flex-8-col button-blue flex flex-dc gap-10 flex-ai-center padding-v10" data-module="waiter">
+		<button type="button" class="bt_module flex-8-col button-blue flex flex-dc gap-10 flex-ai-center padding-v10">
 			<i class="fa-solid fa-user-pen font-size-25"></i>
 			<span class="">Garçom</span>
 		</button>
 	</div>
-</div>
+</div> -->
 <!-- END BLOCK_PAGE -->

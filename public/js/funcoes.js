@@ -162,7 +162,13 @@ class Observable {
 	}
 }
 
-// let observerStart = new Observable();
+function currentModule() {
+
+  const p = location.pathname.replace(/\/+$/, '');
+  if (p === '/pdv')    return 'pdv';
+  if (p === '/garcom') return 'waiter'; // ou 'garcom'
+  return 'backend';
+}
 
 class Authenticator {
 
@@ -179,14 +185,13 @@ class Authenticator {
 
 	static async afterLogin() {
 
+		$('#auth_container').remove();
+		$('#body-container').empty();
+
 		if (this._didAfterLogin) return;   // evita rodar 2x
 		this._didAfterLogin = true;
 
 		await this.status(true);            // invalida o cache e confirma auth
-
-		// some com a tela de login
-		$('#auth_container').remove();      // ou .addClass('hidden')
-		$('#body-container').empty();
 
 		Message.Show('Autenticado com sucesso.', Message.MSG_DONE);
 
@@ -228,15 +233,10 @@ class Authenticator {
 	static async showLogin(cancel = null) {
 
 		try {
-
-			const r = await GET_JSON('/ui/login');
-			const html = (r && r.html) ? r.html : r; // compat: caso venha já o HTML puro
-
+			const html = await GET_HTML('/login'); // <- HTML puro
 			$('#body-container').html(html);
 			$('.leftmenu_container').addClass('hidden').empty();
 			$('.body-header').addClass('hidden');
-
-			this._didAfterLogin = false; // permite novo afterLogin numa sessão futura
 
 		} catch (e) {
 
@@ -267,18 +267,13 @@ class Authenticator {
 
 			const $menu = $('.leftmenu_container');
 
-			if (!$menu.length) {
-				console.error('Container .leftmenu_container não encontrado no DOM.');
-				Message.Show('Estrutura da página indisponível. Recarregue a tela.', Message.MSG_ERROR);
-				return;
-			}
-
 			$menu.removeClass('hidden').html(html);
 
 			$('.body-header').removeClass('hidden');
 			$('#body-container').empty();
 
-			LoadPage('home.php');
+			const home = await GET('/ui/pages/home'); // dataType: 'text'
+			$('#body-container').html(home);
 
 		} catch (e) {
 
@@ -315,22 +310,26 @@ class Authenticator {
 
 			if (s.authenticated) {
 
-				const module = ($("#body-container").data("module") || "backend").toString();
+				const module = currentModule();
 
 				switch (module) {
 
 					case 'backend':
 						await this.loadBackendMenu();
 						break;
+
 					case 'waiter':
 						if (typeof loadWaiter === 'function') await loadWaiter();
 						else Message.Show('Módulo do garçom não implementado.', Message.MSG_INFO);
 						break;
+
 					case 'pdv':
 						if (typeof loadPdv === 'function') await loadPdv();
 						else Message.Show('Módulo do PDV não implementado.', Message.MSG_INFO);
 						break;
+
 					default:
+
 						Message.Show('Módulo não definido.', Message.MSG_ERROR);
 				}
 
@@ -396,6 +395,14 @@ function setCookie(cname, cvalue, exdays = 365) {
 	let expires = "expires="+ d.toUTCString();
 
 	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function isAbsoluteUrl(u) {
+  return /^https?:\/\//i.test(u || '');
+}
+
+function cleanPath(u) {
+  return String(u || '').trim();
 }
 
 async function GetAuthPopupHtml() {
@@ -604,9 +611,9 @@ console.log(url);
 
 	try {
 		// Detectar HTML/texto (ex.: /ui/login, /ui/backend/menu)
-		const ct = (request.getResponseHeader('Content-Type') || '').toLowerCase();
+		// const ct = (request.getResponseHeader('Content-Type') || '').toLowerCase();
 
-		if (typeof response === 'string' || ct.includes('text/html')) {
+		if (typeof response === 'string') { //} || ct.includes('text/html')) {
 
 			return response; // não tenta ler messages nem version
 		}
@@ -633,12 +640,8 @@ console.log(url);
 
 		// Compat: headers de autorização (legado)
 		if (data && data['logged']) {
-		const token = request.getResponseHeader('Authorization');
-		if (token) {
-			localStorage.setItem('token', token);
-			if (url === 'backend.php') localStorage.setItem('module', 'backend');
-			else if (url === 'waiter.php') localStorage.setItem('module', 'waiter');
-		}
+			const token = request.getResponseHeader('Authorization');
+			if (token) localStorage.setItem('token', token);
 		}
 
 		return data ?? response;
@@ -820,27 +823,31 @@ async function GET_JSON(url, data) {
   return ret;
 }
 
-async function GET_HTML(url, data) {
-  let ret = null;
-  try {
-    await $.ajax({
-      url,
-      type: 'GET',
-      data,
-      dataType: 'text',              // << quer HTML
-      headers: { "Authorization": localStorage.getItem('token') },
-      cache: false,
-      success: function (data, status, request) {
-        ret = Treat_Receive_Success(data, status, request, url);
-      },
-      error: function (request) {
-        ret = Treat_Receive_Error(data, request, url);
-      }
-    });
-  } catch (e) {
-    Message.Show(`Erro de comunicação [GET_HTML] [${e.status||'?'}]`, Message.MSG_ERROR);
-  }
-  return ret;
+async function GET_HTML(path, data) {
+
+	const url = legacyToUi(path);
+
+	let ret = null;
+
+	try {
+		await $.ajax({
+		url,
+		type: 'GET',
+		data,
+		dataType: 'text',              // << quer HTML
+		headers: { "Authorization": localStorage.getItem('token') },
+		cache: false,
+		success: function (data, status, request) {
+			ret = Treat_Receive_Success(data, status, request, url);
+		},
+		error: function (request) {
+			ret = Treat_Receive_Error(data, request, url);
+		}
+		});
+	} catch (e) {
+		Message.Show(`Erro de comunicação [GET_HTML] [${e.status||'?'}]`, Message.MSG_ERROR);
+	}
+	return ret;
 }
 
 async function CEPSearch(cep) {
@@ -957,7 +964,6 @@ async function Logout() {
 
   // 3) limpa estado local
   localStorage.removeItem('token');
-  localStorage.removeItem('module');
   // se quiser manter o último colaborador selecionado:
   // localStorage.removeItem('id_entidade');
 
@@ -1267,11 +1273,12 @@ async function FormEdit(container, button, data, page) {
 
 	Disable(button);
 
-	response = await Post(page, data);
+	const response = await Post(page, data);
 
 	if (response != null) {
 
-		var content = $(response);
+		const content = $(response);
+
 		container.replaceWith(content);
 
 		AutoFocus(content);
