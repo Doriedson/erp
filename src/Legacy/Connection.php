@@ -14,6 +14,7 @@ class Connection
     protected ?string $query = null;   // SQL a ser executado
     protected array $params = [];      // parâmetros do SQL (se houver)
     protected array $data   = [];      // resultado preenchido pelo Execute()
+    protected int $rowIndex = 0;       // ponteiro para getResult() legado
     protected ?PDOStatement $stmt = null; // último statement executado
 
     public function __construct()
@@ -43,6 +44,7 @@ class Connection
         // Por padrão, carrega tudo no $this->data (padrão do legado)
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->data = is_array($rows) ? $rows : [];
+        $this->rowIndex = 0;
 
         return $stmt;
     }
@@ -65,6 +67,21 @@ class Connection
     protected function getFirst(): ?array     { return $this->data[0] ?? null; }
 
     /** Normalizadores comuns no legado (não fazem mal existir na base) */
-    public function getResult(): ?array       { return $this->data[0] ?? null; } // 1 linha
-    public function getResults(): array       { return $this->data; }            // todas
+    public function getResult(): ?array
+    {
+        if (!isset($this->data[$this->rowIndex])) {
+            return null;
+        }
+        return $this->data[$this->rowIndex++];
+    }
+
+    public function getResults(): array
+    {
+        return $this->data;
+    }
+
+    public function rowCount(): int
+    {
+        return $this->stmt ? $this->stmt->rowCount() : 0;
+    }
 }

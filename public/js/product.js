@@ -835,12 +835,11 @@ $(document).on("click", ".product_bt_validade", async function() {
 
 	button.addClass('disabled');
 
-	data = {
-		action: "product_validade_edit",
+	let data = {
 		id_produto: id_produto,
-	}
+	};
 
-	let response = await Post("product.php", data);
+	let response = await Post("/ui/products/expirations/modal", data);
 
 	if (response != null) {
 
@@ -867,13 +866,12 @@ $(document).on("submit", "#frm_product_new_validade", async function(event) {
 
 	FormDisable(form);
 
-	data = {
-		action: "validade_add",
+	let data = {
 		id_produto: id_produto,
 		validade: validade,
-	}
+	};
 
-	let response = await Post("product.php", data);
+	let response = await Post("/ui/products/expirations/add", data);
 
 	FormEnable(form);
 
@@ -901,6 +899,11 @@ $(document).on("submit", "#frm_product_new_validade", async function(event) {
 
 		$(".productexpdate_expirated").html(response["expirated"]);
 		$(".productexpdate_toexpirate").html(response["toexpirate"]);
+		$(document).trigger('product:validity-updated', [{
+			source: 'validade_add',
+			productId: id_produto,
+			response: response
+		}]);
 	}
 
 	this.data.focus();
@@ -914,15 +917,20 @@ $(document).on("click", ".product_bt_validade_delete", async function() {
 	let button = $(this);
 
 	let id_produtovalidade = button.data('id_produtovalidade');
+	let productId = null;
+
+	const modalContainer = button.closest('.w-productvalidade');
+	if (modalContainer.length) {
+		productId = modalContainer.data('id_produto') || null;
+	}
 
 	Disable(button);
 
 	let data = {
-		action: "validade_delete",
 		id_produtovalidade: id_produtovalidade
-	}
+	};
 
-	let response = await Post("product.php", data);
+	let response = await Post("/ui/products/expirations/delete", data);
 
 	if (response != null) {
 
@@ -944,6 +952,12 @@ $(document).on("click", ".product_bt_validade_delete", async function() {
 				$(".cp_expdate_notfound").removeClass('hidden');
 			}
 		});
+
+		$(document).trigger('product:validity-updated', [{
+			source: 'validade_delete',
+			productId: productId,
+			response: response
+		}]);
 
 	} else {
 

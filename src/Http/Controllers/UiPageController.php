@@ -11,6 +11,9 @@ use Throwable;
 
 final class UiPageController
 {
+    private const MIN_EXPIRY_DAYS = 0;
+    private const MAX_EXPIRY_DAYS = 365;
+
     public function show(string $slug)
     {
         // 1) Autenticação
@@ -72,9 +75,13 @@ final class UiPageController
             return Response::html('', 401);
         }
 
-        // $uid = $auth->userId();
-
         $repo = new ProductExpiryRepository();
+        $tpl  = new View('home'); // templates/home.tpl
+
+        $action = $this->resolveHomeAction();
+        if ($action !== null) {
+            return $this->handleExpiryDaysAction($repo, $tpl, $action);
+        }
 
         // Lê preferência de dias do usuário (fallback: 30)
         $days = $repo->getExpiryDaysThreshold();
@@ -83,8 +90,7 @@ final class UiPageController
         [$expirated, $toexpirate] = $repo->counters($days);
 
         // Monta o fragmento {extra_block_expiratedays}
-        $tpl = new View('home'); // templates/home.tpl
-        $chipHtml = $tpl->getContent(['product_expirate_days' => $days], 'EXTRA_BLOCK_EXPIRATEDAYS');
+        $chipHtml = $this->renderExpiryDaysButton($tpl, $days);
 
         // Render da página
         $html = $tpl->getContent([
@@ -93,47 +99,6 @@ final class UiPageController
             'toexpirate'               => $toexpirate,
             // Demais placeholders que seu BLOCK_PAGE usa…
         ], 'BLOCK_PAGE');
-
-        return Response::html($html);
-    }
-
-    /** GET /ui/home/expirations?days=15 → devolve apenas as linhas EXTRA_BLOCK_CP_EXPDATE_TR */
-    public function expirationsList(): string
-    {
-        $tpl  = new View('home');
-        $repo = new ProductExpiryRepository();
-
-        $days = $repo->getExpiryDaysThreshold();
-
-        $rows = $repo->listExpirations($days);
-
-        if (!$rows) {
-            // devolve marcador para o front exibir “não encontrado”
-            return Response::html('<div class="cp_expdate_notfound" style="padding: 40px 10px;">Nenhum produto com vencimento próximo <i class="icon fa-regular fa-face-smile-wink"></i></div>');
-        }
-
-        $html = '';
-        foreach ($rows as $r) {
-            $isExpired = (int)$r['dias'] < 0;
-
-            $html .= $tpl->getContent([
-                'id_produtovalidade' => (string)$r['id_produtovalidade'],
-                'id_produto'         => (string)$r['id_produto'],
-                'produto'            => $r['produto'],
-                'produtotipo'        => $r['produtotipo'],
-                'data_formatted'     => date('d/m/Y', strtotime($r['data'])),
-
-                // blocos condicionais
-                'extra_block_productexpdate_days'      => $isExpired ? '' : $tpl->getContent(
-                    ['dias' => (string)$r['dias']],
-                    'EXTRA_BLOCK_PRODUCTEXPDATE_DAYS'
-                ),
-                'extra_block_productexpdate_expirated' => $isExpired ? $tpl->getContent([], 'EXTRA_BLOCK_PRODUCTEXPDATE_EXPIRATED') : '',
-
-                // se tiver botões de status, pode preencher aqui:
-                'extra_block_product_button_status'    => '',
-            ], 'EXTRA_BLOCK_CP_EXPDATE_TR');
-        }
 
         return Response::html($html);
     }
@@ -160,34 +125,19 @@ final class UiPageController
     // Salva “Vencem em” (retorna JSON com novos contadores + chip)
     public function expirationDays(): string
     {
-
-        $action = $_POST['action'];
-
         $auth = new AuthService();
         if (!$auth->isAuthenticated()) {
             return Response::error('Unauthorized', 401);
         }
 
-        $uid  = $auth->userId();
-        $days = max(0, min(365, (int)($_POST['days'] ?? 0)));
+        $repo   = new ProductExpiryRepository(Connection::pdo());
+        $tpl    = new View('home');
+        $action = $this->resolveHomeAction() ?? 'save';
 
-        // $this->setUserDaysPref($uid, $days);
-
-        $repo = new ProductExpiryRepository(Connection::pdo());
-        [$expirated, $toexpirate] = $repo->counters($days);
-
-        $tpl = new View('home');
-        $chipHtml = $tpl->getContent(['product_expirate_days' => $days], 'EXTRA_BLOCK_EXPIRATEDAYS');
-
-        return Response::json([
-            'days'                    => $days,
-            'expirated'               => $expirated,
-            'toexpirate'              => $toexpirate,
-            'extra_block_expiratedays'=> $chipHtml,
-        ]);
+        return $this->handleExpiryDaysAction($repo, $tpl, $action);
     }
 
-    // Lista de itens (HTML de <div class="cp_expdate_tr">…)
+    // Lista de itens (HTML completo do bloco EXTRA_BLOCK_POPUP_CP_EXPDATE)
     public function listExpirations(): string
     {
         $auth = new AuthService();
@@ -196,32 +146,198 @@ final class UiPageController
         }
 
         $repo = new ProductExpiryRepository();
+        $tpl  = new View('home');
 
-        $days = (int)($_GET['days'] ?? $repo->getExpiryDaysThreshold());
-        $days = max(0, min(365, $days));
+        $currentDays = $repo->getExpiryDaysThreshold();
+        $days        = $this->sanitizeDays($_GET['days'] ?? $currentDays, $currentDays);
 
-        $rows = $repo->listByDays($days); // retorna um array de linhas normalizadas
+        $rows     = $repo->listByDays($days); // linhas normalizadas usadas pelo tpl legado
+        $rowsHtml = $this->renderExpirationsRows($tpl, $rows);
 
-        $tpl = new View('home');
-        $rowsHtml = '';
-        if (!empty($rows)) {
-            foreach ($rows as $r) {
-                $rowsHtml .= $tpl->getContent($r, 'EXTRA_BLOCK_CP_EXPDATE_TR');
-            }
-        }
+        $hasRows = $rowsHtml !== '';
 
-        // Se preferir devolver o bloco completo (com cabeçalho, etc), monte com EXTRA_BLOCK_POPUP_CP_EXPDATE
-        return Response::html($rowsHtml);
+        $html = $tpl->getContent([
+            'extra_block_expiratedays' => $this->renderExpiryDaysButton($tpl, $days),
+            'extra_block_cp_expdate_tr'=> $rowsHtml,
+            'cp_expdate_notfound'      => $hasRows ? 'hidden' : '',
+            'productexpdate_bt_print'  => $hasRows ? '' : 'hidden',
+            'product_expirate_days'    => (string)$days,
+        ], 'EXTRA_BLOCK_POPUP_CP_EXPDATE');
+
+        return Response::html($html);
     }
 
-    private function renderDaysBlock(View $tpl, int $days): string
+    private function resolveHomeAction(): ?string
     {
-        // se você quer o botão simples “{product_expirate_days} dias”:
-        $btn = $tpl->getContent(['product_expirate_days' => (string)$days], 'EXTRA_BLOCK_EXPIRATEDAYS');
+        $action = $_POST['action'] ?? $_GET['action'] ?? null;
+        if (is_string($action) && $action !== '') {
+            return $action;
+        }
+        return null;
+    }
 
-        // e/ou o formulário de edição (abre quando clicar):
-        // $form = $tpl->getContent(['product_expirate_days' => (string)$days], 'EXTRA_BLOCK_EXPIRATEDAYS_FORM');
+    private function handleExpiryDaysAction(ProductExpiryRepository $repo, View $tpl, string $action): string
+    {
+        $currentDays = $repo->getExpiryDaysThreshold();
+        $normalized  = strtolower($action);
+        $context     = $this->resolveExpiryContext();
 
-        return $btn;
+        switch ($normalized) {
+            case 'edit':
+            case 'cp_expiratedays_edit':
+                return Response::json($this->renderExpiryDaysForm($tpl, $currentDays));
+
+            case 'cancel':
+            case 'cp_expiratedays_cancel':
+                return Response::json($this->renderExpiryDaysButton($tpl, $currentDays));
+
+            case 'save':
+            case 'cp_expiratedays_save':
+                $days = $this->sanitizeDays($this->getDaysFromRequest(), $currentDays);
+                $repo->setDaysThreshold($days);
+                [$expirated, $toexpirate] = $repo->counters($days);
+
+                $payload = [
+                    'days'                     => $days,
+                    'expirated'                => $expirated,
+                    'toexpirate'               => $toexpirate,
+                    'extra_block_expiratedays' => $this->renderExpiryDaysButton($tpl, $days),
+                ];
+
+                if ($context === 'list') {
+                    $payload = array_merge(
+                        $payload,
+                        $this->buildListPayload($repo, $tpl, $days)
+                    );
+                }
+
+                return Response::json($payload);
+
+            case 'update':
+            case 'cp_expiratedays_update':
+                [$expirated, $toexpirate] = $repo->counters($currentDays);
+
+                $payload = [
+                    'days'                     => $currentDays,
+                    'expirated'                => $expirated,
+                    'toexpirate'               => $toexpirate,
+                    'extra_block_expiratedays' => $this->renderExpiryDaysButton($tpl, $currentDays),
+                ];
+
+                if ($context === 'list') {
+                    $payload = array_merge(
+                        $payload,
+                        $this->buildListPayload($repo, $tpl, $currentDays)
+                    );
+                }
+
+                return Response::json($payload);
+
+            default:
+                return Response::error('Ação inválida.', 400);
+        }
+    }
+
+    private function sanitizeDays($value, int $fallback): int
+    {
+        if (is_numeric($value)) {
+            $value = (int)$value;
+        } else {
+            $value = $fallback;
+        }
+
+        if ($value < self::MIN_EXPIRY_DAYS) {
+            return self::MIN_EXPIRY_DAYS;
+        }
+
+        if ($value > self::MAX_EXPIRY_DAYS) {
+            return self::MAX_EXPIRY_DAYS;
+        }
+
+        return $value;
+    }
+
+    private function getDaysFromRequest()
+    {
+        if (isset($_POST['days'])) {
+            return $_POST['days'];
+        }
+        if (isset($_POST['value'])) {
+            return $_POST['value'];
+        }
+        if (isset($_GET['days'])) {
+            return $_GET['days'];
+        }
+        if (isset($_GET['value'])) {
+            return $_GET['value'];
+        }
+
+        return null;
+    }
+
+    private function resolveExpiryContext(): string
+    {
+        $ctx = $_POST['context'] ?? $_GET['context'] ?? '';
+
+        if (is_string($ctx)) {
+            $ctx = strtolower(trim($ctx));
+        } else {
+            $ctx = '';
+        }
+
+        return $ctx === 'list' ? 'list' : 'home';
+    }
+
+    private function renderExpiryDaysButton(View $tpl, int $days): string
+    {
+        return $tpl->getContent(
+            ['product_expirate_days' => (string)$days],
+            'EXTRA_BLOCK_EXPIRATEDAYS'
+        );
+    }
+
+    private function buildListPayload(ProductExpiryRepository $repo, View $tpl, int $days): array
+    {
+        $rows     = $repo->listByDays($days);
+        $rowsHtml = $this->renderExpirationsRows($tpl, $rows);
+
+        return [
+            'extra_block_cp_expdate_tr' => $rowsHtml,
+            'cp_expdate_notfound'       => $rowsHtml === '' ? '' : 'hidden',
+            'productexpdate_bt_print'   => $rowsHtml === '' ? 'hidden' : '',
+            'product_expirate_days'     => (string)$days,
+        ];
+    }
+
+    private function renderExpiryDaysForm(View $tpl, int $days): string
+    {
+        return $tpl->getContent(
+            ['product_expirate_days' => (string)$days],
+            'EXTRA_BLOCK_EXPIRATEDAYS_FORM'
+        );
+    }
+
+    private function renderExpirationsRows(View $tpl, array $rows): string
+    {
+        if (empty($rows)) {
+            return '';
+        }
+
+        $html = '';
+        foreach ($rows as $row) {
+            $html .= $tpl->getContent([
+                'id_produtovalidade'               => (string)($row['id_produtovalidade'] ?? ''),
+                'id_produto'                       => (string)($row['id_produto'] ?? ''),
+                'produto'                          => $row['produto'] ?? '',
+                'produtotipo'                      => $row['produtotipo'] ?? '',
+                'data_formatted'                   => $row['data_formatted'] ?? '',
+                'dias'                             => (string)($row['dias'] ?? '0'),
+                'extra_block_productexpdate_days'  => $row['extra_block_productexpdate_days'] ?? '',
+                'extra_block_productexpdate_expirated' => $row['extra_block_productexpdate_expirated'] ?? '',
+                'extra_block_product_button_status'    => $row['extra_block_product_button_status'] ?? '',
+            ], 'EXTRA_BLOCK_CP_EXPDATE_TR');
+        }
+
+        return $html;
     }
 }

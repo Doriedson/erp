@@ -56,7 +56,7 @@ $(document).on("submit", "#frm_report_sale_one_product", async function(event) {
 
 	container.html(imgLoading);
 
-	let response = await Post("report_sale_one_product.php", data);
+	let response = await Post("/ui/products/history/search", data);
 
 	if (response != null) {
 		
@@ -64,12 +64,11 @@ $(document).on("submit", "#frm_report_sale_one_product", async function(event) {
 		let filter = response["filter"];
 		let total = response["total"];
 
-		data = {
-			action: "reportsaleonproduct_popup_data",
+		const popupPayload = {
 			produto: produto
-		}
+		};
 
-		response = await Post("report_sale_one_product.php", data);
+		response = await Post("/ui/products/history/popup-data", popupPayload);
 
 		if (response != null) {
 
@@ -77,7 +76,7 @@ $(document).on("submit", "#frm_report_sale_one_product", async function(event) {
 
 			content.find(".w_reportsaleoneproduct_filter").html(filter);
 			content.find(".w_reportsaleoneproduct_total").html(total);
-	
+
 			let chart_container = content.siblings(".w_reportsaleoneproduct_graph_container");
 
 			container.html(content);

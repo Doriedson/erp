@@ -1404,14 +1404,13 @@ $(document).on("submit", "#frm_purchaseorder_reportsaleoneproduct", async functi
 	$('.w_reportsaleoneproduct_graph_notfound').addClass('hidden');
 
 	let data = {
-		action: 'report_sale_one_product_search',
 		produto: id_produto,
 		dataini: dataini,
 		intervalo: intervalo,
 		datafim: datafim,
 	}
 
-	let response = await Post("report_sale_one_product.php", data);
+	let response = await Post("/ui/products/history/search", data);
 
 	if (response != null) {
 
@@ -1455,11 +1454,10 @@ $(document).on("click", ".bt_purchaseorder_history", async function() {
 	if (Modal.history_productsale.datelock == false) {
 
 		let data = {
-			action: "purchaseorder_getlastentry",
 			id_produto: id_produto
 		}
 
-		let response = await Post("purchase_order.php", data);
+		let response = await Post("/ui/products/history/last-entry", data);
 
 		if (response != null) {
 
@@ -1477,7 +1475,6 @@ $(document).on("click", ".bt_purchaseorder_history", async function() {
 	}
 
 	let data = {
-		action: "reportsaleonproduct_popup",
 		id_produto: id_produto,
 		datestart: Modal.history_productsale.datestart,
 		dateend_sel: Modal.history_productsale.dateend_sel,
@@ -1485,7 +1482,7 @@ $(document).on("click", ".bt_purchaseorder_history", async function() {
 		datelock: Modal.history_productsale.datelock
 	}
 
-	let response = await Post("report_sale_one_product.php", data);
+	let response = await Post("/ui/products/history/popup", data);
 
 	if ( response!= null) {
 

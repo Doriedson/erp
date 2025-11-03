@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Database\Connection;
+use App\View\View;
 use PDO;
 
 final class ProductExpiryRepository
@@ -50,29 +51,57 @@ final class ProductExpiryRepository
     public function listByDays(int $days): array
     {
         $sql = "
-            SELECT v.id_produtovalidade, v.id_produto, p.nome AS produto, p.tipo AS produtotipo,
-                   DATE_FORMAT(v.data, '%d/%m/%Y') AS data_formatted,
-                   DATEDIFF(v.data, CURRENT_DATE()) AS dias
-              FROM tab_produto_validade v
-              JOIN tab_produto p ON p.id_produto = v.id_produto
-             WHERE v.data <= DATE_ADD(CURRENT_DATE(), INTERVAL :d DAY)
-             ORDER BY v.data ASC
+            SELECT
+                pv.id_produtovalidade,
+                pv.id_produto,
+                p.produto,
+                pt.produtotipo,
+                pv.data,
+                p.ativo,
+                DATEDIFF(pv.data, CURRENT_DATE()) AS dias
+            FROM tab_produtovalidade pv
+            JOIN tab_produto p ON p.id_produto = pv.id_produto
+            LEFT JOIN tab_produtotipo pt ON pt.id_produtotipo = p.id_produtotipo
+            WHERE pv.data <= DATE_ADD(CURRENT_DATE(), INTERVAL :d DAY)
+            ORDER BY pv.data ASC, p.produto ASC
         ";
         $st = $this->pdo->prepare($sql);
         $st->execute([':d' => $days]);
         $out = [];
+        $homeView    = new View('home');
+        $productView = new View('product');
         while ($r = $st->fetch(PDO::FETCH_ASSOC)) {
+            $daysDiff = (int)$r['dias'];
+            $isExpired = $daysDiff < 0;
+            $diasValue = max(0, $daysDiff);
+
+            $statusHtml = ((int)($r['ativo'] ?? 0) === 1)
+                ? $productView->getContent(
+                    ['id_produto' => (string)$r['id_produto']],
+                    'EXTRA_BLOCK_PRODUCT_BUTTON_ATIVO'
+                )
+                : $productView->getContent(
+                    ['id_produto' => (string)$r['id_produto']],
+                    'EXTRA_BLOCK_PRODUCT_BUTTON_INATIVO'
+                );
+
             $out[] = [
-                'id_produtovalidade' => $r['id_produtovalidade'],
-                'id_produto'         => $r['id_produto'],
-                'produto'            => $r['produto'],
-                'produtotipo'        => $r['produtotipo'] ?: '',
-                'data_formatted'     => $r['data_formatted'],
-                // decide mostrar EXPIRATED x DAYS
-                'extra_block_productexpdate_days'      => ($r['dias'] >= 0) ? 'BLOCK' : '',
-                'extra_block_productexpdate_expirated' => ($r['dias'] < 0) ? 'BLOCK' : '',
-                'dias'               => max(0, (int)$r['dias']),
-                // Se você usa botões auxiliares no tpl, preencha aqui…
+                'id_produtovalidade'               => $r['id_produtovalidade'],
+                'id_produto'                       => $r['id_produto'],
+                'produto'                          => $r['produto'],
+                'produtotipo'                      => $r['produtotipo'] ?: '',
+                'data_formatted'                   => $r['data'] ? date('d/m/Y', strtotime($r['data'])) : '',
+                'dias'                             => (string)$diasValue,
+                'extra_block_productexpdate_days'  => $isExpired
+                    ? ''
+                    : $homeView->getContent(
+                        ['dias' => (string)$diasValue],
+                        'EXTRA_BLOCK_PRODUCTEXPDATE_DAYS'
+                    ),
+                'extra_block_productexpdate_expirated' => $isExpired
+                    ? $homeView->getContent([], 'EXTRA_BLOCK_PRODUCTEXPDATE_EXPIRATED')
+                    : '',
+                'extra_block_product_button_status'    => $statusHtml,
             ];
         }
         return $out;
@@ -88,12 +117,18 @@ final class ProductExpiryRepository
 
     public function setDaysThreshold(int $days): void
     {
-        $st = $this->pdo->prepare("
-            INSERT INTO tab_config (chave, valor)
-            VALUES ('product_expirate_days', :v)
-            ON DUPLICATE KEY UPDATE valor = VALUES(valor)
-        ");
-        $st->execute([':v' => (string)$days]);
+        $hasConfig = (int)$this->pdo
+            ->query('SELECT COUNT(*) FROM tab_config')
+            ->fetchColumn() > 0;
+
+        if ($hasConfig) {
+            $st = $this->pdo->prepare('UPDATE tab_config SET product_expirate_days = :v');
+            $st->execute([':v' => $days]);
+            return;
+        }
+
+        $st = $this->pdo->prepare('INSERT INTO tab_config (product_expirate_days) VALUES (:v)');
+        $st->execute([':v' => $days]);
     }
 
     public function countExpired(): int

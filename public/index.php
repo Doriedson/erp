@@ -25,6 +25,8 @@ use App\Http\Controllers\UiPageController;
 use App\Http\Controllers\UiBackendController;
 use App\Http\Controllers\CollaboratorController;
 use App\Http\Controllers\CollaboratorLegacyController;
+use App\Http\Controllers\ProductExpiryController;
+use App\Http\Controllers\ProductSalesHistoryController;
 use App\Auth\AuthService;
 
 // Fuso horário do projeto
@@ -90,14 +92,20 @@ $router->get('/pdv',    [HomeController::class, 'indexPdv']);     // PDV
 
 // $router->get('/ui/pages/home', [UiPageController::class, 'home']);
 
-// Popup: lista de produtos por validade (HTML para o bloco EXTRA_BLOCK_CP_EXPDATE_TR)
-$router->get('/ui/home/expirations', [UiPageController::class, 'expirationsList']);
-
 // Atualiza preferência “dias para expirar” (opcional; guarda em tab_config)
 // $router->post('/ui/home/expirations/days', [UiPageController::class, 'saveExpirationDays']);
 
 $router->post('/ui/home/expirations/days', [UiPageController::class, 'expirationDays']);
-$router->get('/ui/home/expirations', [UiPageController::class, 'listExpirations']); // Linhas (HTML) da lista
+$router->get('/ui/home/expirations', [UiPageController::class, 'listExpirations']); // HTML completo da lista (popup)
+
+$router->post('/ui/products/expirations/modal', [ProductExpiryController::class, 'popup']);
+$router->post('/ui/products/expirations/add', [ProductExpiryController::class, 'add']);
+$router->post('/ui/products/expirations/delete', [ProductExpiryController::class, 'delete']);
+
+$router->post('/ui/products/history/last-entry', [ProductSalesHistoryController::class, 'lastEntry']);
+$router->post('/ui/products/history/popup', [ProductSalesHistoryController::class, 'popup']);
+$router->post('/ui/products/history/search', [ProductSalesHistoryController::class, 'search']);
+$router->post('/ui/products/history/popup-data', [ProductSalesHistoryController::class, 'popupData']);
 
 // 1) Rotas ESPECÍFICAS (têm lógica própria)
 $router->get('/ui/pages/home', [UiPageController::class, 'home']);                  // HTML da Home

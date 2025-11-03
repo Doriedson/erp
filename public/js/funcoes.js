@@ -1,6 +1,27 @@
 let imgLoading = "<div class='flex flex-ai-center flex-jc-center'><i class='fa-solid fa-rotate fa-spin font-size-20'></i><div>";
 let warnings = 0;
 
+function normalizeAjaxUrl(url) {
+
+	if (typeof url !== 'string' || url.trim() === '') {
+		return url;
+	}
+
+	if (/^https?:\/\//i.test(url)) {
+		return url;
+	}
+
+	if (url.startsWith('/')) {
+		return url;
+	}
+
+	if (url.startsWith('./')) {
+		return '/' + url.replace(/^\.\//, '');
+	}
+
+	return '/' + url;
+}
+
 class WindowManager {
 
 	static page = null;
@@ -625,7 +646,22 @@ console.log(url);
 
 		// Renderiza mensagens se existirem (apenas informativas)
 		for (const m of messages) {
-			Message.Show(m.text || String(m), Message.MSG_INFO);
+			let text = '';
+			let type = Message.MSG_INFO;
+
+			if (Array.isArray(m)) {
+				text = m[0] || '';
+				type = typeof m[1] !== 'undefined' ? m[1] : Message.MSG_INFO;
+			} else if (m && typeof m === 'object') {
+				text = m.text || '';
+				type = typeof m.type !== 'undefined' ? m.type : Message.MSG_INFO;
+			} else {
+				text = String(m);
+			}
+
+			if (text) {
+				Message.Show(text, type);
+			}
 		}
 
 		// Verificação de versão (somente se houver variável global version definida)
@@ -696,6 +732,8 @@ function Treat_Receive_Error(data, request, url) {
 }
 
 async function Post(url, data, processData = true, contentType = 'application/x-www-form-urlencoded; charset=UTF-8') {
+
+	url = normalizeAjaxUrl(url);
 
 	let ret = null;
 

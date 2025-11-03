@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@tanstack/vue-query": "^5.90.6",
+    "pinia": "^3.0.3"
+  }
+}
