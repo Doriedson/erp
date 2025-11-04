@@ -22,6 +22,11 @@ services:
       - ./:/var/www/html/erp:cached   # <-- mesmo path nos dois serviços
     working_dir: /var/www/html/erp
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "php -r 'echo \"ok\";' || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
   web:
     image: nginx:1.25-alpine                 # <- usa direto a imagem oficial
@@ -34,3 +39,34 @@ services:
     depends_on:
       - app
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost/ || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+# Banco em container (se quiser sair do host DB)
+
+# Você pode adicionar um serviço db:
+
+# db:
+#   image: mysql:8.0
+#   environment:
+#     MYSQL_DATABASE: ${DB_DATABASE:-erp}
+#     MYSQL_USER: ${DB_USERNAME:-erp}
+#     MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+#     MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+#   ports:
+#     - "3307:3306"
+#   volumes:
+#     - db_data:/var/lib/mysql
+#   restart: unless-stopped
+
+# volumes:
+#   db_data:
+
+
+# E trocar no app:
+
+# DB_HOST: db
+# DB_PORT: "3306"
