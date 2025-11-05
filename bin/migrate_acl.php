@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Database\Connection;
+use App\Infra\Database\Connection;
 
 require __DIR__ . '/../vendor/autoload.php';
 

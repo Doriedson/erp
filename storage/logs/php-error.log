@@ -1,0 +1,156 @@
+[05-Nov-2025 11:26:33 America/Sao_Paulo] PHP Warning:  require(inc/authorization.php): Failed to open stream: No such file or directory in /var/www/html/erp/home.php on line 13
+[05-Nov-2025 11:26:33 America/Sao_Paulo] Slim Application Error
+Type: Error
+Code: 0
+Message: Failed opening required 'inc/authorization.php' (include_path='.:/usr/local/lib/php')
+File: /var/www/html/erp/home.php
+Line: 13
+Trace: #0 /var/www/html/erp/src/Support/LegacyRenderer.php(53): require()
+#1 /var/www/html/erp/src/Http/Controllers/HomeController.php(14): App\Support\LegacyRenderer->render('home.php')
+#2 /var/www/html/erp/vendor/slim/slim/Slim/Handlers/Strategies/RequestResponse.php(39): App\Http\Controllers\HomeController->index(Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#3 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(362): Slim\Handlers\Strategies\RequestResponse->__invoke(Array, Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#4 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\Routing\Route->handle(Object(Slim\Psr7\Request))
+#5 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#6 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(321): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#7 /var/www/html/erp/vendor/slim/slim/Slim/Routing/RouteRunner.php(74): Slim\Routing\Route->run(Object(Slim\Psr7\Request))
+#8 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/RoutingMiddleware.php(45): Slim\Routing\RouteRunner->handle(Object(Slim\Psr7\Request))
+#9 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(Slim\Routing\RouteRunner))
+#10 /var/www/html/erp/src/Http/Middlewares/StartSession.php(17): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#11 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): App\Http\Middlewares\StartSession->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#12 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/ErrorMiddleware.php(77): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#13 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#14 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#15 /var/www/html/erp/vendor/slim/slim/Slim/App.php(209): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#16 /var/www/html/erp/vendor/slim/slim/Slim/App.php(193): Slim\App->handle(Object(Slim\Psr7\Request))
+#17 /var/www/html/erp/public/index.php(63): Slim\App->run()
+#18 {main}
+[05-Nov-2025 11:26:35 America/Sao_Paulo] PHP Warning:  require(inc/authorization.php): Failed to open stream: No such file or directory in /var/www/html/erp/home.php on line 13
+[05-Nov-2025 11:26:35 America/Sao_Paulo] Slim Application Error
+Type: Error
+Code: 0
+Message: Failed opening required 'inc/authorization.php' (include_path='.:/usr/local/lib/php')
+File: /var/www/html/erp/home.php
+Line: 13
+Trace: #0 /var/www/html/erp/src/Support/LegacyRenderer.php(53): require()
+#1 /var/www/html/erp/src/Http/Controllers/HomeController.php(14): App\Support\LegacyRenderer->render('home.php')
+#2 /var/www/html/erp/vendor/slim/slim/Slim/Handlers/Strategies/RequestResponse.php(39): App\Http\Controllers\HomeController->index(Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#3 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(362): Slim\Handlers\Strategies\RequestResponse->__invoke(Array, Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#4 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\Routing\Route->handle(Object(Slim\Psr7\Request))
+#5 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#6 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(321): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#7 /var/www/html/erp/vendor/slim/slim/Slim/Routing/RouteRunner.php(74): Slim\Routing\Route->run(Object(Slim\Psr7\Request))
+#8 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/RoutingMiddleware.php(45): Slim\Routing\RouteRunner->handle(Object(Slim\Psr7\Request))
+#9 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(Slim\Routing\RouteRunner))
+#10 /var/www/html/erp/src/Http/Middlewares/StartSession.php(17): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#11 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): App\Http\Middlewares\StartSession->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#12 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/ErrorMiddleware.php(77): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#13 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#14 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#15 /var/www/html/erp/vendor/slim/slim/Slim/App.php(209): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#16 /var/www/html/erp/vendor/slim/slim/Slim/App.php(193): Slim\App->handle(Object(Slim\Psr7\Request))
+#17 /var/www/html/erp/public/index.php(63): Slim\App->run()
+#18 {main}
+[05-Nov-2025 11:27:31 America/Sao_Paulo] PHP Warning:  require(inc/authorization.php): Failed to open stream: No such file or directory in /var/www/html/erp/home.php on line 13
+[05-Nov-2025 11:27:31 America/Sao_Paulo] Slim Application Error
+Type: Error
+Code: 0
+Message: Failed opening required 'inc/authorization.php' (include_path='.:/usr/local/lib/php')
+File: /var/www/html/erp/home.php
+Line: 13
+Trace: #0 /var/www/html/erp/src/Support/LegacyRenderer.php(53): require()
+#1 /var/www/html/erp/src/Http/Controllers/HomeController.php(14): App\Support\LegacyRenderer->render('home.php')
+#2 /var/www/html/erp/vendor/slim/slim/Slim/Handlers/Strategies/RequestResponse.php(39): App\Http\Controllers\HomeController->index(Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#3 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(362): Slim\Handlers\Strategies\RequestResponse->__invoke(Array, Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#4 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\Routing\Route->handle(Object(Slim\Psr7\Request))
+#5 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#6 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(321): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#7 /var/www/html/erp/vendor/slim/slim/Slim/Routing/RouteRunner.php(74): Slim\Routing\Route->run(Object(Slim\Psr7\Request))
+#8 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/RoutingMiddleware.php(45): Slim\Routing\RouteRunner->handle(Object(Slim\Psr7\Request))
+#9 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(Slim\Routing\RouteRunner))
+#10 /var/www/html/erp/src/Http/Middlewares/StartSession.php(17): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#11 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): App\Http\Middlewares\StartSession->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#12 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/ErrorMiddleware.php(77): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#13 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#14 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#15 /var/www/html/erp/vendor/slim/slim/Slim/App.php(209): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#16 /var/www/html/erp/vendor/slim/slim/Slim/App.php(193): Slim\App->handle(Object(Slim\Psr7\Request))
+#17 /var/www/html/erp/public/index.php(63): Slim\App->run()
+#18 {main}
+[05-Nov-2025 11:27:34 America/Sao_Paulo] PHP Warning:  require(inc/authorization.php): Failed to open stream: No such file or directory in /var/www/html/erp/home.php on line 13
+[05-Nov-2025 11:27:34 America/Sao_Paulo] Slim Application Error
+Type: Error
+Code: 0
+Message: Failed opening required 'inc/authorization.php' (include_path='.:/usr/local/lib/php')
+File: /var/www/html/erp/home.php
+Line: 13
+Trace: #0 /var/www/html/erp/src/Support/LegacyRenderer.php(53): require()
+#1 /var/www/html/erp/src/Http/Controllers/HomeController.php(14): App\Support\LegacyRenderer->render('home.php')
+#2 /var/www/html/erp/vendor/slim/slim/Slim/Handlers/Strategies/RequestResponse.php(39): App\Http\Controllers\HomeController->index(Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#3 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(362): Slim\Handlers\Strategies\RequestResponse->__invoke(Array, Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#4 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\Routing\Route->handle(Object(Slim\Psr7\Request))
+#5 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#6 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(321): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#7 /var/www/html/erp/vendor/slim/slim/Slim/Routing/RouteRunner.php(74): Slim\Routing\Route->run(Object(Slim\Psr7\Request))
+#8 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/RoutingMiddleware.php(45): Slim\Routing\RouteRunner->handle(Object(Slim\Psr7\Request))
+#9 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(Slim\Routing\RouteRunner))
+#10 /var/www/html/erp/src/Http/Middlewares/StartSession.php(17): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#11 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): App\Http\Middlewares\StartSession->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#12 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/ErrorMiddleware.php(77): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#13 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#14 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#15 /var/www/html/erp/vendor/slim/slim/Slim/App.php(209): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#16 /var/www/html/erp/vendor/slim/slim/Slim/App.php(193): Slim\App->handle(Object(Slim\Psr7\Request))
+#17 /var/www/html/erp/public/index.php(63): Slim\App->run()
+#18 {main}
+[05-Nov-2025 11:31:32 America/Sao_Paulo] PHP Warning:  require(inc/authorization.php): Failed to open stream: No such file or directory in /var/www/html/erp/home.php on line 13
+[05-Nov-2025 11:31:32 America/Sao_Paulo] Slim Application Error
+Type: Error
+Code: 0
+Message: Failed opening required 'inc/authorization.php' (include_path='/var/www/html/erp:/var/www/html/erp/inc:.:/usr/local/lib/php')
+File: /var/www/html/erp/home.php
+Line: 13
+Trace: #0 /var/www/html/erp/src/Support/LegacyRenderer.php(69): require()
+#1 /var/www/html/erp/src/Http/Controllers/HomeController.php(14): App\Support\LegacyRenderer->render('home.php')
+#2 /var/www/html/erp/vendor/slim/slim/Slim/Handlers/Strategies/RequestResponse.php(39): App\Http\Controllers\HomeController->index(Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#3 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(362): Slim\Handlers\Strategies\RequestResponse->__invoke(Array, Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#4 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\Routing\Route->handle(Object(Slim\Psr7\Request))
+#5 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#6 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(321): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#7 /var/www/html/erp/vendor/slim/slim/Slim/Routing/RouteRunner.php(74): Slim\Routing\Route->run(Object(Slim\Psr7\Request))
+#8 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/RoutingMiddleware.php(45): Slim\Routing\RouteRunner->handle(Object(Slim\Psr7\Request))
+#9 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(Slim\Routing\RouteRunner))
+#10 /var/www/html/erp/src/Http/Middlewares/StartSession.php(17): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#11 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): App\Http\Middlewares\StartSession->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#12 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/ErrorMiddleware.php(77): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#13 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#14 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#15 /var/www/html/erp/vendor/slim/slim/Slim/App.php(209): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#16 /var/www/html/erp/vendor/slim/slim/Slim/App.php(193): Slim\App->handle(Object(Slim\Psr7\Request))
+#17 /var/www/html/erp/public/index.php(63): Slim\App->run()
+#18 {main}
+[05-Nov-2025 11:31:51 America/Sao_Paulo] PHP Warning:  require(inc/authorization.php): Failed to open stream: No such file or directory in /var/www/html/erp/home.php on line 13
+[05-Nov-2025 11:31:51 America/Sao_Paulo] Slim Application Error
+Type: Error
+Code: 0
+Message: Failed opening required 'inc/authorization.php' (include_path='/var/www/html/erp:/var/www/html/erp/inc:.:/usr/local/lib/php')
+File: /var/www/html/erp/home.php
+Line: 13
+Trace: #0 /var/www/html/erp/src/Support/LegacyRenderer.php(69): require()
+#1 /var/www/html/erp/src/Http/Controllers/HomeController.php(14): App\Support\LegacyRenderer->render('home.php')
+#2 /var/www/html/erp/vendor/slim/slim/Slim/Handlers/Strategies/RequestResponse.php(39): App\Http\Controllers\HomeController->index(Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#3 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(362): Slim\Handlers\Strategies\RequestResponse->__invoke(Array, Object(Slim\Psr7\Request), Object(Slim\Psr7\Response), Array)
+#4 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\Routing\Route->handle(Object(Slim\Psr7\Request))
+#5 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#6 /var/www/html/erp/vendor/slim/slim/Slim/Routing/Route.php(321): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#7 /var/www/html/erp/vendor/slim/slim/Slim/Routing/RouteRunner.php(74): Slim\Routing\Route->run(Object(Slim\Psr7\Request))
+#8 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/RoutingMiddleware.php(45): Slim\Routing\RouteRunner->handle(Object(Slim\Psr7\Request))
+#9 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(Slim\Routing\RouteRunner))
+#10 /var/www/html/erp/src/Http/Middlewares/StartSession.php(17): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#11 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): App\Http\Middlewares\StartSession->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#12 /var/www/html/erp/vendor/slim/slim/Slim/Middleware/ErrorMiddleware.php(77): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#13 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(129): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(Psr\Http\Server\RequestHandlerInterface@anonymous))
+#14 /var/www/html/erp/vendor/slim/slim/Slim/MiddlewareDispatcher.php(73): Psr\Http\Server\RequestHandlerInterface@anonymous->handle(Object(Slim\Psr7\Request))
+#15 /var/www/html/erp/vendor/slim/slim/Slim/App.php(209): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#16 /var/www/html/erp/vendor/slim/slim/Slim/App.php(193): Slim\App->handle(Object(Slim\Psr7\Request))
+#17 /var/www/html/erp/public/index.php(63): Slim\App->run()
+#18 {main}

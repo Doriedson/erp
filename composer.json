@@ -1,23 +1,15 @@
 {
-  "name": "doriedson/erp",
-  "type": "project",
   "require": {
-    "php": "^8.1",
+    "php": ">=8.1",
     "slim/slim": "^4.13",
     "slim/psr7": "^1.6",
-    "vlucas/phpdotenv": "^5.6"
+    "vlucas/phpdotenv": "^5.6",
+    "php-di/php-di": "^7.1"
   },
   "autoload": {
     "psr-4": {
       "App\\": "src/"
     },
-    "files": [
-      "src/Support/helpers.php"
-    ]
-  },
-  "scripts": {
-    "post-install-cmd": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-    ]
+    "files": []
   }
 }

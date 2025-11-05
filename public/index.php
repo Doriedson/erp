@@ -1,31 +1,63 @@
 <?php
 declare(strict_types=1);
 
+use DI\Container;
 use Slim\Factory\AppFactory;
+
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// Dotenv
-$envPath = dirname(__DIR__);
-if (file_exists($envPath . '/.env')) {
-    Dotenv\Dotenv::createImmutable($envPath)->load();
+
+$BASE = dirname(__DIR__); // /var/www/html/erp
+
+
+// Dotenv (opcional)
+if (class_exists(\Dotenv\Dotenv::class) && is_file($BASE.'/.env')) {
+\Dotenv\Dotenv::createImmutable($BASE)->safeLoad();
 }
 
-// Instância do app
+
+// Erros em dev
+if (($_ENV['APP_DEBUG'] ?? $_SERVER['APP_DEBUG'] ?? '1') === '1') {
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+}
+
+// Container
+$container = new Container();
+
+// Definitions (exemplos)
+$container->set(App\Support\LegacyRenderer::class, fn() =>
+    new App\Support\LegacyRenderer($BASE)
+);
+
+// Exemplo: Connection e Repositórios, se tiver
+$container->set(App\Infra\Database\Connection::class, function () {
+    // leia env aqui
+    return new App\Infra\Database\Connection(
+        host: $_ENV['DB_HOST'] ?? 'db',
+        db:   $_ENV['DB_DATABASE'] ?? 'erp',
+        user: $_ENV['DB_USERNAME'] ?? 'erp',
+        pass: $_ENV['DB_PASSWORD'] ?? 'secret',
+        port: (int)($_ENV['DB_PORT'] ?? 3306),
+    );
+});
+
+AppFactory::setContainer($container);
 $app = AppFactory::create();
 
-// Middlewares básicos
-$app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 
-// Exemplo de rota antiga “encapsulada” como handler
-$app->get('/', [\App\Http\Controllers\HomeController::class, 'index']);
-$app->get('/pdv', [\App\Http\Controllers\PdvController::class, 'index']);
+// Middleware de sessão (para o legado)
+$app->add(new App\Http\Middlewares\StartSession());
 
-// API (exemplo)
-$app->get('/api/products', [\App\Http\Controllers\Api\ProductController::class, 'list']);
-
-// 404 handler simples
+// Error middleware (dev)
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
+
+
+// Carrega as rotas
+(require __DIR__ . '/../routes/web.php')($app);
+
 
 $app->run();
