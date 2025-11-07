@@ -4,24 +4,20 @@ declare(strict_types=1);
 use DI\Container;
 use Slim\Factory\AppFactory;
 
-
 require __DIR__ . '/../vendor/autoload.php';
-
 
 $BASE = dirname(__DIR__); // /var/www/html/erp
 
-
 // Dotenv (opcional)
 if (class_exists(\Dotenv\Dotenv::class) && is_file($BASE.'/.env')) {
-\Dotenv\Dotenv::createImmutable($BASE)->safeLoad();
+    \Dotenv\Dotenv::createImmutable($BASE)->safeLoad();
 }
-
 
 // Erros em dev
 if (($_ENV['APP_DEBUG'] ?? $_SERVER['APP_DEBUG'] ?? '1') === '1') {
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+    error_reporting(E_ALL);
 }
 
 // Container
@@ -55,9 +51,7 @@ $app->add(new App\Http\Middlewares\StartSession());
 // Error middleware (dev)
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
-
 // Carrega as rotas
 (require __DIR__ . '/../routes/web.php')($app);
-
 
 $app->run();

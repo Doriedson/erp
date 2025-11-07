@@ -2,6 +2,7 @@
 
 namespace App\Legacy;
 
+use App\View\View;
 class ProductExpDate extends Connection {
 
     public function Create($id_produto, $validade) {

@@ -154,3 +154,27 @@ Trace: #0 /var/www/html/erp/src/Support/LegacyRenderer.php(69): require()
 #16 /var/www/html/erp/vendor/slim/slim/Slim/App.php(193): Slim\App->handle(Object(Slim\Psr7\Request))
 #17 /var/www/html/erp/public/index.php(63): Slim\App->run()
 #18 {main}
+[05-Nov-2025 11:50:20 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[05-Nov-2025 11:50:24 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[05-Nov-2025 11:50:25 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[05-Nov-2025 11:51:30 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[05-Nov-2025 11:51:31 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[05-Nov-2025 11:51:38 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[05-Nov-2025 12:03:33 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[05-Nov-2025 14:16:08 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[05-Nov-2025 14:23:24 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[06-Nov-2025 17:59:55 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[06-Nov-2025 18:00:32 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[06-Nov-2025 19:06:55 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[06-Nov-2025 19:15:53 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[06-Nov-2025 19:15:58 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[06-Nov-2025 19:16:48 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[06-Nov-2025 19:25:50 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[06-Nov-2025 19:43:13 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[06-Nov-2025 20:02:21 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[07-Nov-2025 11:00:12 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[07-Nov-2025 11:00:19 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[07-Nov-2025 11:00:23 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[07-Nov-2025 11:00:24 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[07-Nov-2025 11:00:26 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86
+[07-Nov-2025 11:00:28 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in /var/www/html/erp/home.php on line 86

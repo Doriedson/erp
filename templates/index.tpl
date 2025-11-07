@@ -7,7 +7,12 @@
 		<title>{title}</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="height=device-height, width=device-width, user-scalable=no">
+
 		<link rel="manifest" href="/{manifest}?version={version}">
+
+		<!-- Defina version e um fallback do ServiceWorker ANTES de carregar JS -->
+		<script>window.version = '{version}';</script>
+		<script>window.ServiceWorkerInit = window.ServiceWorkerInit || function(){};</script>
 
 		<link rel="stylesheet" type="text/css" href="/css/style.css?version={version}" />
 		<link rel="stylesheet" type="text/css" href="/css/menu.css?version={version}" />
@@ -28,13 +33,12 @@
 		</script>
 
 		<!-- <script type="text/javascript" src="/service_worker.js?version={version}"></script> -->
-		<script>
+		<!-- <script>
 			let version = {version};
-		</script>
+		</script> -->
 
 		<script type="text/javascript" src="/vendor/bootstrap/js/jquery-3.6.0.min.js?version={version}"></script>
 		<script type="text/javascript" src="/vendor/bootstrap/js/jquery-ui.min.js?version={version}"></script>
-
 		<script type="text/javascript" src="/vendor/bootstrap/js/chart.min.js?version={version}"></script>
 
 		<script type="text/javascript" src="/js/funcoes.js?version={version}"></script>
@@ -236,7 +240,7 @@
 			<!-- END EXTRA_BLOCK_MESSAGE_ALERT -->
 
 		</div>
-
+		{menu}
 		{module}
 
 		<!-- JavaScript -- Aumentar Textarea automático

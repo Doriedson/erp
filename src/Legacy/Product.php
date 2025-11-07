@@ -2,6 +2,8 @@
 
 namespace App\Legacy;
 
+use App\View\View;
+
 class Product extends Connection {
 
 	const PRODUTO_TIPO_NORMAL = 1;

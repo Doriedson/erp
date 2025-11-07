@@ -23,31 +23,139 @@ class Connection
         $this->pdo = NewConnection::pdo();
     }
 
+    // === dentro de App\Legacy\Connection ==============================
+
     /**
-     * Compat: parent::Execute() sem argumentos usa $this->query/$this->params.
-     * Se forem passados $sql/$params, atualiza as propriedades e executa.
-     * Preenche $this->data com fetchAll() e retorna o PDOStatement.
-     */
-    protected function Execute(?string $sql = null, ?array $params = null): PDOStatement
+    * Executa a query atual ($this->query) com $this->params de forma tolerante:
+    * - suporta placeholders nomeados e posicionais
+    * - expande arrays (IN (:ids) -> (:ids_0,:ids_1,...))
+    * - intercala LIMIT/OFFSET como inteiros (sem bind)
+    * - faz bind apenas dos placeholders efetivamente presentes no SQL
+    */
+    protected function Execute(): PDOStatement
     {
-        if ($sql !== null)   { $this->query  = $sql; }
-        if ($params !== null){ $this->params = $params; }
+        if (!$this->query) {
+            throw new \RuntimeException('Query vazia em Connection::Execute()');
+        }
 
-        $q = (string)($this->query ?? '');
-        $p = $this->params ?? [];
+        $sql    = $this->query;
+        $params = $this->params ?? [];
 
-        $stmt = $this->pdo->prepare($q);
-        $stmt->execute($p);
+        // 1) Interpolar LIMIT/OFFSET como inteiros (evita HY093 e problemas de driver)
+        $numericPlaceholders = ['limit','offset'];
+        foreach ($numericPlaceholders as $ph) {
+            if (preg_match('/\b' . $ph . '\s*:\s*' . $ph . '\b/i', $sql)) {
+                // Caso raro "LIMIT :limit" (com palavra anterior), mantemos abaixo
+            }
+            // Troca segura: "LIMIT :limit" -> "LIMIT 10"
+            $rx = '/\b' . strtoupper($ph) . '\b\s*:\s*' . $ph . '\b/i';
+            if (preg_match('/:' . $ph . '\b/', $sql) && array_key_exists($ph, $params)) {
+                $val = (int)$params[$ph];
+                $sql = preg_replace('/:' . $ph . '\b/', (string)$val, $sql);
+                unset($params[$ph]);
+            }
+        }
 
-        $this->stmt = $stmt;
+        // 2) Expandir arrays em placeholders nomeados (IN (:ids))
+        [$sql, $params] = $this->expandArrayParams($sql, $params);
 
-        // Por padrão, carrega tudo no $this->data (padrão do legado)
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $this->data = is_array($rows) ? $rows : [];
+        // 3) Detectar placeholders
+        $hasPositional = strpos($sql, '?') !== false;
+        $named = $this->extractNamedPlaceholders($sql);
+
+        // 4) Preparar statement
+        $stmt = $this->pdo->prepare($sql);
+
+        // 5) Bind de parâmetros
+        if ($hasPositional) {
+            // Posicionais: garantir ordem e contagem
+            $needed = substr_count($sql, '?');
+            $values = array_values($params);       // ignora chaves, usa ordem do array
+            if (count($values) < $needed) {
+                throw new \InvalidArgumentException("Parâmetros insuficientes: esperados $needed, fornecidos " . count($values));
+            }
+            // Bind apenas o necessário
+            for ($i = 0; $i < $needed; $i++) {
+                $this->bindValue($stmt, $i+1, $values[$i]); // 1-based
+            }
+            $stmt->execute();
+        } else {
+            // Nomeados: filtrar para somente os que estão no SQL
+            $bindData = [];
+            foreach ($named as $ph) {
+                if (array_key_exists($ph, $params)) {
+                    $bindData[$ph] = $params[$ph];
+                } else {
+                    // se o placeholder existir no SQL mas não no array, bind como null
+                    $bindData[$ph] = null;
+                }
+            }
+            // Ignorar chaves extras em $params que não aparecem no SQL
+            foreach ($bindData as $key => $val) {
+                $this->bindValue($stmt, ':' . $key, $val);
+            }
+            $stmt->execute();
+        }
+
+        // 6) Popular dados e resetar state legado
+        $this->stmt     = $stmt;
+        $this->data     = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         $this->rowIndex = 0;
 
         return $stmt;
     }
+
+    /** Extrai placeholders nomeados (sem ':') do SQL */
+    private function extractNamedPlaceholders(string $sql): array
+    {
+        preg_match_all('/:([a-zA-Z_][a-zA-Z0-9_]*)/', $sql, $m);
+        // Remover duplicados preservando ordem
+        return array_values(array_unique($m[1] ?? []));
+    }
+
+    /**
+    * Expande arrays:  ... IN (:ids)  com ['ids'=>[1,2]]  -> IN (:ids_0,:ids_1)
+    * Retorna [sqlNovo, paramsNovos]
+    */
+    private function expandArrayParams(string $sql, array $params): array
+    {
+        if (!$params) return [$sql, $params];
+
+        foreach ($params as $key => $val) {
+            if (is_array($val) && preg_match('/:' . preg_quote($key, '/') . '\b/', $sql)) {
+                if (count($val) === 0) {
+                    // evita SQL inválido; gera IN (NULL)
+                    $sql = preg_replace('/:' . preg_quote($key, '/') . '\b/', 'NULL', $sql);
+                    unset($params[$key]);
+                    continue;
+                }
+                $repls = [];
+                foreach (array_values($val) as $i => $v) {
+                    $newKey = $key . '_' . $i;
+                    $repls[] = ':' . $newKey;
+                    $params[$newKey] = $v;
+                }
+                $sql = preg_replace('/:' . preg_quote($key, '/') . '\b/', implode(',', $repls), $sql);
+                unset($params[$key]);
+            }
+        }
+        return [$sql, $params];
+    }
+
+    /** Bind com tipos coerentes (int/bool/string/null) */
+    private function bindValue(PDOStatement $stmt, $placeholder, $value): void
+    {
+        if (is_int($value)) {
+            $stmt->bindValue($placeholder, $value, PDO::PARAM_INT);
+        } elseif (is_bool($value)) {
+            $stmt->bindValue($placeholder, $value, PDO::PARAM_BOOL);
+        } elseif (is_null($value)) {
+            $stmt->bindValue($placeholder, null, PDO::PARAM_NULL);
+        } else {
+            $stmt->bindValue($placeholder, (string)$value, PDO::PARAM_STR);
+        }
+    }
+
 
     /** Compat opcional: execução direta sem preparar parâmetros */
     protected function Query(string $sql): PDOStatement

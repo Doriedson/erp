@@ -1,27 +1,30 @@
 <?php
-use Slim\App;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 
+use Slim\App;
+use App\Http\Controllers\LegacyApiController;
+use App\Http\Controllers\AuthUiAdapter;
 
 return function (App $app) {
-	// Rotas modernas
-	$app->get('/', [\App\Http\Controllers\HomeController::class, 'index']);
+
+    // Home nova (HTML direto):
+    $app->get('/', [\App\Http\Controllers\HomeController::class, 'index']);
+
+    // ... outras rotas modernas ...
 
 
-	// Exemplo de rota API moderna
-	$app->get('/api/ping', function (Request $req, Response $res) {
-		$res->getBody()->write('pong');
-		return $res;
-	});
+    // Endpoints AJAX legados
+    $app->map(['GET','POST'], '/message.php', [LegacyApiController::class, 'message']);
+    // $app->get('/auth/status', [LegacyApiController::class, 'authStatus']);
 
+    $app->get('/auth/status', [AuthUiAdapter::class, 'status']);
+    $app->post('/auth/login', [AuthUiAdapter::class, 'login']);
+    $app->post('/auth/logout', [AuthUiAdapter::class, 'logout']);
 
-	// PDV (ainda renderizando legado por enquanto)
-	$app->get('/pdv', [\App\Http\Controllers\PdvController::class, 'index']);
+    // retorna HTML do popup autenticador (usa index.tpl -> bloco EXTRA_BLOCK_AUTHENTICATOR)
+    $app->get('/auth/prompt', [AuthUiAdapter::class, 'prompt']);
 
-
-	// Fallback de legado: última rota — tenta abrir home.php, pdv.php etc.
-	$app->map(['GET','POST','PUT','PATCH','DELETE'], '/{path:.*}', [
-		\App\Http\Controllers\LegacyController::class, 'dispatch'
-	]);
+    // Fallback do legado — sempre por último
+    $app->map(['GET','POST','PUT','PATCH','DELETE'], '/{path:.*}', [
+        \App\Http\Controllers\LegacyController::class, 'dispatch'
+    ]);
 };
