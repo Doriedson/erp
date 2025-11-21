@@ -1,30 +1,25 @@
 <?php
-
 use Slim\App;
-use App\Http\Controllers\LegacyApiController;
-use App\Http\Controllers\AuthUiAdapter;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AuthApiController;
+use App\Http\Controllers\MessageController;
+use App\Http\Middlewares\AuthMiddleware;
+
 
 return function (App $app) {
 
-    // Home nova (HTML direto):
-    $app->get('/', [\App\Http\Controllers\HomeController::class, 'index']);
+	// APIs usadas pelo front logo no boot
+    $app->map(['GET'],  '/auth/status', [AuthApiController::class, 'status']);
+    $app->map(['POST'], '/message.php', [MessageController::class, 'message']);
 
-    // ... outras rotas modernas ...
+	// Login (público)
+	$app->get('/login', [AuthController::class, 'showLogin']);
+	$app->post('/login', [AuthController::class, 'login']);
+	$app->post('/logout', [AuthController::class, 'logout']);
 
 
-    // Endpoints AJAX legados
-    $app->map(['GET','POST'], '/message.php', [LegacyApiController::class, 'message']);
-    // $app->get('/auth/status', [LegacyApiController::class, 'authStatus']);
-
-    $app->get('/auth/status', [AuthUiAdapter::class, 'status']);
-    $app->post('/auth/login', [AuthUiAdapter::class, 'login']);
-    $app->post('/auth/logout', [AuthUiAdapter::class, 'logout']);
-
-    // retorna HTML do popup autenticador (usa index.tpl -> bloco EXTRA_BLOCK_AUTHENTICATOR)
-    $app->get('/auth/prompt', [AuthUiAdapter::class, 'prompt']);
-
-    // Fallback do legado — sempre por último
-    $app->map(['GET','POST','PUT','PATCH','DELETE'], '/{path:.*}', [
-        \App\Http\Controllers\LegacyController::class, 'dispatch'
-    ]);
+	// Home (protegido)
+	$app->get('/', [HomeController::class, 'index'])
+	->add(AuthMiddleware::class);
 };

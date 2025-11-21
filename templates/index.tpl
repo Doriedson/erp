@@ -131,51 +131,41 @@
 		<!-- END EXTRA_BLOCK_POPUP -->
 
 		<!-- BEGIN EXTRA_BLOCK_AUTHENTICATOR -->
-		<!-- <div class="w_authenticator popup hidden">
-			<div class="popup-container popup-small"> -->
-				<!-- <div class="window-container">
+		<div class="w_authenticator popup hidden">
+			<form method="post" id="frm_authenticator" class="fill">
+				<div class="flex flex-dc gap-10">
+					<div>
+						<label class="caption">Colaborador(a)</label>
+						<div class="addon">
+							<select id="id_entidade" class="fill">
+								{collaborators}
 
-					<div class="window-header setor-2 flex flex-jc-sb flex-ai-center gap-10">
-						Autorização
-						<button class="popup_close button-icon button-transparent color-white fa-solid fa-xmark" title="Fechar"></button>
-					</div> -->
-
-					<form method="post" id="frm_authenticator" class="fill">
-						<div class="flex flex-dc gap-10">
-							<div>
-								<label class="caption">Colaborador(a)</label>
-								<div class="addon">
-									<select id="id_entidade" class="fill">
-										{collaborators}
-
-										<!-- BEGIN EXTRA_BLOCK_COLLABORATOR -->
-										<option value="{id_entidade}" {selected}>{nome} #{id_entidade}</option>
-										<!-- END EXTRA_BLOCK_COLLABORATOR -->
-									</select>
-								</div>
-							</div>
-
-							<div>
-								<label class="caption">Senha</label>
-								<div class="addon">
-									<input
-										type="password"
-										id="senha"
-										class="textcenter fill"
-										maxlength="4"
-										pattern="[0-9]+"
-										required
-										autofocus
-									>
-								</div>
-							</div>
-
-							<button type="submit" class="button-blue margin-t10">Confirmar</button>
+								<!-- BEGIN EXTRA_BLOCK_COLLABORATOR -->
+								<option value="{id_entidade}" {selected}>{nome} #{id_entidade}</option>
+								<!-- END EXTRA_BLOCK_COLLABORATOR -->
+							</select>
 						</div>
-					</form>
-				<!-- </div> -->
-			<!-- </div>
-		</div> -->
+					</div>
+
+					<div>
+						<label class="caption">Senha</label>
+						<div class="addon">
+							<input
+								type="password"
+								id="senha"
+								class="textcenter fill"
+								maxlength="4"
+								pattern="[0-9]+"
+								required
+								autofocus
+							>
+						</div>
+					</div>
+
+					<button type="submit" class="button-blue margin-t10">Confirmar</button>
+				</div>
+			</form>
+		</div>
 		<!-- END EXTRA_BLOCK_AUTHENTICATOR -->
 
 		<!-- BEGIN EXTRA_BLOCK_MESSAGEBOX -->
@@ -240,6 +230,7 @@
 			<!-- END EXTRA_BLOCK_MESSAGE_ALERT -->
 
 		</div>
+
 		{menu}
 		{module}
 

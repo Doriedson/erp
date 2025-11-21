@@ -1,42 +1,29 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Response;
-use App\View\View;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use App\View\ViewRenderer;
 
 final class MessageController
 {
-    /**
-     * Retorna os templates de mensagens/popup usados no frontend.
-     * Mantém as mesmas chaves que o legado entregava para o JS.
-     */
-    public function load(): string
+    public function __construct(private ViewRenderer $view) {}
+
+    public function message(Request $req, Response $res): Response
     {
-
-		$tplIndex = new View("index");
-
-        $message_info = $tplIndex->getContent([], "EXTRA_BLOCK_MESSAGE_INFO");
-
-        $message_error = $tplIndex->getContent([], "EXTRA_BLOCK_MESSAGE_ERROR");
-
-        $message_done = $tplIndex->getContent([], "EXTRA_BLOCK_MESSAGE_DONE");
-
-        $message_alert = $tplIndex->getContent([], "EXTRA_BLOCK_MESSAGE_ALERT");
-
-        $popup = $tplIndex->getContent([], "EXTRA_BLOCK_POPUP");
-
-        $messagebox = $tplIndex->getContent([], "EXTRA_BLOCK_MESSAGEBOX");
-
-        // contrato esperado pelo front: chaves na raiz
-        $payload = [
-            'message_info'  => $message_info,
-            'message_error' => $message_error,
-            'message_done'  => $message_done,
-            'message_alert' => $message_alert,
-            'popup'         => $popup,
-            'messagebox'    => $messagebox,
+        // Gera os mesmos blocos do index.tpl
+        $tpl = 'index';
+        $data = [
+            'message_info'  => $this->view->block($tpl, 'EXTRA_BLOCK_MESSAGE_INFO', []),
+            'message_error' => $this->view->block($tpl, 'EXTRA_BLOCK_MESSAGE_ERROR', []),
+            'message_done'  => $this->view->block($tpl, 'EXTRA_BLOCK_MESSAGE_DONE', []),
+            'message_alert' => $this->view->block($tpl, 'EXTRA_BLOCK_MESSAGE_ALERT', []),
+            'popup'         => $this->view->block($tpl, 'EXTRA_BLOCK_POPUP', []),
+            'messagebox'    => $this->view->block($tpl, 'EXTRA_BLOCK_MESSAGEBOX', []),
         ];
 
-        return Response::json($payload);
+        $res = $res->withHeader('Content-Type', 'application/json; charset=UTF-8');
+        $res->getBody()->write(json_encode($data));
+        return $res;
     }
 }

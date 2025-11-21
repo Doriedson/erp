@@ -1,61 +1,94 @@
 <?php
 namespace App\Http\Controllers;
 
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use App\View\ViewRenderer;
 use App\Auth\AuthService;
-use App\Http\Response;
-use Throwable;
+use App\Infra\Repositories\CollaboratorRepository;
 
 final class AuthController
 {
-    public function login()
+    public function __construct(
+        private ViewRenderer $view,
+        private AuthService $auth,
+        private CollaboratorRepository $collabs
+    ) {}
+
+    /** GET /login */
+    public function showLogin(Request $request, Response $response): Response
     {
-        try {
-            // 1) Campos obrigatórios
-            $id_entidade = isset($_POST['id_entidade']) ? (int)$_POST['id_entidade'] : 0;
-            $senha       = isset($_POST['senha']) ? (string)$_POST['senha'] : '';
+        $assetsVersion = $_ENV['ASSETS_VERSION'] ?? (string) time();
 
-            if ($id_entidade <= 0 || $senha === '') {
-                return Response::json(['error' => 'Parâmetros inválidos'], 422);
-            }
-
-            // 2) Autentica
-            $auth = new AuthService();
-            $ok = $auth->authenticate($id_entidade, $senha);
-
-            if (!$ok) {
-                // senha errada, usuário inativo, etc.
-                return Response::json(['error' => 'Credenciais inválidas'], 401);
-            }
-
-            // 3) Sucesso
-            return Response::json([
-                'ok'   => true,
-                'user' => ['id_entidade' => $auth->userId()],
-            ], 200);
-
-        } catch (Throwable $e) {
-            // Erro inesperado -> 500 (logar para depuração)
-            error_log("[/auth/login] ".$e->getMessage()."\n".$e->getTraceAsString());
-            $debug = getenv('APP_DEBUG');
-            $msg = ($debug === '1' || $debug === 'true')
-                ? ('Erro interno: '.$e->getMessage())
-                : 'Erro interno';
-            return Response::json(['error' => $msg], 500);
+        // Monta as <option> com o bloco EXTRA_BLOCK_COLLABORATOR
+        $optionsHtml = '';
+        $list = $this->collabs->listForLogin();
+        foreach ($list as $i => $row) {
+            $optionsHtml .= $this->view->block('login', 'EXTRA_BLOCK_COLLABORATOR', [
+                'id_entidade' => (int)$row['id_entidade'],
+                'nome'        => $row['nome'],
+                'selected'    => ($i === 0 ? 'selected' : ''), // seleciona o 1º por padrão
+            ]);
         }
+
+        $loginHtml = $this->view->render('login', [
+            'collaborators' => $optionsHtml, // placeholder {collaborators}
+        ], 'BLOCK_PAGE');
+
+        $html = $this->view->render('index', [
+            'title'    => 'ERP — Login',
+            'version'  => $assetsVersion,
+            'manifest' => 'manifest.webmanifest',
+            'menu'     => '',
+            'module'   => $loginHtml,
+        ], 'BLOCK_PAGE');
+
+        $res = $response->withHeader('Content-Type', 'text/html; charset=UTF-8');
+        $res->getBody()->write($html);
+        return $res;
     }
 
-    public function logout()
+    /** POST /login */
+    public function login(Request $request, Response $response): Response
     {
-        (new AuthService())->logout();
-        return Response::json(['ok' => true], 200);
-    }
+        $data = $request->getParsedBody() ?? [];
+        $idEntidade = (int)($data['id_entidade'] ?? 0);
+        $pin        = (string)($data['senha'] ?? '');
 
-    public function status()
-    {
-        $auth = new AuthService();
-        return Response::json([
-            'authenticated' => $auth->isAuthenticated(),
-            'user' => $auth->isAuthenticated() ? ['id_entidade' => $auth->userId()] : null,
-        ], 200);
+        if ($idEntidade > 0 && $pin !== '' && $this->auth->authenticateByCollaboratorPin($idEntidade, $pin)) {
+            return $response->withHeader('Location', '/')->withStatus(302);
+        }
+
+        // Reapresenta com erro e mantém o selecionado
+        $assetsVersion = $_ENV['ASSETS_VERSION'] ?? (string) time();
+
+        $optionsHtml = '';
+        $list = $this->collabs->listForLogin();
+        foreach ($list as $row) {
+            $optionsHtml .= $this->view->block('login', 'EXTRA_BLOCK_COLLABORATOR', [
+                'id_entidade' => (int)$row['id_entidade'],
+                'nome'        => $row['nome'],
+                'selected'    => ((int)$row['id_entidade'] === $idEntidade ? 'selected' : ''),
+            ]);
+        }
+
+        // Caso seu login.tpl tenha bloco de erro próprio, você pode criar aqui
+        // $errorHtml = $this->view->block('login', 'EXTRA_ERROR', ['error' => 'Credenciais inválidas']);
+        $loginHtml = $this->view->render('login', [
+            'collaborators' => $optionsHtml,
+            // 'error_block' => $errorHtml, // se existir no tpl
+        ], 'BLOCK_PAGE');
+
+        $html = $this->view->render('index', [
+            'title'    => 'ERP — Login',
+            'version'  => $assetsVersion,
+            'manifest' => 'manifest.webmanifest',
+            'menu'     => '',
+            'module'   => $loginHtml,
+        ], 'BLOCK_PAGE');
+
+        $res = $response->withHeader('Content-Type', 'text/html; charset=UTF-8');
+        $res->getBody()->write($html);
+        return $res;
     }
 }

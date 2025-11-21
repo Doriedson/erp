@@ -28,7 +28,7 @@
 				<div>
 					<label class="caption">Colaborador(a)</label>
 					<div class="addon">
-						<select id="id_entidade" class="fill">
+						<select name="id_entidade" class="fill">
 							{collaborators}
 
 							<!-- BEGIN EXTRA_BLOCK_COLLABORATOR -->
@@ -43,7 +43,7 @@
 					<div class="addon">
 						<input
 							type="password"
-							id="senha"
+							name="senha"
 							class="textcenter fill"
 							maxlength="4"
 							pattern="[0-9]+"

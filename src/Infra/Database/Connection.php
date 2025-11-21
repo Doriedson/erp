@@ -1,35 +1,33 @@
 <?php
 namespace App\Infra\Database;
 
-use PDO;
-use PDOException;
 
-final class Connection {
-    private static ?PDO $pdo = null;
+use PDO; use PDOException; use RuntimeException;
 
-    public static function pdo(): PDO {
-        if (self::$pdo instanceof PDO) return self::$pdo;
-        $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
-            $_ENV['DB_HOST'] ?? '127.0.0.1',
-            $_ENV['DB_PORT'] ?? '3306',
-            $_ENV['DB_DATABASE'] ?? 'erp'
-        );
-        $user = $_ENV['DB_USERNAME'] ?? 'root';
-        $pass = $_ENV['DB_PASSWORD'] ?? '';
 
-        $opt = [
+class Connection
+{
+    public function __construct(
+        private string $host,
+        private string $db,
+        private string $user,
+        private string $pass,
+        private int $port = 3306,
+        private string $charset = 'utf8mb4'
+    ) {}
+
+
+    public function pdo(): PDO
+    {
+        $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->db};charset={$this->charset}";
+
+        $opts = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
         ];
-        try {
-            self::$pdo = new PDO($dsn, $user, $pass, $opt);
-            self::$pdo->exec("SET time_zone = '+00:00'");
-            return self::$pdo;
-        } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(['error' => 'DB connection failed']);
-            exit;
+
+        try { return new PDO($dsn, $this->user, $this->pass, $opts); }
+            catch (PDOException $e) { throw new RuntimeException('DB connection failed: '.$e->getMessage(), 0, $e); }
         }
-    }
 }
